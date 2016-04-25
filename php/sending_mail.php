@@ -5,10 +5,10 @@ session_start();
 $path = 'uploads';
 $filename = (isset($_POST['file']) && $_POST['file'] != '') ? $_POST['file'] : NULL;
 
-$message = $_POST['message'];
-$from = $_POST['email'];
-$subject = $_POST['subject'];
-$mailto = 'your@email.com';
+$message = $_POST['you have mail'];
+$from = $_POST['mpcheli7@gmail.com'];
+$subject = $_POST['Website Contact Form'];
+$mailto = 'mpcheli7@gmail.com';
 
 // check if any attachment
 

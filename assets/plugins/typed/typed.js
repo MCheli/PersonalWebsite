@@ -342,7 +342,7 @@
     };
 
     $.fn.typed.defaults = {
-        strings: ["These are the default values...", "You know what you should do?", "Use your own!", "Have a great day!"],
+        strings: ["An Engineer", "An Educator", "A Designer"],
         // typing speed
         typeSpeed: 0,
         // time before typing starts
