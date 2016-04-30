@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="7f4a92db-0d14-45ab-90dc-341efdcb5a65" name="Marks Server" url="http://u71774661.1and1-data.host">
+        <fileTransfer host="u71774661.1and1-data.host" port="22" accessType="SFTP" password="dfe8dfc6dfdfdfcfdfc8dfc3dfd8dfcedf93df9bdf9bdf8b" username="u71774661">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
