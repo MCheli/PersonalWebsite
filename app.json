@@ -1,0 +1,21 @@
+{
+  "name": "PersonalWebsite",
+  "scripts": {
+  },
+  "env": {
+    "APP_ENVIRONMENT": "development",
+    "EMAIL_PASSWORD": "4c2b2df458b51db2a5182866d9f76b61",
+    "EMAIL_SENDTO": "mpcheli7@gmail.com",
+    "EMAIL_USERNAME": "6e657289e5c27b11497d70e3d8e688ac"
+  },
+  "formation": {
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/java"
+    }
+  ]
+}
