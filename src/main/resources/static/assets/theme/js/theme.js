@@ -49,13 +49,12 @@
           $.ajax({
             type: 'POST',
             data: params,
-            url: "php/sending_mail.php",
+            url: "/contact",
             beforeSend: function() {
               el.find('.preload-submit').removeClass('hidden');
               el.find('.message-submit').addClass('hidden');
             },
             success: function(res) {
-              res = jQuery.parseJSON(res);
               setTimeout(function() {
                 el.find('.preload-submit').addClass('hidden');
                 if (res.error === null) {
