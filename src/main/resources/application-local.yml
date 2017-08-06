@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://ec2-54-243-107-66.compute-1.amazonaws.com:5432/dakbkelg915trh?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-    username: vdapezarpldmrs
-    password: 7c5339b08e6a611dcd6a218b9c6250865ecd8501c4bacc5e13ec58a03521ea2b
+    url: jdbc:postgresql://ec2-54-243-185-123.compute-1.amazonaws.com:5432/db44jodb9qqv37?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    username: ouzgzzfaqcigpo
+    password: 714b4455fce206e21655e9cd96cc045d2273e81f52c081602abc78fd7f8cc8b8
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
