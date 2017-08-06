@@ -45,9 +45,8 @@ public class ContactMessageController {
     }
 
     private void sendEmail(ContactMessage message){
-        //TODO: Move this to environment variables
-        //MailJet information
 
+        //MailJet config
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
