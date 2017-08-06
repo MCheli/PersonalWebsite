@@ -34,13 +34,19 @@ public class ContactMessageController {
         return new ResponseEntity<Iterable>(messages, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<ContactMessage> sendMessage(@RequestBody ContactMessage message){
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody ResponseEntity<ResponseMessage> sendMessage(@RequestParam String fullname, @RequestParam String email, @RequestParam String message){
         //Save message to the database
-        contactMessageRepository.save(message);
-        sendEmail(message);
+        ContactMessage contactMessage = new ContactMessage();
+        contactMessage.setName(fullname);
+        contactMessage.setMessage(message);
+        contactMessage.setEmail(email);
+        contactMessageRepository.save(contactMessage);
+        sendEmail(contactMessage);
 
-        return new ResponseEntity<ContactMessage>(message, HttpStatus.OK);
+        ResponseMessage response = new ResponseMessage("Thanks, I will get back to you ASAP",null);
+
+        return new ResponseEntity<ResponseMessage>(response, HttpStatus.OK);
 
     }
 
