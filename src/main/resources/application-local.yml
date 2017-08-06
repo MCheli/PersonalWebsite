@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://ec2-54-243-107-66.compute-1.amazonaws.com:5432/dakbkelg915trh?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-    username: vdapezarpldmrs
+    url: jdbc:postgresql://ec2-54-243-185-123.compute-1.amazonaws.com:5432/db44jodb9qqv37?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    username: ouzgzzfaqcigpo
     password: REMOVED-SECRET
     driver-class-name: org.postgresql.Driver
   jpa:
