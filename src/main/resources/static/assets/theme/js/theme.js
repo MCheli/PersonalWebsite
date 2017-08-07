@@ -14,7 +14,7 @@
     initBtnFile();
     initMap();
     initHold();
-    initCaptcha();
+    // initCaptcha();
     initAjaxContactForm();
     initAjaxUploader();
   });
@@ -49,13 +49,12 @@
           $.ajax({
             type: 'POST',
             data: params,
-            url: "php/sending_mail.php",
+            url: "/contact",
             beforeSend: function() {
               el.find('.preload-submit').removeClass('hidden');
               el.find('.message-submit').addClass('hidden');
             },
             success: function(res) {
-              res = jQuery.parseJSON(res);
               setTimeout(function() {
                 el.find('.preload-submit').addClass('hidden');
                 if (res.error === null) {
@@ -328,8 +327,8 @@
   //Map
   function initMap() {
     $('#map-contact').gmap({
-      'center': '42.082875, -71.366518',
-      'zoom': 15,
+      'center': '42.1584236, -71.1561502',
+      'zoom': 16,
       scrollwheel: false,
       'disableDefaultUI': false,
       'callback': function() {
