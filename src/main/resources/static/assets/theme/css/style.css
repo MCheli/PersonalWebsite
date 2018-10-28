@@ -1294,7 +1294,7 @@ textArea.form-flat {
 .list-education li .number {
   position: absolute;
   font-style: italic;
-  right: -128px;
+  right: -175px;
   left: inherit;
   padding-bottom: 10px;
   font-size: 70px;
@@ -1320,7 +1320,7 @@ textArea.form-flat {
 }
 .list-employment li:nth-child(odd) .number,
 .list-education li:nth-child(odd) .number {
-  left: -128px;
+  left: -175px;
   right: inherit;
 }
 .list-employment li:nth-child(odd) .desc,
