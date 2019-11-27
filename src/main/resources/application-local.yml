@@ -1,9 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://ec2-54-243-185-123.compute-1.amazonaws.com:5432/db44jodb9qqv37?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-    username: ouzgzzfaqcigpo
-    password: 714b4455fce206e21655e9cd96cc045d2273e81f52c081602abc78fd7f8cc8b8
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: validate
