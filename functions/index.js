@@ -3,6 +3,11 @@ const admin = require('firebase-admin');
 const express = require('express');
 const cors = require('cors');
 const app = express();
+
+admin.initializeApp(functions.config().firebase);
+
+let db = admin.firestore();
+
 app.use(cors({ origin: true }));
 
 app.get('/hello-world', (req, res) => {
@@ -10,9 +15,16 @@ app.get('/hello-world', (req, res) => {
 }); 
 
 app.post('/contact', (req, res) => {
-    console.log("Fullname: " + req.query.fullname);
-    console.log("Email: " + req.query.email);
-    console.log("Message: " + req.query.message);
+
+    let docRef = db.collection('messages').doc();
+
+    let newMessage = docRef.set({
+        name: req.query.fullname,
+        message: req.query.message,
+        email: req.query.email,
+        date: new Date()
+    });
+
     return res.status(200).send('Thanks, I will get back to you ASAP')
 })
 
