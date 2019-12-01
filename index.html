@@ -621,7 +621,7 @@
 
                     <div id="myTabContent" class="tab-content flat-tab-content">
                         <div class="tab-pane fade in active" id="tab0">
-                            <form method="post" id="contactForm" name="contactForm">
+                            <form action"" id="contactForm" name="contactForm">
                                 <input type="hidden" name="subject" value="Message Contact Form">
                                 <div class="form-group">
                                     <label>Your Name (*)</label>
@@ -640,8 +640,8 @@
                                 <div class="form-group">
                                     <div id="captcha1"></div>
                                 </div>
-                                <div class="form-group ">
-                                    <button type="submit" class="btn btn-flat-solid primary-btn">Send Message</button>
+                                <div class="form-group">
+                                    <button type="submit" value="send" class="btn btn-flat-solid primary-btn">Send Message</button>
                                 </div>
                                 <div class="form-group">
                                     <div class="preload-submit hidden">
@@ -782,5 +782,17 @@
 <!--=====================================================-->
 <!--configuration template-->
 <script src="assets/theme/js/theme.js"></script>
+
+<script>
+$(document).ready(function() {
+    $(document).on('submit', '#contactForm', function() {
+      // do your things
+      console.log("Hello WOrld!")
+      return false;
+     });
+});
+</script>
+
+
 </body>
 </html>
