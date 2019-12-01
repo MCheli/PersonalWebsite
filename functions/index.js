@@ -9,8 +9,11 @@ app.get('/hello-world', (req, res) => {
   return res.status(200).send('Hello World!');
 }); 
 
-app.get('/contact', (req, res) => {
-    
+app.post('/contact', (req, res) => {
+    console.log("Fullname: " + req.query.fullname);
+    console.log("Email: " + req.query.email);
+    console.log("Message: " + req.query.message);
+    return res.status(200).send('Thanks, I will get back to you ASAP')
 })
 
 exports.app = functions.https.onRequest(app);
