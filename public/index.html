@@ -621,7 +621,7 @@
 
                     <div id="myTabContent" class="tab-content flat-tab-content">
                         <div class="tab-pane fade in active" id="tab0">
-                            <form action"" id="contactForm" name="contactForm">
+                            <form id="target" name="contactForm">
                                 <input type="hidden" name="subject" value="Message Contact Form">
                                 <div class="form-group">
                                     <label>Your Name (*)</label>
@@ -707,7 +707,7 @@
             <div class="hidden map-contact-body">
                 <div class="map-content">
                     <h4 class="no-margin-top font-alt">I Am Here</h4>
-                    <p><i class="fa fa-map-marker"></i> <strong>Address:</strong> 348 Neponset Street, Canton MA</p>
+                    <p><i class="fa fa-map-marker"></i> <strong>Address:</strong> 5 Fan Pier Boulevard, Boston MA</p>
                     <p><i class="fa fa-mobile"></i> <strong>Phone:</strong> 508-596-7707 </p>
                     <p><i class="fa fa-envelope"></i> <strong>Email:</strong> mpcheli7@gmail.com</p>
                 </div>
@@ -784,12 +784,15 @@
 <script src="assets/theme/js/theme.js"></script>
 
 <script>
-$(document).ready(function() {
-    $(document).on('submit', '#contactForm', function() {
-      // do your things
-      console.log("Hello WOrld!")
-      return false;
-     });
+
+$( "#target" ).submit(function( event ) {
+    $.ajax({
+        url: "https://us-central1-personal-website-8027b.cloudfunctions.net/app/hello-world"
+    }).then(function(data) {
+       console.log(data);
+    });
+
+    event.preventDefault();
 });
 </script>
 
