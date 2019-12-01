@@ -787,9 +787,10 @@
 
 var $inputs = $('#myForm :input');
 $( "#target" ).submit(function( event ) {
+    //Switch the domain dynamically depending on local or prod
     var postUrl = "https://us-central1-personal-website-8027b.cloudfunctions.net/app/contact" + "?" + $(this).serialize()
-    console.log(postUrl);
     $.post(postUrl).then(function(data) {
+        // Show message to say that data has been received
        console.log(data);
     });
 
