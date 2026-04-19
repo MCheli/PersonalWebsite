@@ -49,7 +49,7 @@ def test_weather_endpoint(client):
     assert data['source'] == 'Demo Data'
 
 def test_profile_endpoint(client):
-    """Test profile endpoint"""
+    """Test profile endpoint returns identity + catalog"""
     response = client.get('/profile')
     assert response.status_code == 200
 
@@ -58,18 +58,52 @@ def test_profile_endpoint(client):
     assert data['title'] == 'Developer'
     assert data['location'] == 'Ashland, MA'
 
-    # Check required links
+    # Professional links are always present
     links = data['links']
     assert 'linkedin' in links
     assert 'github' in links
     assert 'home_assistant' in links
 
-    # Check services structure
-    services = data['services']
-    assert 'public' in services
-    assert 'infrastructure' in services
-    assert len(services['public']) > 0
-    assert len(services['infrastructure']) > 0
+    # Host block reflects the real homelab
+    host = data['host']
+    assert host['hardware'] == 'Dell PowerEdge R630'
+    assert 'Ubuntu' in host['os']
+
+    # Full catalog is embedded
+    assert isinstance(data['categories'], list)
+    assert len(data['categories']) > 0
+    assert data['service_count'] == sum(len(c['services']) for c in data['categories'])
+
+def test_profile_catalog_is_from_services_json(client):
+    """Profile should reflect the shared services.json, so adding a
+    service in one place shows up for both API consumers and the
+    terminal site."""
+    response = client.get('/profile')
+    data = json.loads(response.data)
+
+    # Flatten all services and assert the expected real-world ones are present
+    names = {svc['name'] for cat in data['categories'] for svc in cat['services']}
+    assert {'personal-website', 'flask-api', 'cookbook', 'tallied'} <= names
+    assert {'plex', 'seafile', 'marimo', 'grafana'} <= names
+
+    # Every service has the required shape
+    for cat in data['categories']:
+        assert cat['id'] and cat['title']
+        for svc in cat['services']:
+            assert 'name' in svc
+            # url is optional for backend-only containers; when present, must be http(s)
+            if 'url' in svc:
+                assert svc['url'].startswith(('http://', 'https://')) or ':' in svc['url']
+
+def test_services_endpoint(client):
+    """/services exposes the raw catalog as the single source of truth"""
+    response = client.get('/services')
+    assert response.status_code == 200
+
+    data = json.loads(response.data)
+    assert 'host' in data
+    assert 'categories' in data
+    assert data['host']['displayName'] == '83RR PowerEdge'
 
 def test_404_handler(client):
     """Test 404 error handler"""
@@ -80,12 +114,12 @@ def test_404_handler(client):
     assert data['error'] == 'Endpoint not found'
     assert 'available_endpoints' in data
 
-    # Check that main endpoints are listed
     endpoints = data['available_endpoints']
     assert '/ping' in endpoints
     assert '/health' in endpoints
     assert '/weather' in endpoints
     assert '/profile' in endpoints
+    assert '/services' in endpoints
 
 def test_cors_headers(client):
     """Test CORS headers are present"""
@@ -101,28 +135,8 @@ def test_weather_endpoint_structure(client):
     for field in required_fields:
         assert field in data
 
-    # Temperature should be numeric
     assert isinstance(data['temperature'], (int, float))
     assert isinstance(data['humidity'], (int, float))
-
-def test_profile_services_structure(client):
-    """Test profile services have proper structure"""
-    response = client.get('/profile')
-    data = json.loads(response.data)
-
-    # Check public services structure
-    for service in data['services']['public']:
-        assert 'name' in service
-        assert 'url' in service
-        assert 'description' in service
-        assert service['url'].startswith('https://')
-
-    # Check infrastructure services structure
-    for service in data['services']['infrastructure']:
-        assert 'name' in service
-        assert 'url' in service
-        assert 'description' in service
-        assert service['url'].startswith('https://')
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

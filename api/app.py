@@ -3,9 +3,11 @@
 Personal Website Flask API Server
 Provides backend services for Mark Cheli's personal website
 """
+import json
 import os
 import requests
 from datetime import datetime
+from pathlib import Path
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -19,6 +21,13 @@ CORS(app)
 WEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY', 'demo-key')
 ASHLAND_LAT = 42.2612
 ASHLAND_LON = -71.4633
+
+# Service catalog — single source of truth shared with the frontend.
+# Symlinked from api/services.json -> ../services.json so pytest and Docker
+# both resolve it alongside app.py.
+CATALOG_PATH = Path(__file__).parent / 'services.json'
+with CATALOG_PATH.open() as f:
+    CATALOG = json.load(f)
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -95,45 +104,49 @@ def get_weather():
 
 @app.route('/profile', methods=['GET'])
 def get_profile():
-    """Get Mark Cheli's profile information"""
+    """Get Mark Cheli's profile and full homelab catalog.
+
+    Sourced from services.json — the same file the frontend terminal renders
+    its `services` command from, so the two surfaces can't drift.
+    """
+    profile = CATALOG['profile']
+    categories = CATALOG['categories']
+
+    # Flat lookup for consumers that just want the URLs
+    links = {
+        'linkedin': profile['linkedin'],
+        'github': profile['github']
+    }
+    for cat in categories:
+        for svc in cat['services']:
+            if 'url' in svc and svc['url'].startswith('http'):
+                # normalize name → snake_case for link key
+                key = svc['name'].replace('-', '_')
+                links.setdefault(key, svc['url'])
+    # Stable alias the terminal and older clients rely on
+    links['home_assistant'] = 'https://home.markcheli.com'
+
     return jsonify({
-        'name': 'Mark Cheli',
-        'title': 'Developer',
-        'location': 'Ashland, MA',
-        'links': {
-            'linkedin': 'https://www.linkedin.com/in/mark-cheli-0354a163/',
-            'github': 'https://github.com/MCheli',
-            'home_assistant': 'https://home.markcheli.com',
-            'jupyter': 'https://jupyter.ops.markcheli.com',
-            'portainer': 'https://portainer-local.ops.markcheli.com',
-            'traefik': 'https://traefik-local.ops.markcheli.com',
-            'logs': 'https://logs-local.ops.markcheli.com'
-        },
-        'services': {
-            'public': [
-                {'name': 'JupyterHub', 'url': 'https://jupyter.ops.markcheli.com', 'description': 'Data Science Environment'},
-                {'name': 'Home Assistant', 'url': 'https://home.markcheli.com', 'description': 'Smart Home Control'},
-                {'name': 'Personal Website', 'url': 'https://www.markcheli.com', 'description': 'Terminal Interface'}
-            ],
-            'infrastructure': [
-                {'name': 'Portainer', 'url': 'https://portainer-local.ops.markcheli.com', 'description': 'Container Management (LAN)'},
-                {'name': 'Traefik', 'url': 'https://traefik-local.ops.markcheli.com', 'description': 'Reverse Proxy Dashboard (LAN)'},
-                {'name': 'OpenSearch', 'url': 'https://logs-local.ops.markcheli.com', 'description': 'Log Analytics (LAN)'}
-            ],
-            'monitoring': [
-                {'name': 'Grafana', 'url': 'https://grafana-local.ops.markcheli.com', 'description': 'System Dashboards & Metrics (LAN)'},
-                {'name': 'Prometheus', 'url': 'https://prometheus-local.ops.markcheli.com', 'description': 'Metrics Database (LAN)'},
-                {'name': 'cAdvisor', 'url': 'https://cadvisor-local.ops.markcheli.com', 'description': 'Container Monitoring (LAN)'}
-            ]
-        },
+        'name': profile['name'],
+        'title': profile['title'],
+        'location': profile['location'],
+        'links': links,
+        'host': CATALOG['host'],
+        'categories': categories,
+        'service_count': sum(len(cat['services']) for cat in categories),
         'timestamp': datetime.utcnow().isoformat()
     })
+
+@app.route('/services', methods=['GET'])
+def get_services():
+    """Raw service catalog — the single source of truth."""
+    return jsonify(CATALOG)
 
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
         'error': 'Endpoint not found',
-        'available_endpoints': ['/ping', '/health', '/weather', '/profile'],
+        'available_endpoints': ['/ping', '/health', '/weather', '/profile', '/services'],
         'timestamp': datetime.utcnow().isoformat()
     }), 404
 
