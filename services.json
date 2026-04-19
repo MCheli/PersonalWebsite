@@ -46,6 +46,12 @@
           "repo": "https://github.com/MCheli/tallied"
         },
         {
+          "name": "tasks",
+          "url": "https://tasks.markcheli.com",
+          "description": "Cycle-based task manager (FastAPI + Vue 3)",
+          "repo": "https://github.com/MCheli/tasks"
+        },
+        {
           "name": "homelab-infra",
           "description": "Infrastructure-as-code for this entire stack",
           "repo": "https://github.com/MCheli/83rr-poweredge"
@@ -109,7 +115,8 @@
         { "name": "watchtower", "description": "Auto-deploys new ghcr.io/mcheli/* images (5m poll)" },
         { "name": "seafile-db", "description": "MariaDB 10.11 backend for Seafile" },
         { "name": "seafile-memcached", "description": "Cache layer for Seafile" },
-        { "name": "tallied-db", "description": "PostgreSQL 16 backend for Tallied (SSL required)" }
+        { "name": "tallied-db", "description": "PostgreSQL 16 backend for Tallied (SSL required)" },
+        { "name": "tasks-db", "description": "PostgreSQL 15 backend for the tasks app" }
       ]
     },
     {

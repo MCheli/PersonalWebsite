@@ -191,6 +191,7 @@ describe('useTerminal', () => {
       ['jupyter', 'https://data.markcheli.com'],
       ['minecraft', 'https://minecraft.markcheli.com'],
       ['tallied', 'https://money.markcheli.com'],
+      ['tasks', 'https://tasks.markcheli.com'],
       ['grafana', 'https://dashboard.ops.markcheli.com']
     ])('opens %s in a new tab', async (cmd, url) => {
       const result = await executeCommand(cmd)

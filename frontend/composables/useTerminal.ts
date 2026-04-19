@@ -132,6 +132,7 @@ export const useTerminal = () => {
     seafile: 'https://files.markcheli.com',
     minecraft: 'https://minecraft.markcheli.com',
     tallied: 'https://money.markcheli.com',
+    tasks: 'https://tasks.markcheli.com',
     grafana: 'https://dashboard.ops.markcheli.com'
   }
 
@@ -152,7 +153,7 @@ contact                 Contact information
 
 Open shortcuts:
   linkedin, github, cookbook, home, jupyter, plex, seafile,
-  minecraft, tallied, grafana
+  minecraft, tallied, tasks, grafana
 
 exit                    Exit terminal
 
