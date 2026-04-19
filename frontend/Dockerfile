@@ -1,21 +1,22 @@
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Build context is the repo root so services.json can be shared with the API.
+COPY frontend/package*.json ./
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+# --ignore-scripts skips the `nuxt prepare` postinstall which needs source files
+# that haven't been copied yet. `npm run build` runs prepare itself.
+RUN npm install --legacy-peer-deps --ignore-scripts
 
-# Copy source code
-COPY . .
+COPY frontend/ ./
+# Replace the dev symlink with the real catalog file
+COPY services.json ./services.json
 
-# Build the application
 RUN npm run build
 
 # Production image
-FROM node:18-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 

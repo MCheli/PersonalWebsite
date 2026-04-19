@@ -1,0 +1,136 @@
+{
+  "host": {
+    "name": "83rr-poweredge",
+    "displayName": "83RR PowerEdge",
+    "hardware": "Dell PowerEdge R630",
+    "os": "Ubuntu 24.04.3 LTS",
+    "kernel": "6.8.0-generic",
+    "cpu": "Intel Xeon (16 cores)",
+    "memory": "128GB DDR4",
+    "stack": "Docker + NGINX + Cloudflare"
+  },
+  "profile": {
+    "name": "Mark Cheli",
+    "title": "Developer",
+    "location": "Ashland, MA",
+    "linkedin": "https://www.linkedin.com/in/mark-cheli-0354a163/",
+    "github": "https://github.com/MCheli"
+  },
+  "categories": [
+    {
+      "id": "custom",
+      "title": "Custom Applications (built by me)",
+      "services": [
+        {
+          "name": "personal-website",
+          "url": "https://www.markcheli.com",
+          "description": "Nuxt.js terminal-style site (you are here)",
+          "repo": "https://github.com/MCheli/PersonalWebsite"
+        },
+        {
+          "name": "flask-api",
+          "url": "https://flask.markcheli.com",
+          "description": "Python Flask API — weather, profile data",
+          "repo": "https://github.com/MCheli/PersonalWebsite"
+        },
+        {
+          "name": "cookbook",
+          "url": "https://cookbook.markcheli.com",
+          "description": "Static recipe site & meal planner",
+          "repo": "https://github.com/MCheli/cookbook"
+        },
+        {
+          "name": "tallied",
+          "url": "https://money.markcheli.com",
+          "description": "Personal finance dashboard (Google SSO)",
+          "repo": "https://github.com/MCheli/tallied"
+        },
+        {
+          "name": "homelab-infra",
+          "description": "Infrastructure-as-code for this entire stack",
+          "repo": "https://github.com/MCheli/83rr-poweredge"
+        }
+      ]
+    },
+    {
+      "id": "self-hosted",
+      "title": "Self-Hosted Services (third-party, public)",
+      "services": [
+        { "name": "plex", "url": "https://videos.markcheli.com", "description": "Media streaming" },
+        { "name": "seafile", "url": "https://files.markcheli.com", "description": "File sync / share" },
+        { "name": "marimo", "url": "https://data.markcheli.com", "description": "Python notebooks" },
+        { "name": "home-assistant", "url": "https://home.markcheli.com", "description": "Smart home" },
+        { "name": "minecraft", "url": "minecraft.markcheli.com:25565", "description": "Paper (Java 21)" }
+      ]
+    },
+    {
+      "id": "observability",
+      "title": "Observability (LAN-only · *.ops.markcheli.com)",
+      "lanOnly": true,
+      "services": [
+        {
+          "name": "grafana",
+          "url": "https://dashboard.ops.markcheli.com",
+          "description": "5 dashboards — system, docker, nginx, containers"
+        },
+        {
+          "name": "prometheus",
+          "url": "https://prometheus.ops.markcheli.com",
+          "description": "Metrics DB · 30-day retention"
+        },
+        {
+          "name": "cadvisor",
+          "url": "https://cadvisor.ops.markcheli.com",
+          "description": "Per-container CPU/memory/IO metrics"
+        },
+        {
+          "name": "opensearch-dashboards",
+          "url": "https://logs.ops.markcheli.com",
+          "description": "Log search UI · daily index rotation"
+        },
+        {
+          "name": "opensearch",
+          "url": "https://opensearch.ops.markcheli.com",
+          "description": "Log storage + cluster API"
+        }
+      ]
+    },
+    {
+      "id": "infra",
+      "title": "Infrastructure Containers (behind the scenes)",
+      "services": [
+        {
+          "name": "nginx",
+          "description": "Reverse proxy + SSL (Cloudflare origin certs, Let's Encrypt wildcard for *.ops)"
+        },
+        { "name": "fluent-bit", "description": "Ships Docker + Plex + Seafile logs → OpenSearch" },
+        { "name": "node-exporter", "description": "Host metrics for Prometheus (CPU/mem/disk/net)" },
+        { "name": "nginx-exporter", "description": "NGINX connection & request metrics" },
+        { "name": "watchtower", "description": "Auto-deploys new ghcr.io/mcheli/* images (5m poll)" },
+        { "name": "seafile-db", "description": "MariaDB 10.11 backend for Seafile" },
+        { "name": "seafile-memcached", "description": "Cache layer for Seafile" },
+        { "name": "tallied-db", "description": "PostgreSQL 16 backend for Tallied (SSL required)" }
+      ]
+    },
+    {
+      "id": "voice-ai",
+      "title": "Voice AI (LAN-only, serves HeyClawy ESP32 devices)",
+      "lanOnly": true,
+      "services": [
+        { "name": "edge-tts", "description": "OpenAI-compatible TTS endpoint" },
+        { "name": "faster-whisper", "description": "Speech-to-text (Whisper small, int8)" }
+      ]
+    },
+    {
+      "id": "isolated",
+      "title": "Isolated Deployment",
+      "services": [
+        {
+          "name": "openclaw",
+          "url": "https://openclaw.ops.markcheli.com",
+          "description": "Dedicated proxy-only network, no Docker socket, caps dropped — security-hardened sandbox"
+        }
+      ]
+    }
+  ]
+}

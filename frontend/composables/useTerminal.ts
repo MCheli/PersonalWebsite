@@ -1,7 +1,139 @@
+import catalog from '~/services.json'
+
+type Service = {
+  name: string
+  url?: string
+  description?: string
+  repo?: string
+}
+
+type Category = {
+  id: string
+  title: string
+  lanOnly?: boolean
+  services: Service[]
+}
+
+type Catalog = {
+  host: {
+    name: string
+    displayName: string
+    hardware: string
+    os: string
+    kernel: string
+    cpu: string
+    memory: string
+    stack: string
+  }
+  profile: {
+    name: string
+    title: string
+    location: string
+    linkedin: string
+    github: string
+  }
+  categories: Category[]
+}
+
+const DIVIDER = '──────────────────────────────────────────────────────────────────────'
+
+const totalServices = (c: Catalog): number =>
+  c.categories.reduce((sum, cat) => sum + cat.services.length, 0)
+
+const renderServiceCatalog = (c: Catalog): string => {
+  const total = totalServices(c)
+  const rule = '═'.repeat(70)
+  const header = [
+    rule,
+    `  ${c.host.displayName} Homelab — Service Catalog`,
+    `  ${total} containers · ${c.host.hardware} · ${c.host.os.replace(/ LTS$/, '')} · ${c.host.stack}`,
+    rule,
+    ''
+  ].join('\n')
+
+  const sections = c.categories.map(cat => {
+    const lines: string[] = []
+    lines.push(`▶ ${cat.title}`)
+    lines.push(DIVIDER)
+
+    const hasRepos = cat.services.some(s => s.repo)
+    const hasUrls = cat.services.some(s => s.url)
+    // Dynamic column width: longest URL in this category + 2 spaces, min 35
+    const urlColWidth = Math.max(
+      35,
+      ...cat.services.map(s => (s.url?.length ?? 0) + 2)
+    )
+
+    for (const svc of cat.services) {
+      const name = svc.name.padEnd(22)
+
+      if (hasRepos) {
+        // Detailed vertical layout for categories with GitHub links
+        if (svc.url) {
+          lines.push(`  ${name}${svc.url}`)
+          if (svc.description) lines.push(`                        ${svc.description}`)
+          if (svc.repo) lines.push(`                        repo: ${svc.repo}`)
+        } else {
+          lines.push(`  ${name}${svc.description || ''}`)
+          if (svc.repo) lines.push(`                        repo: ${svc.repo}`)
+        }
+        lines.push('')
+      } else if (hasUrls) {
+        if (svc.url) {
+          const urlCol = svc.url.padEnd(urlColWidth)
+          lines.push(`  ${name}${urlCol}${svc.description || ''}`.trimEnd())
+        } else {
+          lines.push(`  ${name}${svc.description || ''}`)
+        }
+      } else {
+        lines.push(`  ${name}${svc.description || ''}`)
+      }
+    }
+    return lines.join('\n')
+  }).join('\n\n')
+
+  const counts = c.categories.map(cat => `${cat.services.length} ${cat.id}`).join(' · ')
+  const footer = [
+    '',
+    DIVIDER,
+    `Summary:  ${counts}  (${total} total)`,
+    'Delivery: GitHub Actions → ghcr.io → Watchtower rolling restarts',
+    'Security: Cloudflare (Full Strict) · LAN allowlist on *.ops · isolated nets',
+    '',
+    'Type a service name (plex, grafana, tallied…) to open it.',
+    "Tip: run 'github' to browse all my repos, 'contact' for links."
+  ].join('\n')
+
+  return header + sections + footer
+}
+
+const findService = (c: Catalog, name: string): Service | undefined => {
+  for (const cat of c.categories) {
+    const match = cat.services.find(s => s.name === name)
+    if (match) return match
+  }
+  return undefined
+}
+
 export const useTerminal = () => {
   const history = ref<string[]>([])
   const currentCommand = ref('')
   const historyIndex = ref(-1)
+
+  const data = catalog as Catalog
+
+  const shortcuts: Record<string, string> = {
+    linkedin: data.profile.linkedin,
+    github: data.profile.github,
+    cookbook: 'https://cookbook.markcheli.com',
+    home: 'https://home.markcheli.com',
+    jupyter: 'https://data.markcheli.com',
+    plex: 'https://videos.markcheli.com',
+    seafile: 'https://files.markcheli.com',
+    minecraft: 'https://minecraft.markcheli.com',
+    tallied: 'https://money.markcheli.com',
+    grafana: 'https://dashboard.ops.markcheli.com'
+  }
 
   const commands = {
     help: {
@@ -12,18 +144,16 @@ help                    Show this help message
 clear                   Clear terminal screen
 whoami                  Display user information
 ls                      List available services
-linkedin                Open LinkedIn profile
-github                  Open GitHub profile
 services                List all services and infrastructure
+neofetch                Display system information
 weather                 Check weather in Ashland, MA
-cookbook                Open recipe cookbook
-home                    Open Home Assistant
-jupyter                 Open JupyterHub
-plex                    Open Plex Media Server
-seafile                 Open Seafile file storage
-minecraft               Open Minecraft server status
 about                   About Mark Cheli
 contact                 Contact information
+
+Open shortcuts:
+  linkedin, github, cookbook, home, jupyter, plex, seafile,
+  minecraft, tallied, grafana
+
 exit                    Exit terminal
 
 Use 'help <command>' for more information about a specific command.`
@@ -53,13 +183,13 @@ Use 'help <command>' for more information about a specific command.`
 
      Development | Engineering | Strategy | Data Analysis | Operations
      ────────────────────────────────────────
-     OS: Ubuntu 24.04 LTS
-     Host: Dell PowerEdge R630
-     Kernel: 5.15.0-91-generic
-     CPU: Intel Xeon (16 cores)
-     Memory: 128GB DDR4
+     OS: ${data.host.os}
+     Host: ${data.host.hardware}
+     Kernel: ${data.host.kernel}
+     CPU: ${data.host.cpu}
+     Memory: ${data.host.memory}
      ────────────────────────────────────────
-     Services: 10/10 running
+     Services: ${totalServices(data)} containers running
      Status: Operational
      ────────────────────────────────────────`
     },
@@ -68,19 +198,19 @@ Use 'help <command>' for more information about a specific command.`
       description: 'Display current user information',
       action: () => `mark-cheli
 Developer | Software Engineer | Infrastructure Enthusiast
-Location: Ashland, MA
+Location: ${data.profile.location}
 Status: Building cool things`
     },
 
     ls: {
       description: 'List available services',
-      action: () => `total 6
-drwxr-xr-x  2 mark users  4096 Dec 13 12:00 public-services/
-drwxr-xr-x  2 mark users  4096 Dec 13 12:00 infrastructure/
--rw-r--r--  1 mark users   256 Dec 13 12:00 profile.json
--rw-r--r--  1 mark users   128 Dec 13 12:00 weather.api
--rw-r--r--  1 mark users   512 Dec 13 12:00 links.txt
--rw-r--r--  1 mark users    64 Dec 13 12:00 contact.info
+      action: () => `total ${data.categories.length + 3}
+drwxr-xr-x  2 mark users  4096 services/
+drwxr-xr-x  2 mark users  4096 infrastructure/
+-rw-r--r--  1 mark users   256 profile.json
+-rw-r--r--  1 mark users   128 weather.api
+-rw-r--r--  1 mark users   512 links.txt
+-rw-r--r--  1 mark users    64 contact.info
 
 Use 'services' to view all available services and infrastructure.`
     },
@@ -110,107 +240,74 @@ Background:
 
     contact: {
       description: 'Contact information',
-      action: () => `Contact Information:
-
-Professional:
-  LinkedIn: https://www.linkedin.com/in/mark-cheli-0354a163/
-  GitHub: https://github.com/MCheli
-
-Services:
-  Personal Website: https://www.markcheli.com
-  Cookbook: https://cookbook.markcheli.com
-  API Server: https://flask.markcheli.com
-  Development Environment: https://data.markcheli.com
-  Plex Media Server: https://videos.markcheli.com
-  Seafile File Storage: https://files.markcheli.com
-  Smart Home: https://home.markcheli.com
-  Minecraft Server: minecraft.markcheli.com:25565
-
-Infrastructure:
-  All services are self-hosted on my homelab infrastructure
-  Built with Docker, NGINX, and modern DevOps practices`
+      action: () => {
+        const lines: string[] = []
+        lines.push('Contact Information:')
+        lines.push('')
+        lines.push('Professional:')
+        lines.push(`  LinkedIn: ${data.profile.linkedin}`)
+        lines.push(`  GitHub:   ${data.profile.github}`)
+        lines.push('')
+        lines.push('Public Services:')
+        for (const cat of data.categories) {
+          if (cat.lanOnly) continue
+          for (const svc of cat.services) {
+            if (!svc.url) continue
+            const label = svc.name.padEnd(20)
+            lines.push(`  ${label}${svc.url}`)
+          }
+        }
+        lines.push('')
+        lines.push('Infrastructure:')
+        lines.push('  All services are self-hosted on my homelab infrastructure')
+        lines.push('  Built with Docker, NGINX, Cloudflare, and GitHub Actions')
+        return lines.join('\n')
+      }
     }
-  }
-
-  const actionCommands = {
-    linkedin: () => window.open('https://www.linkedin.com/in/mark-cheli-0354a163/', '_blank'),
-    github: () => window.open('https://github.com/MCheli', '_blank'),
-    cookbook: () => window.open('https://cookbook.markcheli.com', '_blank'),
-    home: () => window.open('https://home.markcheli.com', '_blank'),
-    jupyter: () => window.open('https://data.markcheli.com', '_blank'),
-    plex: () => window.open('https://videos.markcheli.com', '_blank'),
-    seafile: () => window.open('https://files.markcheli.com', '_blank'),
-    minecraft: () => window.open('https://minecraft.markcheli.com', '_blank'),
-  }
+  } as const
 
   const executeCommand = async (command: string): Promise<string> => {
     const cmd = command.toLowerCase().trim()
 
-    if (commands[cmd]) {
-      const result = commands[cmd].action()
-      return result
-    }
+    if (commands[cmd]) return commands[cmd].action()
 
-    if (actionCommands[cmd]) {
-      actionCommands[cmd]()
+    if (shortcuts[cmd]) {
+      window.open(shortcuts[cmd], '_blank')
       return `Opening ${cmd}...`
     }
 
-    if (cmd === 'services') {
-      return `Public Services (Internet accessible):
-
-https://www.markcheli.com       Interactive terminal website
-https://cookbook.markcheli.com  Recipe cookbook & meal planner
-https://flask.markcheli.com     Flask API server with weather data
-https://data.markcheli.com      JupyterHub data science environment
-https://videos.markcheli.com    Plex media streaming server
-https://files.markcheli.com     Seafile file sync & storage
-https://home.markcheli.com      Home Assistant smart home platform
-minecraft.markcheli.com:25565   Minecraft Java Edition server
-
-Internal Infrastructure (LAN-only):
-
-https://logs.ops.markcheli.com        OpenSearch Dashboards log aggregation
-https://opensearch.ops.markcheli.com  OpenSearch API and cluster management
-https://nas.ops.markcheli.com         NAS for backups and bulk file storage
-
-System Monitoring (LAN-only):
-
-https://dashboard.ops.markcheli.com   Grafana system dashboards & metrics
-https://prometheus.ops.markcheli.com  Prometheus metrics database
-https://cadvisor.ops.markcheli.com    cAdvisor container monitoring
-
-Type a service name to open it, or 'linkedin' to connect professionally.`
-    }
+    if (cmd === 'services') return renderServiceCatalog(data)
 
     if (cmd === 'weather') {
       try {
-        const data = await $fetch('/api/weather')
-        return `Weather in ${data.location}:
+        const weather = await $fetch('/api/weather')
+        return `Weather in ${weather.location}:
 
-Temperature: ${data.temperature}°F (feels like ${data.feels_like}°F)
-Conditions: ${data.description}
-Humidity: ${data.humidity}%
-Wind Speed: ${data.wind_speed} mph
+Temperature: ${weather.temperature}°F (feels like ${weather.feels_like}°F)
+Conditions: ${weather.description}
+Humidity: ${weather.humidity}%
+Wind Speed: ${weather.wind_speed} mph
 
-Data source: ${data.source}
-Last updated: ${new Date(data.timestamp).toLocaleString()}`
+Data source: ${weather.source}
+Last updated: ${new Date(weather.timestamp).toLocaleString()}`
       } catch (error) {
         return 'Error: Unable to fetch weather information'
       }
     }
 
-    if (cmd === 'exit') {
-      return 'Thanks for visiting! Feel free to explore my services.'
-    }
+    if (cmd === 'exit') return 'Thanks for visiting! Feel free to explore my services.'
 
-    // Check if it's a help command for specific command
     if (cmd.startsWith('help ')) {
       const helpCmd = cmd.substring(5)
-      if (commands[helpCmd]) {
-        return `${helpCmd}: ${commands[helpCmd].description}`
-      }
+      if (commands[helpCmd]) return `${helpCmd}: ${commands[helpCmd].description}`
       return `Unknown command: ${helpCmd}`
+    }
+
+    // Unknown command — check if it matches a catalog service name for a hint
+    const svc = findService(data, cmd)
+    if (svc && svc.url) {
+      window.open(svc.url.startsWith('http') ? svc.url : `https://${svc.url}`, '_blank')
+      return `Opening ${cmd}...`
     }
 
     return `Command not found: ${command}
@@ -240,7 +337,13 @@ Type 'help' to see available commands.`
   }
 
   const getCommandCompletions = (partial: string): string[] => {
-    const allCommands = [...Object.keys(commands), ...Object.keys(actionCommands), 'services', 'weather', 'exit']
+    const allCommands = [
+      ...Object.keys(commands),
+      ...Object.keys(shortcuts),
+      'services',
+      'weather',
+      'exit'
+    ]
     return allCommands.filter(cmd => cmd.startsWith(partial.toLowerCase()))
   }
 
@@ -250,20 +353,15 @@ Type 'help' to see available commands.`
 
     if (parts.length === 1) {
       const completions = getCommandCompletions(partial)
-      if (completions.length === 1) {
-        return completions[0]
-      } else if (completions.length > 1) {
-        // Return the longest common prefix
+      if (completions.length === 1) return completions[0]
+      if (completions.length > 1) {
         return completions.reduce((acc, cmd) => {
           let i = 0
-          while (i < acc.length && i < cmd.length && acc[i] === cmd[i]) {
-            i++
-          }
+          while (i < acc.length && i < cmd.length && acc[i] === cmd[i]) i++
           return acc.substring(0, i)
         })
       }
     }
-
     return input
   }
 
