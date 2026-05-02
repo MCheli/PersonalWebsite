@@ -70,6 +70,23 @@
       ]
     },
     {
+      "id": "personal-dashboards",
+      "title": "Personal Dashboards (LAN-only · *.ops.markcheli.com)",
+      "lanOnly": true,
+      "services": [
+        {
+          "name": "daily-report",
+          "url": "https://report.ops.markcheli.com",
+          "description": "Daily summary dashboard (calendar + tasks + AI digest)"
+        },
+        {
+          "name": "energy-monitor",
+          "url": "https://energy.ops.markcheli.com",
+          "description": "Home electrical panel monitor (panel-tool)"
+        }
+      ]
+    },
+    {
       "id": "observability",
       "title": "Observability (LAN-only · *.ops.markcheli.com)",
       "lanOnly": true,
@@ -115,8 +132,10 @@
         { "name": "watchtower", "description": "Auto-deploys new ghcr.io/mcheli/* images (5m poll)" },
         { "name": "seafile-db", "description": "MariaDB 10.11 backend for Seafile" },
         { "name": "seafile-memcached", "description": "Cache layer for Seafile" },
+        { "name": "tallied-scheduler", "description": "Background scheduler sidecar for Tallied (same image)" },
         { "name": "tallied-db", "description": "PostgreSQL 16 backend for Tallied (SSL required)" },
-        { "name": "tasks-db", "description": "PostgreSQL 15 backend for the tasks app" }
+        { "name": "tasks-db", "description": "PostgreSQL 16 backend for the tasks app" },
+        { "name": "energy-monitor-db", "description": "PostgreSQL 16 backend for the energy monitor" }
       ]
     },
     {
