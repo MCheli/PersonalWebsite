@@ -177,8 +177,12 @@ onMounted(async () => {
     inputElement.value?.focus()
   })
 
-  // Keep input focused when clicking anywhere on terminal
-  document.addEventListener('click', () => {
+  // Keep input focused when clicking anywhere on terminal — but don't steal
+  // focus mid-selection, otherwise the click that ends a drag-to-select clears
+  // the highlight before the user can copy.
+  document.addEventListener('mouseup', () => {
+    const selection = window.getSelection()
+    if (selection && selection.toString().length > 0) return
     inputElement.value?.focus()
   })
 
