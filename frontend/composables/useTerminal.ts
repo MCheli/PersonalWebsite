@@ -223,7 +223,7 @@ on Onshape, the SaaS-native CAD platform PTC acquired in 2019.
 Before Onshape I worked across PTC's IoT (ThingWorx), CAD (Creo),
 PLM (Windchill), and Academic Programs groups.
 
-Currently I'm part of Onshape's Product Operations & Strategy
+I'm the director of Onshape's Product Operations & Strategy
 team. Day to day that's a mix of product-led growth, internal
 AI adoption, product analytics, the operating cadence the org
 runs on, and shipping full-stack code on early-stage initiatives

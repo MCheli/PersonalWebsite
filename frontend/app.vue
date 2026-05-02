@@ -15,7 +15,7 @@
         Programs groups.
       </p>
       <p>
-        Currently I'm part of Onshape's Product Operations &amp; Strategy team. The
+        I'm the director of Onshape's Product Operations &amp; Strategy team. The
         work is a mix of product-led growth, internal AI adoption, product analytics,
         the operating cadence the org runs on, and full-stack code on early-stage
         product initiatives.
