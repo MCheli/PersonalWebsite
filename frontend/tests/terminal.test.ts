@@ -83,8 +83,9 @@ describe('useTerminal', () => {
     it('describes Mark Cheli', async () => {
       const result = await executeCommand('about')
       expect(result).toContain('Mark Cheli')
-      expect(result).toContain('Product Strategist & Engineering Leader')
-      expect(result).toContain('Professional Focus:')
+      expect(result).toContain('Onshape')
+      expect(result).toContain('PTC')
+      expect(result).toContain('Ashland')
     })
   })
 

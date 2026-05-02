@@ -218,25 +218,20 @@ Use 'services' to view all available services and infrastructure.`
 
     about: {
       description: 'About Mark Cheli',
-      action: () => `Mark Cheli - Product Strategist & Engineering Leader
+      action: () => `I'm Mark Cheli. I live in ${data.profile.location} and work at PTC
+on Onshape, the SaaS-native CAD platform PTC acquired in 2019.
+Before Onshape I worked across PTC's IoT (ThingWorx), CAD (Creo),
+PLM (Windchill), and Academic Programs groups.
 
-A developer-turned-product strategist with a passion for the cross-functional
-journey of bringing innovative products to market. I thrive at the intersection
-of engineering and business strategy, leading initiatives that bridge technical
-and go-to-market teams.
+Currently I'm part of Onshape's Product Operations & Strategy
+team. Day to day that's a mix of product-led growth, internal
+AI adoption, product analytics, the operating cadence the org
+runs on, and shipping full-stack code on early-stage initiatives
+where speed beats handoff.
 
-Professional Focus:
-• Product-led growth strategies for technical products
-• Cross-functional team leadership (R&D, PM, UX, Sales, Marketing)
-• Viral product adoption and user engagement
-• MCAD and EdTech product development
-• Engineering management and team scaling
-
-Background:
-• Experience with PTC's product ecosystem (Onshape, Creo, Windchill, ThingWorx)
-• Full-stack development
-• Self-hosted infrastructure enthusiast
-`
+This site runs on a Dell PowerEdge R630 in my basement. Type
+'services' for the catalog of what's on it, 'github' for code,
+'linkedin' to connect.`
     },
 
     contact: {

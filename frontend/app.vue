@@ -7,35 +7,31 @@
       hidden via CSS so it doesn't disrupt the terminal UI.
     -->
     <section class="seo-content" aria-label="Site overview for search engines and assistants">
-      <h1>{{ catalog.profile.name }} — {{ catalog.profile.title }}</h1>
+      <h1>{{ catalog.profile.name }}</h1>
       <p>
-        {{ catalog.profile.name }} is a developer and product strategist based in
-        {{ catalog.profile.location }}. This site is an interactive terminal that
-        showcases personal projects and a self-hosted homelab running
-        {{ totalServices }} Docker containers on a {{ catalog.host.hardware }}
-        ({{ catalog.host.os }}, {{ catalog.host.cpu }}, {{ catalog.host.memory }}).
+        I'm Mark Cheli. I live in {{ catalog.profile.location }} and work at PTC on
+        Onshape, the SaaS-native CAD platform PTC acquired in 2019. Before Onshape I
+        worked across PTC's IoT (ThingWorx), CAD (Creo), PLM (Windchill), and Academic
+        Programs groups.
+      </p>
+      <p>
+        Currently I'm part of Onshape's Product Operations &amp; Strategy team. The
+        work is a mix of product-led growth, internal AI adoption, product analytics,
+        the operating cadence the org runs on, and full-stack code on early-stage
+        product initiatives.
       </p>
 
-      <h2>About</h2>
-      <p>
-        Developer-turned-product strategist focused on bringing technical products to
-        market. Background spans full-stack engineering, cross-functional team leadership
-        (R&amp;D, PM, UX, Sales, Marketing), product-led growth, and self-hosted
-        infrastructure. Past work has touched PTC's product ecosystem including
-        Onshape, Creo, Windchill, and ThingWorx.
-      </p>
-
-      <h2>Contact &amp; Profiles</h2>
+      <h2>Elsewhere</h2>
       <ul>
         <li>LinkedIn: <a :href="catalog.profile.linkedin">{{ catalog.profile.linkedin }}</a></li>
         <li>GitHub: <a :href="catalog.profile.github">{{ catalog.profile.github }}</a></li>
-        <li>Location: {{ catalog.profile.location }}</li>
       </ul>
 
-      <h2>Homelab Service Catalog</h2>
+      <h2>Homelab</h2>
       <p>
-        {{ totalServices }} containers across {{ catalog.categories.length }} categories,
-        delivered via GitHub Actions to ghcr.io with Watchtower rolling restarts. NGINX +
+        This site is served from a Dell PowerEdge R630 in my basement, running
+        {{ totalServices }} Docker containers across {{ catalog.categories.length }}
+        categories. Delivery is GitHub Actions → ghcr.io → Watchtower; NGINX +
         Cloudflare (Full Strict) terminate TLS; *.ops.markcheli.com is LAN-only.
       </p>
 
@@ -55,17 +51,17 @@
         </ul>
       </section>
 
-      <h2>Infrastructure</h2>
+      <h2>Host</h2>
       <dl>
-        <dt>Host</dt><dd>{{ catalog.host.displayName }} — {{ catalog.host.hardware }}</dd>
+        <dt>Hardware</dt><dd>{{ catalog.host.hardware }}</dd>
         <dt>OS / Kernel</dt><dd>{{ catalog.host.os }} ({{ catalog.host.kernel }})</dd>
         <dt>CPU / Memory</dt><dd>{{ catalog.host.cpu }} · {{ catalog.host.memory }}</dd>
         <dt>Stack</dt><dd>{{ catalog.host.stack }}</dd>
       </dl>
 
       <p>
-        This site itself (<a href="https://www.markcheli.com">markcheli.com</a>) is a Nuxt
-        SSR app backed by a Flask API; both run as containers on the same homelab. Source:
+        This site itself is a Nuxt SSR app backed by a Flask API; both run as
+        containers on the same machine. Source:
         <a href="https://github.com/MCheli/PersonalWebsite">github.com/MCheli/PersonalWebsite</a>.
       </p>
     </section>
