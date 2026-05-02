@@ -276,7 +276,7 @@ This site runs on a Dell PowerEdge R630 in my basement. Type
 
     if (cmd === 'weather') {
       try {
-        const weather = await $fetch('/api/weather')
+        const weather = await $fetch('https://flask.markcheli.com/weather')
         return `Weather in ${weather.location}:
 
 Temperature: ${weather.temperature}°F (feels like ${weather.feels_like}°F)
