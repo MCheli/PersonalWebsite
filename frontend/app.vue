@@ -1,6 +1,75 @@
 <template>
   <div class="terminal-container">
 
+    <!--
+      SEO / AI-readable content. Rendered server-side so search engines and
+      LLM crawlers without a JS runtime can read the full catalog. Visually
+      hidden via CSS so it doesn't disrupt the terminal UI.
+    -->
+    <section class="seo-content" aria-label="Site overview for search engines and assistants">
+      <h1>{{ catalog.profile.name }} — {{ catalog.profile.title }}</h1>
+      <p>
+        {{ catalog.profile.name }} is a developer and product strategist based in
+        {{ catalog.profile.location }}. This site is an interactive terminal that
+        showcases personal projects and a self-hosted homelab running
+        {{ totalServices }} Docker containers on a {{ catalog.host.hardware }}
+        ({{ catalog.host.os }}, {{ catalog.host.cpu }}, {{ catalog.host.memory }}).
+      </p>
+
+      <h2>About</h2>
+      <p>
+        Developer-turned-product strategist focused on bringing technical products to
+        market. Background spans full-stack engineering, cross-functional team leadership
+        (R&amp;D, PM, UX, Sales, Marketing), product-led growth, and self-hosted
+        infrastructure. Past work has touched PTC's product ecosystem including
+        Onshape, Creo, Windchill, and ThingWorx.
+      </p>
+
+      <h2>Contact &amp; Profiles</h2>
+      <ul>
+        <li>LinkedIn: <a :href="catalog.profile.linkedin">{{ catalog.profile.linkedin }}</a></li>
+        <li>GitHub: <a :href="catalog.profile.github">{{ catalog.profile.github }}</a></li>
+        <li>Location: {{ catalog.profile.location }}</li>
+      </ul>
+
+      <h2>Homelab Service Catalog</h2>
+      <p>
+        {{ totalServices }} containers across {{ catalog.categories.length }} categories,
+        delivered via GitHub Actions to ghcr.io with Watchtower rolling restarts. NGINX +
+        Cloudflare (Full Strict) terminate TLS; *.ops.markcheli.com is LAN-only.
+      </p>
+
+      <section v-for="cat in catalog.categories" :key="cat.id" :aria-label="cat.title">
+        <h3>{{ cat.title }}</h3>
+        <ul>
+          <li v-for="svc in cat.services" :key="svc.name">
+            <strong>{{ svc.name }}</strong>
+            <template v-if="svc.url">
+              — <a :href="svc.url">{{ svc.url }}</a>
+            </template>
+            <template v-if="svc.description"> — {{ svc.description }}</template>
+            <template v-if="svc.repo">
+              (repo: <a :href="svc.repo">{{ svc.repo }}</a>)
+            </template>
+          </li>
+        </ul>
+      </section>
+
+      <h2>Infrastructure</h2>
+      <dl>
+        <dt>Host</dt><dd>{{ catalog.host.displayName }} — {{ catalog.host.hardware }}</dd>
+        <dt>OS / Kernel</dt><dd>{{ catalog.host.os }} ({{ catalog.host.kernel }})</dd>
+        <dt>CPU / Memory</dt><dd>{{ catalog.host.cpu }} · {{ catalog.host.memory }}</dd>
+        <dt>Stack</dt><dd>{{ catalog.host.stack }}</dd>
+      </dl>
+
+      <p>
+        This site itself (<a href="https://www.markcheli.com">markcheli.com</a>) is a Nuxt
+        SSR app backed by a Flask API; both run as containers on the same homelab. Source:
+        <a href="https://github.com/MCheli/PersonalWebsite">github.com/MCheli/PersonalWebsite</a>.
+      </p>
+    </section>
+
     <div class="terminal-content">
       <!-- Welcome message -->
       <div class="terminal-output">
@@ -56,8 +125,14 @@
 </template>
 
 <script setup>
+import catalog from '~/services.json'
+
 const { executeCommand, addToHistory, navigateHistory, currentCommand, getTabCompletion } = useTerminal()
 const route = useRoute()
+
+const totalServices = computed(() =>
+  catalog.categories.reduce((sum, cat) => sum + cat.services.length, 0)
+)
 
 const terminalHistory = ref([])
 const currentInput = ref('')
@@ -231,6 +306,19 @@ watch(currentCommand, (newValue) => {
 </script>
 
 <style scoped>
+/* SSR'd content for crawlers and assistive tech: in DOM, off-screen visually. */
+.seo-content {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .clear-marker {
   display: none;
 }
