@@ -192,6 +192,7 @@ describe('useTerminal', () => {
       ['jupyter', 'https://data.markcheli.com'],
       ['minecraft', 'https://minecraft.markcheli.com'],
       ['tallied', 'https://money.markcheli.com'],
+      ['tallied-demo', 'https://money-demo.markcheli.com'],
       ['tasks', 'https://tasks.markcheli.com'],
       ['grafana', 'https://dashboard.ops.markcheli.com']
     ])('opens %s in a new tab', async (cmd, url) => {

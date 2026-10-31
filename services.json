@@ -46,6 +46,12 @@
           "repo": "https://github.com/MCheli/tallied"
         },
         {
+          "name": "tallied-demo",
+          "url": "https://money-demo.markcheli.com",
+          "description": "Live demo of Tallied: a made-up household, read-only",
+          "repo": "https://github.com/MCheli/tallied"
+        },
+        {
           "name": "tasks",
           "url": "https://tasks.markcheli.com",
           "description": "Cycle-based task manager (FastAPI + Vue 3)",
