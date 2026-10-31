@@ -138,5 +138,21 @@ def test_weather_endpoint_structure(client):
     assert isinstance(data['temperature'], (int, float))
     assert isinstance(data['humidity'], (int, float))
 
+def test_weather_error_does_not_leak_api_key(client, monkeypatch):
+    """Upstream errors must not echo the request URL, which contains the appid"""
+    import app as app_module
+    import requests
+
+    def fail(*args, **kwargs):
+        raise requests.ConnectionError(
+            'Max retries exceeded with url: /data/2.5/weather?appid=secret-key-123'
+        )
+
+    monkeypatch.setattr(app_module, 'WEATHER_API_KEY', 'secret-key-123')
+    monkeypatch.setattr(app_module.requests, 'get', fail)
+    response = client.get('/weather')
+    assert response.status_code == 503
+    assert b'secret-key-123' not in response.data
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
