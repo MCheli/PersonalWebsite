@@ -134,6 +134,7 @@ export const useTerminal = () => {
     tallied: 'https://money.markcheli.com',
     'tallied-demo': 'https://money-demo.markcheli.com',
     tasks: 'https://tasks.markcheli.com',
+    'tasks-demo': 'https://tasks-demo.markcheli.com',
     grafana: 'https://dashboard.ops.markcheli.com'
   }
 
@@ -154,7 +155,7 @@ contact                 Contact information
 
 Open shortcuts:
   linkedin, github, cookbook, home, jupyter, plex, seafile,
-  minecraft, tallied, tallied-demo, tasks, grafana
+  minecraft, tallied, tallied-demo, tasks, tasks-demo, grafana
 
 exit                    Exit terminal
 

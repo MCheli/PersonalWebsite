@@ -194,6 +194,7 @@ describe('useTerminal', () => {
       ['tallied', 'https://money.markcheli.com'],
       ['tallied-demo', 'https://money-demo.markcheli.com'],
       ['tasks', 'https://tasks.markcheli.com'],
+      ['tasks-demo', 'https://tasks-demo.markcheli.com'],
       ['grafana', 'https://dashboard.ops.markcheli.com']
     ])('opens %s in a new tab', async (cmd, url) => {
       const result = await executeCommand(cmd)
