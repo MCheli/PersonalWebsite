@@ -100,7 +100,7 @@ const renderServiceCatalog = (c: Catalog): string => {
     'Delivery: GitHub Actions → ghcr.io → Watchtower rolling restarts',
     'Security: Cloudflare (Full Strict) · LAN allowlist on *.ops · isolated nets',
     '',
-    'Type a service name (plex, grafana, tallied…) to open it.',
+    'Type a service name (plex, grafana, tallied-demo…) to open it.',
     "Tip: run 'github' to browse all my repos, 'contact' for links."
   ].join('\n')
 
@@ -132,6 +132,7 @@ export const useTerminal = () => {
     seafile: 'https://files.markcheli.com',
     minecraft: 'https://minecraft.markcheli.com',
     tallied: 'https://money.markcheli.com',
+    'tallied-demo': 'https://money-demo.markcheli.com',
     tasks: 'https://tasks.markcheli.com',
     grafana: 'https://dashboard.ops.markcheli.com'
   }
@@ -153,7 +154,7 @@ contact                 Contact information
 
 Open shortcuts:
   linkedin, github, cookbook, home, jupyter, plex, seafile,
-  minecraft, tallied, tasks, grafana
+  minecraft, tallied, tallied-demo, tasks, grafana
 
 exit                    Exit terminal
 
