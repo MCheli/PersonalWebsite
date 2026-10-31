@@ -58,6 +58,12 @@
           "repo": "https://github.com/MCheli/tasks"
         },
         {
+          "name": "tasks-demo",
+          "url": "https://tasks-demo.markcheli.com",
+          "description": "Live demo of Tasks: a made-up person's task lists, read-only",
+          "repo": "https://github.com/MCheli/tasks"
+        },
+        {
           "name": "homelab-infra",
           "description": "Infrastructure-as-code for this entire stack",
           "repo": "https://github.com/MCheli/83rr-poweredge"
