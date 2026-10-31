@@ -224,9 +224,11 @@ const formatOutputWithClickableUrls = (text) => {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 
   // Replace URLs with clickable links
-  return escapedText.replace(urlRegex, '<a href="$1" target="_blank" class="terminal-link">$1</a>')
+  return escapedText.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" class="terminal-link">$1</a>')
 }
 
 const handleInput = () => {
