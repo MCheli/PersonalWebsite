@@ -89,16 +89,18 @@ def get_weather():
                 'note': 'Set OPENWEATHER_API_KEY environment variable for live data'
             })
 
-    except requests.RequestException as e:
+    except requests.RequestException:
+        # Log details server-side only: a RequestException's message includes the
+        # upstream URL, which carries the OpenWeatherMap appid in its query string.
+        app.logger.exception('Weather upstream request failed')
         return jsonify({
             'error': 'Weather service unavailable',
-            'message': str(e),
             'timestamp': datetime.utcnow().isoformat()
         }), 503
-    except Exception as e:
+    except Exception:
+        app.logger.exception('Weather endpoint failed')
         return jsonify({
             'error': 'Internal server error',
-            'message': str(e),
             'timestamp': datetime.utcnow().isoformat()
         }), 500
 
