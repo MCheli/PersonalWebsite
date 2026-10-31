@@ -71,6 +71,17 @@ export default defineNuxtConfig({
       ]
     }
   },
+  routeRules: {
+    '/**': {
+      headers: {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Content-Security-Policy': "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
+      }
+    }
+  },
   nitro: {
     devProxy: {
       '/api': {
