@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Mark Cheli's Personal Website - Terminal Interface",
   "private": true,
+  "engines": {
+    "node": ">=22.23.4 <23 || >=24.22.1 <25 || >=26.12.1"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",

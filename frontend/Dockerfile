@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:22.23.4-alpine3.24 AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY services.json ./services.json
 RUN npm run build
 
 # Production image
-FROM node:22-alpine AS runner
+FROM node:22.23.4-alpine3.24 AS runner
 
 WORKDIR /app
 
