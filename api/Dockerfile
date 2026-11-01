@@ -2,10 +2,11 @@ FROM python:3.11.18-slim-bookworm
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Install system dependencies. `upgrade` takes Debian security fixes newer than the base tag.
+RUN apt-get update && apt-get upgrade -y && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Build context is the repo root so services.json can be shared with the frontend.
+# requirements.txt is the pinned lockfile (compiled from requirements.in).
 COPY api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
