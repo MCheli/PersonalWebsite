@@ -7,7 +7,8 @@ COPY frontend/package*.json ./
 
 # --ignore-scripts skips the `nuxt prepare` postinstall which needs source files
 # that haven't been copied yet. `npm run build` runs prepare itself.
-RUN npm install --legacy-peer-deps --ignore-scripts
+# `npm ci` installs exactly package-lock.json, so a rebuild never pulls new library versions.
+RUN npm ci --legacy-peer-deps --ignore-scripts
 
 COPY frontend/ ./
 # Replace the dev symlink with the real catalog file
@@ -20,8 +21,9 @@ FROM node:22.23.4-alpine3.24 AS runner
 
 WORKDIR /app
 
-# Install curl and create non-root user
-RUN apk add --no-cache curl && \
+# Take Alpine security fixes newer than the base tag, install curl and create non-root user
+RUN apk upgrade --no-cache && \
+    apk add --no-cache curl && \
     addgroup -g 1001 -S nodejs && \
     adduser -S nuxtjs -u 1001
 
