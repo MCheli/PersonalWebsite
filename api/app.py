@@ -5,6 +5,7 @@ Provides backend services for Mark Cheli's personal website
 """
 import json
 import os
+import re
 import requests
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,15 @@ CORS(app)
 WEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY', 'demo-key')
 ASHLAND_LAT = 42.2612
 ASHLAND_LON = -71.4633
+APPID_PATTERN = re.compile(r'(appid=)[^&\s\'"]+', re.IGNORECASE)
+
+
+def redact_api_key(text):
+    """Strip the OpenWeatherMap key from text bound for the logs."""
+    text = APPID_PATTERN.sub(r'\1REDACTED', text)
+    if WEATHER_API_KEY and WEATHER_API_KEY != 'demo-key':
+        text = text.replace(WEATHER_API_KEY, 'REDACTED')
+    return text
 
 # Service catalog — single source of truth shared with the frontend.
 # Symlinked from api/services.json -> ../services.json so pytest and Docker
@@ -89,16 +99,19 @@ def get_weather():
                 'note': 'Set OPENWEATHER_API_KEY environment variable for live data'
             })
 
-    except requests.RequestException:
-        # Log details server-side only: a RequestException's message includes the
-        # upstream URL, which carries the OpenWeatherMap appid in its query string.
-        app.logger.exception('Weather upstream request failed')
+    except requests.RequestException as e:
+        # A RequestException's message (and so its traceback) includes the upstream
+        # URL, which carries the appid. Logs ship to OpenSearch, so log only the
+        # exception type and a redacted message, never the raw traceback.
+        app.logger.error('Weather upstream request failed: %s: %s',
+                         type(e).__name__, redact_api_key(str(e)))
         return jsonify({
             'error': 'Weather service unavailable',
             'timestamp': datetime.utcnow().isoformat()
         }), 503
-    except Exception:
-        app.logger.exception('Weather endpoint failed')
+    except Exception as e:
+        app.logger.error('Weather endpoint failed: %s: %s',
+                         type(e).__name__, redact_api_key(str(e)))
         return jsonify({
             'error': 'Internal server error',
             'timestamp': datetime.utcnow().isoformat()
