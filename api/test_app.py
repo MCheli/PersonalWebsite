@@ -154,5 +154,34 @@ def test_weather_error_does_not_leak_api_key(client, monkeypatch):
     assert response.status_code == 503
     assert b'secret-key-123' not in response.data
 
+def test_weather_error_does_not_log_api_key(client, monkeypatch, caplog):
+    """Upstream errors must not write the appid to the logs, which ship to OpenSearch"""
+    import logging
+    import app as app_module
+    import requests
+
+    key = 'fake-key-abc123'
+
+    def fail(*args, **kwargs):
+        raise requests.ConnectionError(
+            "HTTPSConnectionPool(host='api.openweathermap.org', port=443): "
+            f'Max retries exceeded with url: /data/2.5/weather?lat=42.2612&appid={key}&units=imperial'
+        )
+
+    monkeypatch.setattr(app_module, 'WEATHER_API_KEY', key)
+    monkeypatch.setattr(app_module.requests, 'get', fail)
+    with caplog.at_level(logging.DEBUG):
+        response = client.get('/weather')
+
+    assert response.status_code == 503
+    assert key.encode() not in response.data
+    assert caplog.records, 'expected the failure to be logged'
+    assert key not in caplog.text
+    for record in caplog.records:
+        assert key not in record.getMessage()
+        assert record.exc_info is None
+    assert 'ConnectionError' in caplog.text
+    assert 'appid=REDACTED' in caplog.text
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
