@@ -21,9 +21,13 @@ FROM node:22.23.4-alpine3.24 AS runner
 
 WORKDIR /app
 
-# Take Alpine security fixes newer than the base tag, install curl and create non-root user
+# Take Alpine security fixes newer than the base tag and create a non-root user.
+# The runtime only needs `node`: strip npm, npx, corepack and yarn (and their bundled deps).
+# No curl: the healthcheck uses busybox wget.
 RUN apk upgrade --no-cache && \
-    apk add --no-cache curl && \
+    rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+           /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+           /usr/local/bin/yarn /usr/local/bin/yarnpkg /opt/yarn-* /root/.npm && \
     addgroup -g 1001 -S nodejs && \
     adduser -S nuxtjs -u 1001
 
@@ -45,6 +49,6 @@ ENV HOST=0.0.0.0
 ENV NODE_ENV=production
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3000/ || exit 1
+    CMD wget -q --spider http://127.0.0.1:3000/ || exit 1
 
 CMD ["node", ".output/server/index.mjs"]
