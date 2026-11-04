@@ -94,6 +94,22 @@ jobs:
           no-cache: ${{ github.event_name == 'schedule' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          load: ${{ github.event_name == 'pull_request' }}
+
+      - name: Smoke test the image (healthy, slim)
+        if: github.event_name == 'pull_request'
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          IMAGE=$(echo "$TAGS" | head -n1)
+          docker run -d --name smoke "$IMAGE"
+          for _ in $(seq 1 45); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' smoke)" = healthy ] && break; sleep 2
+          done
+          docker logs smoke
+          [ "$(docker inspect -f '{{.State.Health.Status}}' smoke)" = healthy ]
+          docker run --rm --entrypoint sh "$IMAGE" -c '! command -v curl && ! command -v npm && ! command -v npx && ! command -v corepack'
+          docker image inspect -f 'image size: {{.Size}} bytes' "$IMAGE"
 
   build-api:
     needs: test
@@ -136,3 +152,20 @@ jobs:
           no-cache: ${{ github.event_name == 'schedule' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          load: ${{ github.event_name == 'pull_request' }}
+
+      - name: Smoke test the image (healthy, slim)
+        if: github.event_name == 'pull_request'
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          IMAGE=$(echo "$TAGS" | head -n1)
+          docker run -d --name smoke "$IMAGE"
+          for _ in $(seq 1 45); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' smoke)" = healthy ] && break; sleep 2
+          done
+          docker logs smoke
+          [ "$(docker inspect -f '{{.State.Health.Status}}' smoke)" = healthy ]
+          docker run --rm --entrypoint sh "$IMAGE" -c '! command -v curl'
+          docker run --rm --entrypoint python "$IMAGE" -c "import setuptools; print('setuptools', setuptools.__version__)"
+          docker image inspect -f 'image size: {{.Size}} bytes' "$IMAGE"
