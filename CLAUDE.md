@@ -14,7 +14,7 @@ Nuxt 3 SSR terminal on `/` (plus `/resume` and `/projects` as readable pages) an
 ## Rules
 
 - Everything about Mark comes from `content/`. Never hard-code a name, title, URL, count or date in a Vue file, a Python file, a meta tag or a script. One fact, one place.
-- **Voice.** Anything written about Mark or his work (`content/*.json`, page copy, meta descriptions, the OG image) is plain, first-person and understated, in his own register: responsibilities, not scope verbs ("steer", "own", "drive", "lead the transformation"); no "executive"; no project-by-project list that makes the job look small; no five-noun tagline, no skills inventory. The test is a coworker reading it and thinking "yes, that's his job". Mark rejected the inflated version on 2026-11-05. `docs/PRODUCT.md`, "Positioning", is the rule; read it before touching `content/`.
+- **Voice.** Anything written about Mark or his work (`content/*.json`, page copy, meta descriptions, the OG image) is first-person, in his own register, with some craft and never self-absorbed. Two failure modes Mark rejected on 2026-11-05: inflation (scope verbs like "steer", "own", "drive", "lead the transformation"; "executive"; a project named as if it were the job) and blandness ("I'm the director of X. The team handles A, B, C and a few D"). Describe the job by what it is for; categories, not inventories of responsibilities or skills. The builder comes through: software, and welding, 3D printing, old trucks, CAD. The test is a coworker reading it and thinking "yes, that's him", not "he thinks he runs the company" and not "a bot wrote this". `docs/PRODUCT.md`, "Positioning", is the rule; read it before touching `content/`.
 - Nothing on the site may read as job-seeking. Mark is not looking and his manager reads it. No "open to", "available", "hire me". `frontend/tests/registry.test.ts` greps every command's output for it.
 - A requirement is done only with evidence: a test on the real code path and, for anything visible, a capture from `make tour`. Update `docs/requirements/ledger.yaml` in the same commit as the work.
 - Nothing fake. No invented system facts ("Last login", "Status: Operational", fake `ls` sizes) and no success message for something that did not happen (`message` prints "Sent" only on a 2xx from the API).
@@ -77,7 +77,7 @@ docs/                        PRODUCT.md · ARCHITECTURE.md · CONTRIBUTING-FEATU
 
 ## History
 
-The site was rebuilt on 2026-11-05 from a review of the old terminal (stale catalog, no resume, "Developer" as the title, unreadable on a phone). `docs/REVIEW-2026-11-05.md` has what was wrong, what shipped (section 6) and what is left for Mark (section 7).
+The site was rebuilt on 2026-11-05 from a review of the old terminal (stale catalog, no resume, "Developer" as the title, unreadable on a phone); the resume took three passes before the voice was right. `docs/REVIEW-2026-11-05.md` has what was wrong, what shipped (section 6) and what is left for Mark (section 7).
 
 ## Local-checkout gotcha
 
