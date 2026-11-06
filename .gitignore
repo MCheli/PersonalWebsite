@@ -36,3 +36,9 @@ Thumbs.db
 
 # Screenshot tour scratch (committed captures live in artifacts/screens/)
 artifacts/tmp/
+
+# Ruff
+.ruff_cache/
+
+# Playwright browsers downloaded locally (CI installs its own)
+frontend/.playwright/
