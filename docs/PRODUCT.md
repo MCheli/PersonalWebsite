@@ -4,7 +4,7 @@ Source of truth for scope. If the code and this file disagree, this file wins un
 
 ## Purpose
 
-markcheli.com is Mark Cheli's personal site. It has one job: **when someone who could hire, work with, or build with Mark lands here, they leave knowing who he is, what he has built, and how to reach him — in under a minute, on a phone.** The terminal is the personality of the site, not its purpose. Nothing the site needs to say may be reachable only by typing.
+markcheli.com is Mark Cheli's personal site. It has one job: **when someone who could work with, build with, or one day hire Mark lands here, they leave knowing who he is, what he has built, and how to reach him — in under a minute, on a phone.** It must do that job without ever reading as a job search: Mark is not looking, and the people he works with read it too. The terminal is the personality of the site, not its purpose. Nothing the site needs to say may be reachable only by typing.
 
 Audiences, in priority order:
 
@@ -30,7 +30,7 @@ Every fact on the site comes from `content/`. Nothing about Mark is hard-coded i
 | `content/resume.json` | [JSON Resume](https://jsonresume.org/schema) v1: basics, work, education, skills, certificates, interests | `resume` command · `/resume` page · `public/Mark-Cheli-Resume.pdf` · API `/resume` · JSON-LD Person · `<title>`/description |
 | `content/projects.json` | Portfolio projects: slug, name, tagline, description, highlights, stack, repo, url, demo, status, started, featured | `projects` command · `/projects` page · API `/projects` · SSR content |
 | `content/services.json` | Homelab catalog: host, profile links, categories of services with container names | `homelab` command (alias `services`) · `neofetch` · `contact` · API `/services`, `/profile` · SSR content |
-| `content/now.json` | What Mark is doing now; optional `openTo` line | `now` command · SSR content |
+| `content/now.json` | What Mark is doing now | `now` command · SSR content |
 
 Rules:
 
@@ -115,7 +115,7 @@ The PDF is generated from this page by `make resume-pdf` (Playwright, print medi
 
 ## Decisions awaiting Mark
 
-- **D1 — "Open to" line.** `now.json` has an empty `openTo` field. Filling it ("Open to director-level product operations / strategy roles in the Boston area or remote") makes the job search explicit to anyone who visits, including colleagues. Rendered only when non-empty. Mark decides whether and when.
+- **D1 — resolved 2026-11-05.** Mark is not job hunting and his manager may read the site. Nothing on the site may suggest he is open to roles, available, or looking — no "open to" line, no "hire me" wording. The job the site does is the same either way: say who he is, show the work, make him easy to reach.
 - **D2 — Headshot.** The site has no photo. Hiring managers expect one on a resume page; it also makes the OG image much better. Add `frontend/public/headshot.jpg` (a square, at least 800px) and set `basics.image` in `resume.json` to `/headshot.jpg`; the resume page and OG image pick it up. Mark has headshots in Seafile `My Library/Headshots/`.
 - **D3 — Resume highlights.** The current-role highlights in `resume.json` were written from Mark's own notes, not from a resume he has reviewed. He should read them once, cut what he wouldn't say in an interview, and add the two or three numbers he can stand behind.
 - **D4 — Domain for the API.** The site calls `https://flask.markcheli.com` directly from the browser. An `/api/*` route on `www.markcheli.com` in the homelab nginx would let the frontend use a relative URL and tighten CSP `connect-src` to `'self'`. Not blocking; a homelab change, not a site change.

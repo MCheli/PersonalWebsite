@@ -140,7 +140,7 @@ requirements:
     area: terminal
     priority: p2
     done_means:
-      - "`now` prints the items from content/now.json with its updated date; the openTo line is printed only when non-empty (test both)."
+      - "`now` prints the items from content/now.json with its updated date. Nothing in it or anywhere on the site reads as job-seeking (a test greps all command output for 'open to', 'hire me', 'looking for')."
     status: todo
     evidence: []
     notes: []

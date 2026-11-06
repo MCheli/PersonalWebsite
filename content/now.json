@@ -1,7 +1,6 @@
 {
-  "$comment": "What Mark is up to right now (nownownow.com style). Rendered by the `now` command and the /now section of the SSR content. `openTo` is rendered only when non-empty — see docs/PRODUCT.md decision D1 before filling it in. Update `updated` whenever the list changes.",
+  "$comment": "What Mark is up to right now (nownownow.com style). Rendered by the `now` command and the SSR content. Update `updated` whenever the list changes. Never add anything here that reads as job-seeking: this site must not suggest Mark is open to roles.",
   "updated": "2026-11-05",
-  "openTo": "",
   "items": [
     "Running Onshape's Product Operations & Strategy team at PTC through FY27 planning and the Schneider Electric acquisition announced in October 2026.",
     "Rolling out AI developer tooling across Onshape R&D: agentic-harness guidelines, MCP servers over the data warehouse, and the governance to go with them.",
