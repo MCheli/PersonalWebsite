@@ -2,7 +2,8 @@
 /**
  * Print /resume to frontend/public/Mark-Cheli-Resume.pdf with Playwright (print media,
  * Letter, 0.5in margins) and write the sidecar Mark-Cheli-Resume.pdf.json:
- *   { "generatedFrom": <resume.json meta.lastModified>, "generatedAt": <ISO timestamp> }
+ *   { "generatedFrom": <resume.json meta.lastModified>, "generatedAt": <ISO timestamp>,
+ *     "resumeSha256": <sha256 of content/resume.json bytes> }
  * scripts/check_resume_pdf.py (make check-resume-pdf, CI) fails when resume.json is newer
  * than generatedFrom. Commit the PDF and the sidecar together.
  *
@@ -12,6 +13,7 @@
  *
  * Fails clearly when /resume does not exist (404) so a PDF of the wrong page is never written.
  */
+import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { contentDir, frontendDir, launchBrowser, readJson, repoRoot, resolveBase, sleep } from './lib/browser.mjs'
@@ -64,7 +66,8 @@ try {
     margin: { top: '0.5in', right: '0.5in', bottom: '0.5in', left: '0.5in' },
     displayHeaderFooter: false,
   })
-  fs.writeFileSync(SIDECAR, JSON.stringify({ generatedFrom: lastModified, generatedAt: new Date().toISOString() }, null, 2) + '\n')
+  const resumeSha256 = crypto.createHash('sha256').update(fs.readFileSync(path.join(contentDir, 'resume.json'))).digest('hex')
+  fs.writeFileSync(SIDECAR, JSON.stringify({ generatedFrom: lastModified, generatedAt: new Date().toISOString(), resumeSha256 }, null, 2) + '\n')
   const size = fs.statSync(OUT).size
   console.log(`resume-pdf: wrote ${path.relative(repoRoot, OUT)} (${FORMAT}, ${(size / 1024).toFixed(0)} kB) from resume.json ${lastModified}; sidecar ${path.basename(SIDECAR)}`)
 } catch (e) {

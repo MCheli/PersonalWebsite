@@ -179,31 +179,31 @@ def get_weather():
 
 @app.route("/profile", methods=["GET"])
 def get_profile():
-    """Identity plus the full homelab catalog, from services.json.
+    """Identity (from resume.json) plus the full homelab catalog (from services.json).
 
-    The same file the terminal renders its `homelab` command from, so the two
-    surfaces can't drift. `links` is a flat name -> url lookup for consumers that
-    just want the URLs.
+    The same files the terminal renders from, so the surfaces can't drift. `links`
+    is a flat name -> url lookup for consumers that just want the URLs.
     """
-    profile = CATALOG["profile"]
+    basics = RESUME["basics"]
+    current = RESUME["work"][0] if RESUME.get("work") else {}
     categories = CATALOG["categories"]
 
-    links = {"linkedin": profile["linkedin"], "github": profile["github"]}
+    links = {p["network"].lower(): p["url"] for p in basics.get("profiles", [])}
     for cat in categories:
         for svc in cat["services"]:
             if "url" in svc and svc["url"].startswith("http"):
                 links.setdefault(svc["name"].replace("-", "_"), svc["url"])
-    # Stable alias the terminal and older clients rely on
-    links["home_assistant"] = "https://home.markcheli.com"
 
     return jsonify(
         {
-            "name": profile["name"],
-            "title": profile["title"],
-            "company": profile.get("company"),
-            "location": profile["location"],
-            "email": profile.get("email"),
-            "website": profile.get("website"),
+            "name": basics["name"],
+            "title": current.get("position", basics.get("label")),
+            "company": current.get("name"),
+            "location": ", ".join(
+                v for v in (basics.get("location", {}).get("city"), basics.get("location", {}).get("region")) if v
+            ),
+            "email": basics.get("email"),
+            "website": basics.get("url"),
             "links": links,
             "host": CATALOG["host"],
             "categories": categories,

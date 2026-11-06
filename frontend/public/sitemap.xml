@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Pages plus one ?cmd= entry per command the registry marks deepLink: true.
-     tests/sitemap.test.ts fails if this list and commands/registry.ts disagree. -->
+     tests/seo.test.ts fails if this list and commands/registry.ts disagree. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.markcheli.com/</loc>

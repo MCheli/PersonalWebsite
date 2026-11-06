@@ -6,7 +6,7 @@
     "label": "Director, Product Operations & Strategy · Onshape (PTC)",
     "email": "mpcheli7@gmail.com",
     "url": "https://www.markcheli.com",
-    "summary": "I run Product Operations & Strategy for Onshape, PTC's cloud CAD platform: the team that works out what the product org should do next, keeps it on track, and tells it how it went. I've been at PTC since I was an intern, through education and training products and now Onshape. Underneath the title I'm a builder. I write software because I like making things, and when I'm not doing that I'm welding, 3D printing, or keeping three old trucks on the road. This site runs on a server in my basement, next to the apps I've built for myself.",
+    "summary": "I run Product Operations & Strategy for Onshape, the cloud-native CAD platform that is PTC's fastest-growing business. The team makes sure the people deciding what the product does next have what they need to decide well: the analysis, the strategy work, the information moving through the org. Then it keeps the plan honest. AI is a big part of the job and of how I work. At Onshape I run the tooling, guidelines and budget for Claude and the other AI tools across the whole company, not just R&D, and I spend a lot of my own time building with agents. I came up through PTC as a software engineer, intern to director across a lot of different roles and organizations, and I still write code for whatever needs it, product features included. That's the common thread: I build things. Software mostly, but also welding, 3D printing, and three old trucks. This site runs on a server in my basement, next to the apps I've built for myself.",
     "location": {
       "city": "Ashland",
       "region": "MA",
@@ -32,11 +32,12 @@
       "position": "Director, Product Operations & Strategy",
       "url": "https://www.onshape.com",
       "startDate": "2022-01",
-      "summary": "Product Operations & Strategy is the connective tissue of the Onshape product org: the planning cycle, the analytics that say whether the plan is working, the programs that cut across every team, and the internal products the org runs on. I'm responsible for the team, and often enough for the first version of whatever it needs.",
+      "summary": "Product Operations & Strategy supports the people who decide what Onshape does next: the strategy and analysis behind the decisions, the planning cycle that turns them into work, the analytics that say how it's going, and the programs that cut across every team. I'm responsible for the team and for a good share of its output.",
       "highlights": [
-        "Strategy and planning for the product org, and the analytics that keep it honest.",
-        "The cross-cutting programs: AI development tooling for R&D, localization, legal and terms of use, and the internal products the org depends on, as their product manager.",
-        "Engineering when it helps. I came up through PTC's engineering and product teams over thirteen years, intern to director, and I still build and ship internal software.",
+        "AI at Onshape: how the organization adopts it. The tooling, guidelines, governance and budget for Claude and other AI tools across the company, and what it changes about how software gets built.",
+        "Strategy and analysis for product decisions, the planning cycle, and the product analytics and data warehouse behind both.",
+        "The programs that cut across every team, localization and legal among them, and product management for the tools the org runs on.",
+        "Software engineering when something needs building, product features and the tooling around them alike. Thirteen years at PTC from intern to director, across engineering, product and operations roles.",
         "2022: interim head of business operations for the Onshape business unit."
       ]
     },
@@ -144,12 +145,12 @@
       "name": "Product and strategy",
       "keywords": [
         "Product operations",
+        "Strategy and analysis",
         "Planning",
         "Product analytics",
         "Product management",
         "Localization",
-        "Legal and terms of use",
-        "AI tooling"
+        "Legal and terms of use"
       ]
     },
     {
@@ -176,12 +177,14 @@
       ]
     },
     {
-      "name": "AI tooling",
+      "name": "AI",
       "keywords": [
-        "Claude Code",
+        "AI adoption and governance",
+        "Claude and Claude Code",
         "GitHub Copilot",
         "MCP servers",
-        "Agentic coding setups"
+        "Agentic coding setups",
+        "AI tooling budgets"
       ]
     }
   ],

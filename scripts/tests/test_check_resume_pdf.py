@@ -45,3 +45,23 @@ def test_malformed_sidecar_fails(tmp_path):
     resume, pdf, side = setup(tmp_path)
     side.write_text(json.dumps({"generatedAt": "x"}))
     assert "malformed" in crp.check(resume, pdf, side)
+
+
+def test_changed_content_same_date_fails(tmp_path):
+    """A same-day edit must still invalidate the PDF (hash, not date, is the real check)."""
+    import hashlib
+
+    resume, pdf, side = setup(tmp_path)
+    side.write_text(
+        json.dumps(
+            {
+                "generatedFrom": "2026-11-05",
+                "generatedAt": "2026-11-05T00:00:00Z",
+                "resumeSha256": hashlib.sha256(resume.read_bytes()).hexdigest(),
+            }
+        )
+    )
+    assert crp.check(resume, pdf, side) is None
+    resume.write_text(json.dumps({"meta": {"lastModified": "2026-11-05"}, "basics": {"x": 1}}))
+    problem = crp.check(resume, pdf, side)
+    assert problem and "content hash changed" in problem

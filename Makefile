@@ -31,7 +31,7 @@ dev:  ## Run the API (:5000) and the Nuxt dev server (:3000) together
 dev-api:  ## Flask API on :5000 (reads api/.env)
 	cd api && FLASK_ENV=development ../$(PY) app.py
 
-dev-frontend:  ## Nuxt dev server on :3000 (proxies /api to :5000)
+dev-frontend:  ## Nuxt dev server on :3000 (set NUXT_PUBLIC_API_BASE=http://localhost:5000 for the API)
 	$(NPM) run dev
 
 # ---------------------------------------------------------------------------------------

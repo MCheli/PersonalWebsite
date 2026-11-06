@@ -1,5 +1,5 @@
 {
-  "$comment": "Homelab service catalog. Single source of truth for the terminal's `homelab` command, the SSR crawler content, and the Flask /services + /profile endpoints. `name` must match the container_name in MCheli/83rr-poweredge docker-compose.yml unless `containers` lists the real container names or `external` is true (runs on other hardware, proxied by the R630). scripts/check_catalog.py diffs this file against the compose file.",
+  "$comment": "Homelab service catalog. Single source of truth for the terminal's `homelab` command, the SSR crawler content, and the Flask /services endpoint (identity comes from resume.json). `name` must match the container_name in MCheli/83rr-poweredge docker-compose.yml unless `containers` lists the real container names or `external` is true (runs on other hardware, proxied by the R630). scripts/check_catalog.py diffs this file against the compose file.",
   "updated": "2026-11-05",
   "host": {
     "name": "83rr-poweredge",
@@ -11,16 +11,6 @@
     "memory": "128GB DDR4",
     "stack": "Docker Compose + NGINX + Cloudflare",
     "repo": "https://github.com/MCheli/83rr-poweredge"
-  },
-  "profile": {
-    "name": "Mark Cheli",
-    "title": "Director, Product Operations & Strategy",
-    "company": "Onshape (PTC)",
-    "location": "Ashland, MA",
-    "email": "mpcheli7@gmail.com",
-    "website": "https://www.markcheli.com",
-    "linkedin": "https://www.linkedin.com/in/mark-cheli-0354a163/",
-    "github": "https://github.com/MCheli"
   },
   "categories": [
     {

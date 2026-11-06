@@ -4,39 +4,62 @@
   "title": "Homelab service catalog (content/services.json)",
   "type": "object",
   "additionalProperties": false,
-  "required": ["updated", "host", "profile", "categories"],
+  "required": [
+    "updated",
+    "host",
+    "categories"
+  ],
   "properties": {
-    "$comment": { "type": "string" },
-    "updated": { "$ref": "#/definitions/isoDate" },
+    "$comment": {
+      "type": "string"
+    },
+    "updated": {
+      "$ref": "#/definitions/isoDate"
+    },
     "host": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "displayName", "hardware", "os", "stack", "repo"],
+      "required": [
+        "name",
+        "displayName",
+        "hardware",
+        "os",
+        "stack",
+        "repo"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "displayName": { "type": "string", "minLength": 1 },
-        "hardware": { "type": "string", "minLength": 1 },
-        "os": { "type": "string", "minLength": 1 },
-        "kernel": { "type": "string" },
-        "cpu": { "type": "string" },
-        "memory": { "type": "string" },
-        "stack": { "type": "string", "minLength": 1 },
-        "repo": { "$ref": "#/definitions/httpsUrl" }
-      }
-    },
-    "profile": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["name", "title", "company", "location", "email", "website", "linkedin", "github"],
-      "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "title": { "type": "string", "minLength": 1 },
-        "company": { "type": "string", "minLength": 1 },
-        "location": { "type": "string", "minLength": 1 },
-        "email": { "type": "string", "format": "email", "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" },
-        "website": { "$ref": "#/definitions/httpsUrl" },
-        "linkedin": { "$ref": "#/definitions/httpsUrl" },
-        "github": { "$ref": "#/definitions/httpsUrl" }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hardware": {
+          "type": "string",
+          "minLength": 1
+        },
+        "os": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kernel": {
+          "type": "string"
+        },
+        "cpu": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "stack": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repo": {
+          "$ref": "#/definitions/httpsUrl"
+        }
       }
     },
     "categories": {
@@ -45,27 +68,50 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "title", "services"],
+        "required": [
+          "id",
+          "title",
+          "services"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-          "title": { "type": "string", "minLength": 1 },
-          "lanOnly": { "type": "boolean" },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lanOnly": {
+            "type": "boolean"
+          },
           "services": {
             "type": "array",
             "minItems": 1,
-            "items": { "$ref": "#/definitions/service" }
+            "items": {
+              "$ref": "#/definitions/service"
+            }
           }
         }
       }
     }
   },
   "definitions": {
-    "isoDate": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
-    "httpsUrl": { "type": "string", "pattern": "^https://" },
+    "isoDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "pattern": "^https://"
+    },
     "service": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -77,14 +123,27 @@
           "description": "https URL, or host:port for non-HTTP services (e.g. Minecraft).",
           "pattern": "^(https?://|[a-z0-9.-]+:[0-9]+$)"
         },
-        "description": { "type": "string", "minLength": 1 },
-        "repo": { "$ref": "#/definitions/httpsUrl" },
-        "lanOnly": { "type": "boolean" },
-        "external": { "type": "boolean", "description": "Runs on other hardware, proxied by the R630; skipped by the compose diff." },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repo": {
+          "$ref": "#/definitions/httpsUrl"
+        },
+        "lanOnly": {
+          "type": "boolean"
+        },
+        "external": {
+          "type": "boolean",
+          "description": "Runs on other hardware, proxied by the R630; skipped by the compose diff."
+        },
         "containers": {
           "type": "array",
           "description": "Real container names when they differ from `name`; empty when the entry is not a container.",
-          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_.-]*$" }
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_.-]*$"
+          }
         },
         "compose": {
           "type": "string",
