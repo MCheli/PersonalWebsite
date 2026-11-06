@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Pages plus one ?cmd= entry per command the registry marks deepLink: true.
+     tests/sitemap.test.ts fails if this list and commands/registry.ts disagree. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.markcheli.com/</loc>
@@ -6,14 +8,44 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://www.markcheli.com/resume</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.markcheli.com/projects</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.markcheli.com/?cmd=help</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.markcheli.com/?cmd=about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.markcheli.com/?cmd=services</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.markcheli.com/?cmd=resume</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.markcheli.com/?cmd=projects</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.markcheli.com/?cmd=homelab</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.markcheli.com/?cmd=now</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.markcheli.com/?cmd=contact</loc>
@@ -23,11 +55,6 @@
   <url>
     <loc>https://www.markcheli.com/?cmd=neofetch</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.markcheli.com/?cmd=help</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.4</priority>
   </url>
 </urlset>
