@@ -3,10 +3,10 @@
   "$comment": "JSON Resume (jsonresume.org) format. Single source of truth for the `resume` command, the /resume page, the printable PDF and the Flask /resume endpoint. Keep it factual: no phone, no street address. Edit this file, run `make resume-pdf`, commit both.",
   "basics": {
     "name": "Mark Cheli",
-    "label": "Director, Product Operations & Strategy · Onshape (PTC)",
+    "label": "Director, Product Operations & Strategy — Onshape at PTC",
     "email": "mpcheli7@gmail.com",
     "url": "https://www.markcheli.com",
-    "summary": "Product and operations leader who still ships code. I run Onshape's Product Operations & Strategy team at PTC: product-led growth, product analytics and the data warehouse, internal AI adoption, localization operations, and the planning cadence the R&D org runs on. Thirteen years at PTC from intern to director, with stops leading engineering teams of 35+ and a 40-person training-products organization. At home I run a 40-container homelab and build the apps on it.",
+    "summary": "I steer how Onshape's R&D organization plans, measures and builds: the operating cadence, the adoption of AI across product development, the analytics leadership plans against, and the strategy work that sets direction. I am a builder by nature who now spends most days steering the organization — and I still prototype the answer before asking for it. Thirteen years at PTC from intern to director, including engineering teams of 35+ and a 40-person training-products organization. At home: a 40-container homelab and the apps that run on it.",
     "location": {
       "city": "Ashland",
       "region": "MA",
@@ -32,15 +32,14 @@
       "position": "Director, Product Operations & Strategy",
       "url": "https://www.onshape.com",
       "startDate": "2022-01",
-      "summary": "Lead the product-operations and analytics function for Onshape, PTC's SaaS-native CAD platform. Scope spans product-led growth, product analytics and the data warehouse, internal AI adoption, localization operations, the org's planning and review cadence, and hands-on full-stack development on early-stage initiatives.",
+      "summary": "Run the team that decides how Onshape's R&D organization plans, measures and builds. I own the operating cadence (annual epic planning, reviews, tech-debt planning), lead the move to AI-assisted software development, and own the product analytics that leadership and go-to-market plan against. Hands-on where it is faster: I write the first version of internal tools myself.",
       "highlights": [
-        "Own the product analytics platform: AWS Redshift warehouse, dbt models, Prefect orchestration, Streamlit dashboards and Looker — the data the product, GTM and leadership teams plan against.",
-        "Drive internal AI adoption across R&D: agentic-harness guidelines for GitHub Copilot, evaluation of Claude via LiteLLM over AWS Bedrock for 1,000+ users, custom MCP servers for the warehouse and data dictionary, and a proposed budget and governance model for AI developer tools.",
-        "Run the product-led growth program: the PLG discovery program and its epics, onboarding and in-app messaging work, signup analytics, and the API rate-limit and quota policy tied to plan tiers.",
-        "Run localization operations for an 11-locale product: translation-management vendor selection and renegotiation, XLIFF/TBX pipelines, and a ~1,300-term glossary.",
-        "Ship production code when speed beats handoff: internal Flask services connecting Onshape to Salesforce, billing and the warehouse; a Python admin library; internal product and admin portals.",
-        "Served as interim Director of Business Operations for the Onshape business unit (Jun–Sep 2022): lead routing, CPQ and executive dashboards.",
-        "Hire and manage a small product-ops/analytics team plus developers and interns; own FY planning epics and tech-debt planning for the group."
+        "Leading Onshape's move to AI-assisted development: the agentic-harness guidelines engineers follow, the evaluation of Claude over AWS Bedrock for 1,000+ users, MCP servers that put the data warehouse and data dictionary in front of every agent, and the governance and budget model for AI tooling across PTC.",
+        "Own the R&D operating cadence — annual epic planning, planning reviews, tech-debt planning — and the strategy work around it: the product-led growth discovery program, the financial case for Onshape Government, and the API quota and rate-limit policy tied to plan tiers.",
+        "Built and run the product analytics platform the organization plans against (AWS Redshift, dbt, Prefect, Streamlit, Looker), from signup funnels to API usage.",
+        "Run localization operations for an 11-locale product: translation-management vendor selection and renegotiation, the XLIFF/TBX pipeline, a 1,300-term glossary.",
+        "Still ship production code: internal Flask services connecting Onshape to Salesforce, billing and the warehouse; a Python admin library; the internal product and admin portals.",
+        "Interim Director of Business Operations for the Onshape business unit in 2022 (lead routing, CPQ, executive dashboards). Hire and manage a product-ops/analytics team, developers and interns."
       ]
     },
     {
@@ -144,65 +143,45 @@
   ],
   "skills": [
     {
-      "name": "Product & operations leadership",
+      "name": "Steering an R&D organization",
       "keywords": [
-        "Product operations",
+        "Operating cadence & annual planning",
         "Product strategy",
-        "Product-led growth",
-        "Annual planning & operating cadence",
-        "Hiring & management",
-        "Localization operations"
+        "AI adoption across the SDLC",
+        "Localization operations",
+        "Hiring & management"
       ]
     },
     {
-      "name": "Data & analytics",
+      "name": "Data",
       "keywords": [
         "SQL",
         "AWS Redshift",
         "dbt",
         "Prefect",
         "Streamlit",
-        "Looker / LookML",
-        "pandas",
-        "Plotly",
-        "Product analytics"
+        "Looker"
       ]
     },
     {
-      "name": "AI adoption & tooling",
+      "name": "Building",
       "keywords": [
-        "Agentic coding harnesses",
-        "GitHub Copilot",
-        "Claude / Claude Code",
-        "MCP servers",
-        "LiteLLM on AWS Bedrock",
-        "AI governance & budgets"
-      ]
-    },
-    {
-      "name": "Software engineering",
-      "keywords": [
-        "Python",
-        "Flask",
-        "FastAPI",
-        "TypeScript",
-        "Vue 3",
-        "Nuxt",
-        "Node.js",
+        "Python (Flask, FastAPI)",
+        "TypeScript (Vue, Nuxt)",
         "PostgreSQL",
         "Docker",
         "GitHub Actions",
-        "NGINX",
         "Linux"
       ]
     },
     {
-      "name": "Hardware & home automation",
+      "name": "AI tooling",
       "keywords": [
-        "Home Assistant",
-        "ESP32 / ESPHome",
-        "3D printing",
-        "Electron desktop apps"
+        "Agentic coding harnesses",
+        "MCP servers",
+        "Claude Code",
+        "GitHub Copilot",
+        "LiteLLM on AWS Bedrock"
       ]
     }
   ],

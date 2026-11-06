@@ -17,9 +17,11 @@ Non-goals: a blog (there is nothing to publish yet), analytics, comments, a cont
 
 ## Positioning
 
-Mark is **a product and operations leader who still ships code**. Director of Product Operations & Strategy for Onshape at PTC (since 2022; thirteen years at PTC from intern to director; led engineering teams of 35+ and a 40-person training-products org on the way). Owns product analytics and the data warehouse, product-led growth, internal AI adoption, localization ops and the R&D planning cadence. At home: a 40-container homelab and a shelf of self-built apps.
+Mark is **a builder who steers an R&D organization**. Director of Product Operations & Strategy for Onshape at PTC (since 2022; thirteen years at PTC from intern to director; led engineering teams of 35+ and a 40-person training-products org on the way). He sets how the org plans, measures and builds — the operating cadence, AI adoption across the software development lifecycle, the analytics leadership plans against, the strategy work that sets direction — and still prototypes the answer himself. At home: a 40-container homelab and a shelf of self-built apps.
 
-The site must say that in the first screen, in those words or plainer ones. Not "Developer". Not "Infrastructure Enthusiast". Not a tagline that lists five nouns.
+Words to avoid: "Developer" or "Software Engineer" as the headline (true, but it undersells what he does); "executive" (true in substance, not a word he uses about himself); any tagline that lists five nouns; anything that reads as a skills inventory. Lead with what he steers, then the evidence that he builds.
+
+The site must say that in the first screen, in those words or plainer ones.
 
 ## Content model: three JSON files and a small fourth
 
@@ -116,7 +118,7 @@ The PDF is generated from this page by `make resume-pdf` (Playwright, print medi
 ## Decisions awaiting Mark
 
 - **D1 — resolved 2026-11-05.** Mark is not job hunting and his manager may read the site. Nothing on the site may suggest he is open to roles, available, or looking — no "open to" line, no "hire me" wording. The job the site does is the same either way: say who he is, show the work, make him easy to reach.
-- **D2 — Headshot.** The site has no photo. Hiring managers expect one on a resume page; it also makes the OG image much better. Add `frontend/public/headshot.jpg` (a square, at least 800px) and set `basics.image` in `resume.json` to `/headshot.jpg`; the resume page and OG image pick it up. Mark has headshots in Seafile `My Library/Headshots/`.
-- **D3 — Resume highlights.** The current-role highlights in `resume.json` were written from Mark's own notes, not from a resume he has reviewed. He should read them once, cut what he wouldn't say in an interview, and add the two or three numbers he can stand behind.
-- **D4 — Domain for the API.** The site calls `https://flask.markcheli.com` directly from the browser. An `/api/*` route on `www.markcheli.com` in the homelab nginx would let the frontend use a relative URL and tighten CSP `connect-src` to `'self'`. Not blocking; a homelab change, not a site change.
-- **D5 — Old projects.** `projects.json` lists only repos that are public and have a README that explains them. Seven (AR, 2020), os-releases, transfer and tycootdw are not listed. Add them when there is something to show.
+- **D2 — resolved 2026-11-05.** Mark: experiment with a photo (his GitHub/LinkedIn avatar) but it probably won't suit the terminal theme. Wired so that `basics.image` in `resume.json` pointing at `frontend/public/headshot.jpg` shows on /resume and in the OG image; shipped without one unless the experiment looks right.
+- **D3 — resolved 2026-11-05 (first pass).** Mark reviewed the first draft and asked for a rewrite centred on AI adoption, the SDLC and strategy — "a builder who steers the organization" — rather than a skills inventory. Done; he will iterate on `content/resume.json` directly. Numbers he can stand behind are still his to add.
+- **D4 — resolved 2026-11-05.** Mark approved changes to `83rr-poweredge`: route `www.markcheli.com/api/*` → `flask-api` so the site can call a relative URL, and add whatever else the site needs there (a contact endpoint that pushes to ntfy, for one). Tracked in the homelab repo's PR.
+- **D5 — resolved 2026-11-05.** The eleven listed projects and the four featured ones (Tallied, RigReady, homelab, Tasks) are right. Seven, os-releases, transfer, tycootdw and HeyClawy stay off until they are public with a README.
