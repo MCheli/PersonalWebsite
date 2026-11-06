@@ -6,7 +6,7 @@
     "label": "Director, Product Operations & Strategy · Onshape (PTC)",
     "email": "mpcheli7@gmail.com",
     "url": "https://www.markcheli.com",
-    "summary": "I steer how Onshape's R&D organization plans, measures and builds: the operating cadence, the adoption of AI across product development, the analytics leadership plans against, and the strategy work that sets direction. I am a builder by nature who now spends most days steering the organization — and I still prototype the answer before asking for it. Thirteen years at PTC from intern to director, including engineering teams of 35+ and a 40-person training-products organization. At home: a 40-container homelab and the apps that run on it.",
+    "summary": "I'm the director of Onshape's Product Operations & Strategy team at PTC. The team handles the planning and review cycle for the product org, product analytics, the rollout of AI tools across R&D, localization, and a few internal tools. I came up through engineering and still write code when it's the fastest way to get something done. Outside work I run a homelab and build small apps on it.",
     "location": {
       "city": "Ashland",
       "region": "MA",
@@ -32,14 +32,14 @@
       "position": "Director, Product Operations & Strategy",
       "url": "https://www.onshape.com",
       "startDate": "2022-01",
-      "summary": "Run the team that decides how Onshape's R&D organization plans, measures and builds. I own the operating cadence (annual epic planning, reviews, tech-debt planning), lead the move to AI-assisted software development, and own the product analytics that leadership and go-to-market plan against. Hands-on where it is faster: I write the first version of internal tools myself.",
+      "summary": "Director of a small product operations team inside Onshape, PTC's cloud CAD product. The team's job is to keep the product org planned, measured and equipped: the planning cycle, product analytics, AI tooling for engineering, localization, and internal tools.",
       "highlights": [
-        "Leading Onshape's move to AI-assisted development: the agentic-harness guidelines engineers follow, the evaluation of Claude over AWS Bedrock for 1,000+ users, MCP servers that put the data warehouse and data dictionary in front of every agent, and the governance and budget model for AI tooling across PTC.",
-        "Own the R&D operating cadence — annual epic planning, planning reviews, tech-debt planning — and the strategy work around it: the product-led growth discovery program, the financial case for Onshape Government, and the API quota and rate-limit policy tied to plan tiers.",
-        "Built and run the product analytics platform the organization plans against (AWS Redshift, dbt, Prefect, Streamlit, Looker), from signup funnels to API usage.",
-        "Run localization operations for an 11-locale product: translation-management vendor selection and renegotiation, the XLIFF/TBX pipeline, a 1,300-term glossary.",
-        "Still ship production code: internal Flask services connecting Onshape to Salesforce, billing and the warehouse; a Python admin library; the internal product and admin portals.",
-        "Interim Director of Business Operations for the Onshape business unit in 2022 (lead routing, CPQ, executive dashboards). Hire and manage a product-ops/analytics team, developers and interns."
+        "Planning: the product org's annual planning and ongoing review cycle.",
+        "Analytics: product analytics and the data warehouse that product and go-to-market teams work from.",
+        "AI adoption: the rollout of AI development tools across R&D, and the guidelines and governance that go with it.",
+        "Localization: localization operations for the product.",
+        "Hands-on: internal tools and integrations, built in-house when that's the fastest route.",
+        "2022: interim head of business operations for the Onshape business unit."
       ]
     },
     {
@@ -48,7 +48,7 @@
       "position": "Director, Education Product",
       "startDate": "2021-02",
       "endDate": "2022-01",
-      "summary": "Led product for PTC's Education organization: services, support, partnerships, community and marketing for the academic programs that put Onshape, Creo and ThingWorx into schools and universities.",
+      "summary": "Product for PTC's Education group: services, support, partnerships, community and marketing for the academic programs around Onshape, Creo and ThingWorx.",
       "highlights": []
     },
     {
@@ -57,7 +57,7 @@
       "position": "Senior Manager, Education Experience",
       "startDate": "2020-01",
       "endDate": "2021-02",
-      "summary": "Owned the end-to-end experience for PTC's education customers after the Onshape acquisition.",
+      "summary": "The education customer experience after PTC acquired Onshape.",
       "highlights": []
     },
     {
@@ -66,7 +66,7 @@
       "position": "Senior Manager, Customer Training Technology & Research",
       "startDate": "2019-01",
       "endDate": "2020-01",
-      "summary": "Head of product for PTC's customer training: eLearning, virtual instructor-led training and in-product guidance. Led a 40+ person organization across the US and Pune, India.",
+      "summary": "Product for PTC's customer training: eLearning, virtual instructor-led training and in-product help. A 40-person group across the US and Pune.",
       "highlights": []
     },
     {
@@ -75,7 +75,7 @@
       "position": "Senior Software Development Manager, PTC University EdTech R&D",
       "startDate": "2018-05",
       "endDate": "2019-01",
-      "summary": "Managed 35+ engineers in three teams building PTC's learning platforms.",
+      "summary": "Engineering management for PTC's learning platforms: 35 engineers in three teams.",
       "highlights": []
     },
     {
@@ -93,7 +93,7 @@
       "position": "Senior Full-Stack Software Engineer",
       "startDate": "2016-10",
       "endDate": "2017-04",
-      "summary": "Led the Academic Software Development group. IoT education products on the MEAN stack and ThingWorx.",
+      "summary": "Led the academic software development group. IoT education products on the MEAN stack and ThingWorx.",
       "highlights": []
     },
     {
@@ -102,7 +102,7 @@
       "position": "Academic Software Engineer",
       "startDate": "2013-05",
       "endDate": "2016-10",
-      "summary": "Joined as a student intern while finishing my degree, then full-time. Built curriculum, demos and applications for Creo, Windchill, Mathcad and ThingWorx.",
+      "summary": "Started as a student intern, then full-time. Curriculum, demos and applications for Creo, Windchill, Mathcad and ThingWorx.",
       "highlights": []
     },
     {
@@ -118,7 +118,7 @@
       "position": "Assistant Program Facilitator",
       "startDate": "2011-12",
       "endDate": "2013-05",
-      "summary": "Ran planetarium shows and simulated space missions for middle-school groups; handled the center's IT.",
+      "summary": "Planetarium shows and simulated space missions for middle-school groups, plus the center's IT.",
       "highlights": []
     }
   ],
@@ -143,13 +143,13 @@
   ],
   "skills": [
     {
-      "name": "Steering an R&D organization",
+      "name": "Product operations",
       "keywords": [
-        "Operating cadence & annual planning",
-        "Product strategy",
-        "AI adoption across the SDLC",
+        "Planning cycles",
+        "Product analytics",
         "Localization operations",
-        "Hiring & management"
+        "AI tooling adoption",
+        "Hiring and management"
       ]
     },
     {
@@ -177,11 +177,10 @@
     {
       "name": "AI tooling",
       "keywords": [
-        "Agentic coding harnesses",
-        "MCP servers",
         "Claude Code",
         "GitHub Copilot",
-        "LiteLLM on AWS Bedrock"
+        "MCP servers",
+        "Agentic coding setups"
       ]
     }
   ],

@@ -97,7 +97,9 @@ def test_resume_and_projects_pages_render_server_side(site):
 
 def test_json_ld_person_comes_from_resume(site):
     html = _get(site, "/")
-    scripts = re.findall(r'<script type="application/ld\+json"[^>]*>(.*?)</script>', html, re.DOTALL)
+    scripts = re.findall(
+        r'<script type="application/ld\+json"[^>]*>(.*?)</script>', html, re.DOTALL
+    )
     assert scripts, "no JSON-LD on /"
     graph = json.loads(scripts[0])
     nodes = graph.get("@graph", [graph])

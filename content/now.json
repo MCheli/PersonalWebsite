@@ -2,11 +2,10 @@
   "$comment": "What Mark is up to right now (nownownow.com style). Rendered by the `now` command and the SSR content. Update `updated` whenever the list changes. Never add anything here that reads as job-seeking: this site must not suggest Mark is open to roles.",
   "updated": "2026-11-05",
   "items": [
-    "Running Onshape's Product Operations & Strategy team at PTC through FY27 planning and the Schneider Electric acquisition announced in October 2026.",
-    "Rolling out AI developer tooling across Onshape R&D: agentic-harness guidelines, MCP servers over the data warehouse, and the governance to go with them.",
-    "Building an 'AI context dictionary' — a structured, agent-readable memory of my systems, preferences and a daily diary — so the agents that run my homelab, grocery orders and security sweeps start with real context.",
-    "RigReady 2.0: rebuilt from a requirements ledger with parallel Claude Code agents; working toward a first public release.",
-    "Hardening the homelab: Dependency-Track fed by nightly SBOM scans, a weekly security sweep, pinned image digests.",
+    "Work: FY27 planning at Onshape, and the rollout of AI tooling across R&D.",
+    "Building an agent-readable memory of my own systems and preferences (an \"AI context dictionary\"), so the agents that run my homelab, grocery orders and security sweeps start with real context.",
+    "RigReady 2.0, rebuilt from a requirements ledger with parallel Claude Code agents. Working toward a first public release.",
+    "Homelab hardening: Dependency-Track fed by nightly SBOM scans, a weekly security sweep, pinned image digests.",
     "Outside: solo backpacking on the Appalachian Trail sections near home, and a 1991 Honda Acty kei truck that always needs something."
   ]
 }
