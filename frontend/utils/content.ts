@@ -169,6 +169,10 @@ export const profileByNetwork = (resume: Resume, network: string): ResumeProfile
 export const locationLine = (resume: Resume): string =>
   `${resume.basics.location.city}, ${resume.basics.location.region}`
 
+/** The user segment of the prompt: the first name, lower-case, as a login would be. */
+export const promptUser = (resume: Resume): string =>
+  (resume.basics.name.trim().split(/\s+/)[0] ?? 'user').toLowerCase()
+
 /** Everything a link to a service needs: urls in the catalog may omit the scheme (minecraft:25565). */
 export const serviceHref = (service: Service): string | undefined => {
   if (service.url === undefined) return undefined

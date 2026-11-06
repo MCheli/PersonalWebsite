@@ -68,7 +68,7 @@ export const ls: Command = {
   name: 'ls',
   description: 'Where to go from here',
   run: () => [
-    text('about/  projects/  resume/  homelab/  contact/'),
+    text('about/  projects/  resume/  services/  contact/'),
     muted("Not a filesystem — each one is a command. Try 'projects'.")
   ]
 }

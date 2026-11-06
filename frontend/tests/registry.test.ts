@@ -16,7 +16,7 @@ import registryRaw from '~/commands/registry.json?raw'
 import { content } from '~/utils/content'
 import { makeContext, scriptedContext } from './helpers'
 
-const EXPECTED = ['help', 'about', 'resume', 'projects', 'homelab', 'now', 'contact', 'message', 'open', 'neofetch', 'whoami', 'weather', 'clear', 'history', 'ls', 'exit']
+const EXPECTED = ['help', 'about', 'resume', 'projects', 'services', 'now', 'contact', 'message', 'open', 'neofetch', 'whoami', 'weather', 'clear', 'history', 'ls', 'exit']
 
 /** Answers that satisfy the interactive `message` command when a loop runs every command. */
 const ANSWERS = ['Test Visitor', 'visitor@example.com', 'A message long enough to pass.']
@@ -45,8 +45,8 @@ describe('registry', () => {
   })
 
   it('findCommand resolves names and aliases case-insensitively', () => {
-    expect(findCommand('homelab')?.name).toBe('homelab')
-    expect(findCommand('services')?.name).toBe('homelab')
+    expect(findCommand('services')?.name).toBe('services')
+    expect(findCommand('homelab')?.name).toBe('services')
     expect(findCommand('?')?.name).toBe('help')
     expect(findCommand('HELP')?.name).toBe('help')
     expect(findCommand('nope')).toBeUndefined()

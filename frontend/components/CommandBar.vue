@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /** Tappable chips that run a command exactly as typing it would. */
 withDefaults(defineProps<{ commands?: string[], disabled?: boolean }>(), {
-  commands: () => ['about', 'projects', 'resume', 'homelab', 'contact', 'help'],
+  commands: () => ['about', 'projects', 'resume', 'services', 'contact', 'help'],
   disabled: false
 })
 
@@ -35,7 +35,7 @@ const emit = defineEmits<{ run: [command: string] }>()
 .chip {
   font: inherit;
   font-size: 0.95rem;
-  color: var(--t-prompt);
+  color: var(--t-chip-fg);
   background: var(--t-chip-bg);
   border: 1px solid var(--t-chip-border);
   border-radius: 999px;
@@ -45,16 +45,18 @@ const emit = defineEmits<{ run: [command: string] }>()
 }
 
 .chip:hover {
-  border-color: var(--t-prompt);
+  border-color: var(--t-chip-fg);
 }
 
 .chip:focus-visible {
-  outline: 2px solid var(--t-link);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--t-chip-focus);
+  box-shadow: 0 0 0 1px var(--t-chip-focus);
 }
 
+/* While a command types itself and runs, the chips wait. */
 .chip:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: default;
 }
 

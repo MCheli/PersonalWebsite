@@ -35,7 +35,7 @@ const location = locationLine(content.resume)
   margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--t-fg);
 }
 
 .identity-title {

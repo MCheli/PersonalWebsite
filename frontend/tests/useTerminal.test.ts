@@ -148,6 +148,44 @@ describe('useTerminal', () => {
     })
   })
 
+  describe('typeAndRun (chips and deep links)', () => {
+    it('fills the input character by character, then runs the line and empties it', async () => {
+      const options = { ...terminalOptions(), typingDelay: 4 }
+      const terminal = useTerminal(options)
+      const seen: string[] = []
+      const finished = terminal.typeAndRun('whoami')
+      for (let i = 0; i < 6; i++) {
+        await new Promise(resolve => setTimeout(resolve, 4))
+        seen.push(terminal.input.value)
+        expect(terminal.busy.value).toBe(true)
+      }
+      await finished
+      expect(seen.some(v => v.length > 0 && v.length < 6 && 'whoami'.startsWith(v))).toBe(true)
+      expect(terminal.input.value).toBe('')
+      expect(terminal.busy.value).toBe(false)
+      expect(terminal.entries.value).toHaveLength(1)
+      expect(terminal.entries.value[0]!.command).toBe('whoami')
+      expect(terminal.entries.value[0]!.blocks.length).toBeGreaterThan(0)
+    })
+
+    it('types instantly when the delay is 0 and runs exactly as Enter would', async () => {
+      const { terminal } = make()
+      await terminal.typeAndRun('services')
+      const typed = make().terminal
+      await typed.run('services')
+      expect(terminal.entries.value[0]!.blocks).toEqual(typed.entries.value[0]!.blocks)
+      expect(terminal.typed.value).toEqual(['services'])
+    })
+
+    it('does nothing while busy or for an empty line', async () => {
+      const { terminal } = make()
+      expect(await terminal.typeAndRun('   ')).toEqual([])
+      terminal.busy.value = true
+      expect(await terminal.typeAndRun('help')).toEqual([])
+      expect(terminal.entries.value).toEqual([])
+    })
+  })
+
   describe('deep links (?cmd=)', () => {
     it('types and runs a known command', async () => {
       const { terminal } = make()

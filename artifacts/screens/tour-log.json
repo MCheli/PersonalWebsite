@@ -1,6 +1,6 @@
 {
-  "capturedAt": "2026-11-06T01:58:09.825Z",
-  "base": "http://127.0.0.1:45047",
+  "capturedAt": "2026-11-06T12:14:22.628Z",
+  "base": "http://127.0.0.1:41455",
   "captures": {
     "home/mobile": {
       "route": "/",
@@ -9,7 +9,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1063,
+      "scrollHeight": 1087,
       "overflow": false,
       "file": "artifacts/screens/home/mobile.png"
     },
@@ -20,7 +20,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1779,
+      "scrollHeight": 1826,
       "overflow": false,
       "file": "artifacts/screens/cmd-help/mobile.png"
     },
@@ -31,7 +31,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1986,
+      "scrollHeight": 2033,
       "overflow": false,
       "file": "artifacts/screens/cmd-about/mobile.png"
     },
@@ -42,7 +42,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 3491,
+      "scrollHeight": 3538,
       "overflow": false,
       "file": "artifacts/screens/cmd-resume/mobile.png"
     },
@@ -53,20 +53,20 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1878,
+      "scrollHeight": 1925,
       "overflow": false,
       "file": "artifacts/screens/cmd-projects/mobile.png"
     },
-    "cmd-homelab/mobile": {
-      "route": "/?cmd=homelab",
+    "cmd-services/mobile": {
+      "route": "/?cmd=services",
       "consoleErrors": [],
       "failedRequests": [],
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 3995,
+      "scrollHeight": 4445,
       "overflow": false,
-      "file": "artifacts/screens/cmd-homelab/mobile.png"
+      "file": "artifacts/screens/cmd-services/mobile.png"
     },
     "cmd-now/mobile": {
       "route": "/?cmd=now",
@@ -75,7 +75,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1570,
+      "scrollHeight": 1616,
       "overflow": false,
       "file": "artifacts/screens/cmd-now/mobile.png"
     },
@@ -86,7 +86,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1801,
+      "scrollHeight": 1847,
       "overflow": false,
       "file": "artifacts/screens/cmd-contact/mobile.png"
     },
@@ -97,7 +97,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1441,
+      "scrollHeight": 1488,
       "overflow": false,
       "file": "artifacts/screens/cmd-neofetch/mobile.png"
     },
@@ -108,7 +108,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1142,
+      "scrollHeight": 1189,
       "overflow": false,
       "file": "artifacts/screens/cmd-whoami/mobile.png"
     },
@@ -141,7 +141,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 931,
+      "scrollHeight": 956,
       "overflow": false,
       "file": "artifacts/screens/home/desktop.png"
     },
@@ -152,7 +152,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1418,
+      "scrollHeight": 1467,
       "overflow": false,
       "file": "artifacts/screens/cmd-help/desktop.png"
     },
@@ -163,7 +163,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1311,
+      "scrollHeight": 1361,
       "overflow": false,
       "file": "artifacts/screens/cmd-about/desktop.png"
     },
@@ -174,7 +174,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 2188,
+      "scrollHeight": 2238,
       "overflow": false,
       "file": "artifacts/screens/cmd-resume/desktop.png"
     },
@@ -185,20 +185,20 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1502,
+      "scrollHeight": 1552,
       "overflow": false,
       "file": "artifacts/screens/cmd-projects/desktop.png"
     },
-    "cmd-homelab/desktop": {
-      "route": "/?cmd=homelab",
+    "cmd-services/desktop": {
+      "route": "/?cmd=services",
       "consoleErrors": [],
       "failedRequests": [],
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 2540,
+      "scrollHeight": 2831,
       "overflow": false,
-      "file": "artifacts/screens/cmd-homelab/desktop.png"
+      "file": "artifacts/screens/cmd-services/desktop.png"
     },
     "cmd-now/desktop": {
       "route": "/?cmd=now",
@@ -207,7 +207,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1178,
+      "scrollHeight": 1228,
       "overflow": false,
       "file": "artifacts/screens/cmd-now/desktop.png"
     },
@@ -218,7 +218,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1504,
+      "scrollHeight": 1554,
       "overflow": false,
       "file": "artifacts/screens/cmd-contact/desktop.png"
     },
@@ -229,7 +229,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1404,
+      "scrollHeight": 1454,
       "overflow": false,
       "file": "artifacts/screens/cmd-neofetch/desktop.png"
     },
@@ -240,7 +240,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 992,
+      "scrollHeight": 1042,
       "overflow": false,
       "file": "artifacts/screens/cmd-whoami/desktop.png"
     },

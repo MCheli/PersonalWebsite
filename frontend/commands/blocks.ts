@@ -1,5 +1,5 @@
 /** Tiny constructors so commands read as prose, not as object literals. */
-import type { Inline, OutputBlock, Tone } from '~/types/terminal'
+import type { Inline, OutputBlock, TableRow, Tone } from '~/types/terminal'
 
 export const text = (value: string, tone?: Tone): OutputBlock =>
   tone === undefined ? { kind: 'text', text: value } : { kind: 'text', text: value, tone }
@@ -16,6 +16,7 @@ export const figlet = (): OutputBlock => ({ kind: 'figlet' })
 
 export const list = (items: Inline[][]): OutputBlock => ({ kind: 'list', items })
 export const kv = (rows: { key: string, value: Inline[] }[]): OutputBlock => ({ kind: 'kv', rows })
+export const table = (rows: TableRow[]): OutputBlock => ({ kind: 'table', rows })
 export const link = (href: string, label?: string): OutputBlock => ({ kind: 'link', href, label: label ?? href })
 
 export const a = (href: string, label?: string): Inline => ({ href, label: label ?? href })
@@ -32,6 +33,10 @@ export const blockText = (block: OutputBlock): string => {
       return block.items.map(item => item.map(inlineText).join(' ')).join('\n')
     case 'kv':
       return block.rows.map(row => `${row.key} ${row.value.map(inlineText).join(' ')}`).join('\n')
+    case 'table':
+      return block.rows
+        .map(row => [inlineText(row.name), row.description, ...(row.detail ?? []).map(inlineText)].filter(Boolean).join(' '))
+        .join('\n')
     case 'link':
       return `${block.label} ${block.href}`
     case 'rule':
@@ -53,6 +58,8 @@ export const blockHrefs = (blocks: OutputBlock[]): string[] =>
         return block.items.flat().flatMap(i => (typeof i === 'string' ? [] : [i.href]))
       case 'kv':
         return block.rows.flatMap(r => r.value.flatMap(i => (typeof i === 'string' ? [] : [i.href])))
+      case 'table':
+        return block.rows.flatMap(r => [r.name, ...(r.detail ?? [])].flatMap(i => (typeof i === 'string' ? [] : [i.href])))
       default:
         return []
     }

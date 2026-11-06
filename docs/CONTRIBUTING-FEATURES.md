@@ -21,6 +21,7 @@ make test / make test-frontend                # pytest (api + scripts, test_ssr 
 make lint / make typecheck                    # ruff + eslint / nuxi typecheck
 make build                                    # frontend/.output (the tour, resume-pdf and test_ssr use it)
 make tour                                     # artifacts/screens/<name>/{mobile,desktop}.png; TOUR_ARGS="home cmd-about" for a few
+make chip-tap                                 # artifacts/screens/chip-tap/{t100,t300,t1200}.png: the services chip tapped at 390px
 make og-image / make resume-pdf               # regenerate the committed assets from content/
 make check-resume-pdf                         # resume.json vs the PDF sidecar (CI runs it)
 make content-check / make catalog-check       # schemas + rules / compose diff + URLs (CATALOG_ARGS="--no-urls" offline)
@@ -71,7 +72,7 @@ When a container is added to or removed from `MCheli/83rr-poweredge`, the Monday
 1. `make catalog-check` (or `CATALOG_ARGS="--offline ../83rr-poweredge --no-urls"` with a local checkout) prints which containers are missing from the catalog and which catalog entries no longer exist.
 2. Edit `content/services.json`. A service's `name` must equal the `container_name`; a service made of several containers lists them in `containers: [...]`; a non-container entry (a repo) uses `containers: []`; a service on other hardware proxied by the R630 sets `external: true`; a container defined in another compose file names it in `compose`. `url` for anything public, `lanOnly: true` for anything that is not, `description` one line, `repo` when the code is public. Set `updated`.
 3. `make content-check`, `make catalog-check`, `make test-frontend` (`tests/commands.test.ts` renders every category and counts from the data; `scripts/tests/test_check_catalog.py` runs the diff on fixtures).
-4. `make build && make tour`; commit `artifacts/screens/cmd-homelab/`, `cmd-neofetch/` (container count) and `cmd-contact/` (public services).
+4. `make build && make tour`; commit `artifacts/screens/cmd-services/`, `cmd-neofetch/` (container count) and `cmd-contact/` (public services).
 
 The `host` block (OS, kernel, CPU, memory) is typed by hand and not checked; update it when the server changes.
 
@@ -96,11 +97,11 @@ Only when `docs/PRODUCT.md` has a section for it.
 
 ## 7. Change the look
 
-1. Colours and spacing are CSS variables in `frontend/assets/css/terminal.css` (`--t-bg`, `--t-prompt`, `--t-output`, `--t-muted`, `--t-link`, `--t-info`, `--t-success`, `--t-error`, `--t-rule`, `--t-chip-*`, `--t-pad`). Change them there, not per component. Dark only; JetBrains Mono; green prompt.
+1. Colours and spacing are CSS variables in `frontend/assets/css/terminal.css`: the Dracula palette (`--t-bg`, `--t-line`, `--t-fg`, `--t-comment`, `--t-cyan` … `--t-yellow`) and the roles built on it (`--t-heading` purple, `--t-info` pink sub-labels, `--t-key` orange, `--t-link` cyan, `--t-command` yellow, `--t-prompt`/`--t-success` green, `--t-error` red, `--t-muted`, `--t-rule`, `--t-chip-*`, `--t-seg-*` for the prompt segments, `--t-pad`). Change them there, not per component; never put the comment colour on anything a visitor must read. Dark only; JetBrains Mono; green caret. The prompt segments are `components/PromptSegments.vue` (shared by the live prompt and every echoed command).
 2. One breakpoint: `640px` (`min-width` for desktop additions, `max-width` for phone-only rules). Nothing may depend on column counts except the figlet, which is hidden below 640px.
 3. Printing: `@media print` in `terminal.css`, `pages/resume.vue`, `layouts/default.vue`, `components/CommandBar.vue` and `components/Figlet.vue` produce the black-on-white resume. After a change there, `make resume-pdf` and look at the PDF.
 4. `make build && make tour`. Look at every changed capture at both widths; `artifacts/tour/tour-log.json` (or `artifacts/screens/tour-log.json`) must show `overflow: false` everywhere. Commit the captures.
-5. If the first screen changed, `IDENT-001`/`IDENT-002`/`SHOW-008`/`NFR-MOB-001` in the ledger point at `home/` captures; add a dated note.
+5. If the first screen changed, `IDENT-001`/`IDENT-002`/`SHOW-008`/`NFR-MOB-001` in the ledger point at `home/` captures; add a dated note. If the chip or deep-link behaviour changed, `make chip-tap` (after `make build`) re-captures `artifacts/screens/chip-tap/{t100,t300,t1200}.png` (the `services` chip tapped at 390px: typing visible, then the output at the top) and fails if the typing was not visible or the echoed command did not land at the top; `SHOW-008` points at them.
 
 ## 8. Ledger evidence
 
@@ -108,7 +109,7 @@ Evidence strings:
 
 - `api/test_app.py::<test_function>` or `scripts/tests/<file>.py::<test_function>`
 - `frontend/tests/<file>.test.ts#<it title>`
-- `artifacts/screens/<name>/<mobile|desktop>.png`
+- `artifacts/screens/<name>/<mobile|desktop>.png` (or `artifacts/screens/chip-tap/<tick>.png`)
 - any other repository path (a committed asset, a script, a document)
 
 `done` needs at least one test. `visible: true` + `done` needs at least one screenshot. `deprecated` needs a dated note and evidence it is off. Every entry gets a dated note when its status changes. The gate is `make ledger-check`; `docs/ARCHITECTURE.md`, "Requirements ledger", has the schema.

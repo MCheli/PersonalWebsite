@@ -23,7 +23,7 @@ export const about: Command = {
     return [
       heading('About'),
       ...paragraphs.flatMap(p => [text(p), blank()]),
-      muted("Next: 'projects' for what I've built, 'resume' for the career, 'homelab' for the server, 'contact' to reach me.")
+      muted("Next: 'projects' for what I've built, 'resume' for the career, 'services' for the server, 'contact' to reach me.")
     ]
   }
 }

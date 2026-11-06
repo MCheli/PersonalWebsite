@@ -19,7 +19,7 @@ describe('help', () => {
   })
 
   it('shows aliases next to the command', async () => {
-    expect(await runText('help')).toContain('homelab, services')
+    expect(await runText('help')).toContain('services, homelab')
     expect(await runText('?')).toContain('help, ?')
   })
 
@@ -30,7 +30,7 @@ describe('help', () => {
   })
 
   it('help <alias> resolves the alias', async () => {
-    expect(await runText('help services')).toContain('homelab —')
+    expect(await runText('help homelab')).toContain('services —')
   })
 
   it('help <unknown> says so', async () => {
@@ -148,9 +148,9 @@ describe('projects', () => {
   })
 })
 
-describe('homelab', () => {
+describe('services', () => {
   it('renders every category and service with counts from the data', async () => {
-    const text = await runText('homelab')
+    const text = await runText('services')
     for (const cat of content.catalog.categories) {
       expect(text).toContain(cat.title)
       expect(text).toContain(`${cat.services.length} ${cat.id}`)
@@ -161,20 +161,49 @@ describe('homelab', () => {
     expect(text).toContain(`(${total} total)`)
   })
 
-  it('services is an alias', async () => {
-    expect(await runText('services')).toBe(await runText('homelab'))
+  it('homelab is an alias', async () => {
+    expect(await runText('homelab')).toBe(await runText('services'))
   })
 
   it('links service urls and repos', async () => {
-    const hrefs = blockHrefs(await run('homelab'))
+    const hrefs = blockHrefs(await run('services'))
     expect(hrefs).toContain('https://videos.markcheli.com')
     expect(hrefs).toContain('https://github.com/MCheli/tallied')
+  })
+
+  it('names the host, the counts and the hardware in the header', async () => {
+    const text = await runText('services')
+    const c = content.catalog
+    expect(text).toContain(c.host.name)
+    expect(text).toContain(c.host.hardware)
+    const total = c.categories.reduce((n, cat) => n + cat.services.length, 0)
+    expect(text).toContain(`${c.host.name} · ${total} services`)
+  })
+
+  it('each service is one table row: a link when it has a url, plain when it does not, repo on the detail line', async () => {
+    const blocks = await run('services')
+    const tables = blocks.filter(b => b.kind === 'table')
+    expect(tables).toHaveLength(content.catalog.categories.length)
+    const rows = tables.flatMap(t => (t.kind === 'table' ? t.rows : []))
+    const plex = rows.find(r => (typeof r.name === 'string' ? r.name : r.name.label) === 'plex')
+    expect(plex?.name).toEqual({ href: 'https://videos.markcheli.com', label: 'plex' })
+    const nginx = rows.find(r => r.name === 'nginx')
+    expect(nginx).toBeDefined()
+    expect(nginx?.description).toBeTruthy()
+    const tallied = rows.find(r => typeof r.name !== 'string' && r.name.label === 'tallied')
+    expect(tallied?.detail).toEqual([{ href: 'https://github.com/MCheli/tallied', label: 'repo' }])
+  })
+
+  it('ends with the summary and the hint to type a service name', async () => {
+    const text = await runText('services')
+    expect(text).toMatch(/Summary: .*\(\d+ total\)/)
+    expect(text).toContain('Type a service name (plex, grafana, tallied-demo…) to open it.')
   })
 
   it('reflects a changed fixture (count goes up)', async () => {
     const c = cloneContent()
     c.catalog.categories[0]!.services.push({ name: 'fixture-svc', description: 'Only in tests' })
-    const text = await runText('homelab', makeContext({ content: c }))
+    const text = await runText('services', makeContext({ content: c }))
     expect(text).toContain('fixture-svc')
     expect(text).toContain(`${c.catalog.categories[0]!.services.length} custom`)
   })

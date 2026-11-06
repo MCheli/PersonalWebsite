@@ -52,7 +52,7 @@ Playwright uses `$PLAYWRIGHT_CHROME`, else `/usr/bin/google-chrome`, else its bu
 
 Nuxt 3 SSR, Vue 3, TypeScript strict, JetBrains Mono self-hosted. Port 3000. Image `ghcr.io/mcheli/personal-website`.
 
-Pages: `/` (the terminal: identity line, figlet, command bar, prompt; `?cmd=<command>` auto-runs one), `/resume` (readable and printable; the PDF is generated from it), `/projects` (cards with `#slug` anchors). Commands: `help` `about` `resume` `projects` `homelab` `now` `contact` `message` `open` `neofetch` `whoami` `weather` `clear` `history` `ls` `exit`, all from `frontend/commands/registry.ts`.
+Pages: `/` (the terminal: identity line, figlet, command bar, prompt; `?cmd=<command>` auto-runs one), `/resume` (readable and printable; the PDF is generated from it), `/projects` (cards with `#slug` anchors). Commands: `help` `about` `resume` `projects` `services` `now` `contact` `message` `open` `neofetch` `whoami` `weather` `clear` `history` `ls` `exit`, all from `frontend/commands/registry.ts`.
 
 | Variable | Description |
 |---|---|

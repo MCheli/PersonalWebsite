@@ -40,12 +40,17 @@ const linkedin = profileByNetwork(content.resume, 'LinkedIn')
 }
 
 .site-nav a {
+  color: var(--t-link);
   text-decoration: none;
 }
 
-.site-nav a:hover,
+.site-nav a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--t-link-underline);
+}
+
 .site-nav a.router-link-active {
-  color: var(--t-prompt);
+  color: var(--t-fg);
 }
 
 .site-nav-home {
