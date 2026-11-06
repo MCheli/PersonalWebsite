@@ -1,0 +1,239 @@
+{
+  "$comment": "Portfolio projects. Single source of truth for the terminal's `projects` command, the /projects page, the SSR crawler content and the Flask /projects endpoint. Order = display order; `featured` projects come first in summaries. `slug` is what `projects <slug>` and `open <slug>` accept. Keep descriptions factual; link to repos so the code speaks for itself.",
+  "updated": "2026-11-05",
+  "projects": [
+    {
+      "slug": "tallied",
+      "name": "Tallied",
+      "tagline": "Household finance in one Postgres database, with a dashboard that shows what it adds up to.",
+      "description": "Accounts, transactions, income, RSUs, 401(k), property and vehicles for one household in a database the owner can also open with psql, plus a dashboard and a year-by-year retirement projection. Bank sync through SimpleFIN; W-2s, pay stubs, mortgage and brokerage statements are read by Claude and staged for confirmation before anything is written — AI output is never saved unreviewed.",
+      "highlights": [
+        "Multi-tenant: a Postgres schema per household, search_path set per request",
+        "Every requirement lives in a ledger (docs/requirements/ledger.yaml) with a test and a screenshot as evidence; CI validates it",
+        "Public read-only demo seeded with a fictional household"
+      ],
+      "stack": [
+        "FastAPI",
+        "SQLAlchemy 2",
+        "Alembic",
+        "PostgreSQL 16",
+        "Vue 3",
+        "TypeScript",
+        "Tailwind",
+        "ECharts",
+        "Claude API",
+        "Docker"
+      ],
+      "repo": "https://github.com/MCheli/tallied",
+      "url": "https://money.markcheli.com",
+      "demo": "https://money-demo.markcheli.com",
+      "status": "active",
+      "started": "2026-03",
+      "featured": true
+    },
+    {
+      "slug": "rigready",
+      "name": "RigReady",
+      "tagline": "A Windows app that gets a flight or racing sim rig ready, fixes what isn't, and launches the game.",
+      "description": "For sim PCs that are also used for other things. RigReady checks that devices are plugged in, helper apps are running, monitors are arranged and game bindings are intact, puts right what it can, then launches. It also manages bindings, backups and hardware troubleshooting for DCS, iRacing, Le Mans Ultimate, BeamNG, MSFS and Assetto Corsa. Version 2.0 was rebuilt from the ground up in a weekend with parallel Claude Code agents working from a requirements ledger.",
+      "highlights": [
+        "Electron + Vue 3 + TypeScript, with a ports-and-fakes architecture so every feature is testable without real hardware",
+        "Playwright e2e against recorded rig scenarios, plus packaged-installer tests",
+        "Open source (MIT), pre-release"
+      ],
+      "stack": [
+        "Electron",
+        "Vue 3",
+        "TypeScript",
+        "Playwright",
+        "Python",
+        "Windows"
+      ],
+      "repo": "https://github.com/MCheli/RigReady",
+      "url": "https://rigready.io",
+      "status": "pre-release",
+      "started": "2026-01",
+      "featured": true
+    },
+    {
+      "slug": "homelab",
+      "name": "83RR PowerEdge homelab",
+      "tagline": "40 containers on a Dell R630 in my basement, as infrastructure-as-code.",
+      "description": "The server this site runs on. Docker Compose for everything, NGINX in front with Cloudflare origin certs and a LAN-only *.ops wildcard, Prometheus + Grafana + cAdvisor for metrics, OpenSearch + Fluent Bit for logs, Uptime Kuma and ntfy for alerting, and Dependency-Track fed by nightly SBOM scans of every running container. Deploys are GitHub Actions → ghcr.io → Watchtower; a weekly fresh-base rebuild and a Saturday security sweep keep images patched.",
+      "highlights": [
+        "Pinned image digests, least-privilege compose (no Docker socket for app containers, capabilities dropped where possible)",
+        "Backups, post-reboot checklist and upgrade runbooks live in the repo",
+        "Run `homelab` in the terminal for the full catalog"
+      ],
+      "stack": [
+        "Ubuntu Server",
+        "Docker Compose",
+        "NGINX",
+        "Cloudflare",
+        "Prometheus",
+        "Grafana",
+        "OpenSearch",
+        "GitHub Actions"
+      ],
+      "repo": "https://github.com/MCheli/83rr-poweredge",
+      "url": "https://status.markcheli.com",
+      "status": "active",
+      "started": "2025-09",
+      "featured": true
+    },
+    {
+      "slug": "tasks",
+      "name": "Tasks",
+      "tagline": "A to-do app built around planning cycles instead of calendar weeks.",
+      "description": "Tasks live in user-initiated cycles under two independent buckets, personal and professional. Open items carry forward when a cycle closes and a push count records how many times — the paper-notebook ritual of rewriting the list, as software. Tasks keep a persistent identity across cycles, so longevity and lineage views come from the same source of truth. Built in a day from a written spec.",
+      "highlights": [
+        "FastAPI + PostgreSQL + Vue 3, Google OAuth, per-user API keys",
+        "Public read-only demo"
+      ],
+      "stack": [
+        "FastAPI",
+        "PostgreSQL",
+        "Vue 3",
+        "Docker"
+      ],
+      "repo": "https://github.com/MCheli/tasks",
+      "url": "https://tasks.markcheli.com",
+      "demo": "https://tasks-demo.markcheli.com",
+      "status": "active",
+      "started": "2026-04",
+      "featured": true
+    },
+    {
+      "slug": "lidar-grade-explorer",
+      "name": "LiDAR Grade Explorer",
+      "tagline": "Plan the earthwork for a flat pad from an iPhone LiDAR scan.",
+      "description": "Upload a .ply or .e57 point cloud, draw the rectangle where the carport, patio or foundation goes, and get cut/fill volumes, a fill-level slider, retaining-wall length and height along each edge with block counts and cost, and a before/after 3D view of the finished grade. Built to plan a carport on my own sloped lot.",
+      "highlights": [
+        "Pure-NumPy voxel downsampling to an elevation heatmap; Three.js before/after terrain",
+        "Flags wall heights that need geogrid or an engineered design under typical MA code",
+        "Deliberately no framework: one Flask handler and a single-file frontend"
+      ],
+      "stack": [
+        "Python",
+        "Flask",
+        "NumPy",
+        "pandas",
+        "Three.js",
+        "Vanilla JS"
+      ],
+      "repo": "https://github.com/MCheli/lidar-grade-explorer",
+      "status": "done",
+      "started": "2026-04",
+      "featured": false
+    },
+    {
+      "slug": "energy-monitor",
+      "name": "energy-monitor / panel-tool",
+      "tagline": "Which CT clamp is the dryer? A web app that maps, calibrates and labels a whole-home energy meter.",
+      "description": "Built around the CircuitSetup 6-channel ESP32 energy meter and Home Assistant. panel-tool covers what the upstream firmware doesn't: mapping each current transformer to a breaker, driving calibration, and printing a two-page wall reference for the panel. Ships an example ESPHome config for a 12-CT split-phase install.",
+      "highlights": [
+        "Runs as a container on the homelab (energy.ops)",
+        "CLI calibration scripts for people who'd rather script it"
+      ],
+      "stack": [
+        "Python",
+        "ESPHome",
+        "Home Assistant",
+        "Docker"
+      ],
+      "repo": "https://github.com/MCheli/energy-monitor",
+      "status": "active",
+      "started": "2026-05",
+      "featured": false
+    },
+    {
+      "slug": "daily-report",
+      "name": "daily-report",
+      "tagline": "A morning brief printed on a thermal receipt printer at 5 AM.",
+      "description": "A Python module of chart and layout primitives for an Epson TM-m30III receipt printer, plus a scheduled report: tasks for the day, calendar, finances from Tallied, weather, stocks, home energy from Home Assistant, server health, GitHub activity and a short AI summary.",
+      "highlights": [
+        "KPI cards, bar charts and sparklines rendered in ESC/POS",
+        "Runs as a container on the homelab (report.ops)"
+      ],
+      "stack": [
+        "Python",
+        "ESC/POS",
+        "Docker"
+      ],
+      "repo": "https://github.com/MCheli/daily-report",
+      "status": "active",
+      "started": "2026-04",
+      "featured": false
+    },
+    {
+      "slug": "cookbook",
+      "name": "Cookbook",
+      "tagline": "Recipes as markdown, with a site, a grocery-list builder and printable PDFs.",
+      "description": "Thirty-odd recipes organized by cooking method. A build script turns the markdown into a static site and a combined PDF; the site builds a grocery list with Whole Foods links from whichever recipes you pick. It's also what my weekly grocery-ordering agent reads.",
+      "highlights": [],
+      "stack": [
+        "Markdown",
+        "JavaScript",
+        "Python",
+        "Make"
+      ],
+      "repo": "https://github.com/MCheli/cookbook",
+      "url": "https://cookbook.markcheli.com",
+      "status": "active",
+      "started": "2025-05",
+      "featured": false
+    },
+    {
+      "slug": "personal-website",
+      "name": "This site",
+      "tagline": "A terminal you can type into, that search engines and AI assistants can still read.",
+      "description": "Nuxt 3 SSR with a Flask API, shipped as two containers from GitHub Actions. The 2016 original was static HTML; it became a Spring Boot app on Heroku in 2017, a Firebase site in 2019, and this in 2025. Everything you see is rendered from three JSON files (resume, projects, service catalog) that the API also serves.",
+      "highlights": [
+        "Full content is server-rendered for crawlers; the terminal is progressive enhancement",
+        "Maintained mostly by AI agents working from docs/PRODUCT.md and a requirements ledger"
+      ],
+      "stack": [
+        "Nuxt 3",
+        "Vue 3",
+        "TypeScript",
+        "Flask",
+        "Docker",
+        "GitHub Actions"
+      ],
+      "repo": "https://github.com/MCheli/PersonalWebsite",
+      "url": "https://www.markcheli.com",
+      "status": "active",
+      "started": "2016",
+      "featured": false
+    },
+    {
+      "slug": "presentation-mode-looker",
+      "name": "Presentation Mode for Looker",
+      "tagline": "A Chrome extension that makes Looker dashboards presentable on a big screen.",
+      "description": "One click (or Ctrl+Shift+P) hides Looker's navigation, headers, filter bars and edit controls and expands the dashboard to fill the screen — for meetings, demos and wall displays. Settings sync across Chrome profiles.",
+      "highlights": [],
+      "stack": [
+        "JavaScript",
+        "Chrome extension"
+      ],
+      "repo": "https://github.com/MCheli/presentation-mode-looker",
+      "status": "done",
+      "started": "2026-01",
+      "featured": false
+    },
+    {
+      "slug": "dotfiles",
+      "name": "dotfiles",
+      "tagline": "One-line shell setup for macOS, Linux and remote servers.",
+      "description": "bash and zsh with shared config, Powerlevel10k or Starship prompts, sensible fallbacks over SSH.",
+      "highlights": [],
+      "stack": [
+        "Shell"
+      ],
+      "repo": "https://github.com/MCheli/dotfiles",
+      "status": "active",
+      "started": "2026-01",
+      "featured": false
+    }
+  ]
+}

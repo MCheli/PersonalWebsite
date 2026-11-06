@@ -1,20 +1,18 @@
 import { vi } from 'vitest'
 
-// Mock Nuxt composables
-global.defineNuxtConfig = vi.fn()
-global.useRuntimeConfig = vi.fn(() => ({
-  public: {
-    apiBase: '/api'
-  }
-}))
-
-global.nextTick = vi.fn(() => Promise.resolve())
-global.onMounted = vi.fn()
-global.watch = vi.fn()
-global.ref = vi.fn((value) => ({ value }))
-
-// Mock window.open for action commands
-Object.defineProperty(window, 'open', {
+// Real Vue, real content. The only thing stubbed is what jsdom lacks.
+Object.defineProperty(window, 'open', { writable: true, value: vi.fn() })
+Object.defineProperty(window, 'scrollTo', { writable: true, value: vi.fn() })
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn()
+  value: vi.fn((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn()
+  }))
 })

@@ -1,0 +1,24 @@
+{
+  "$comment": "Generated view of commands/registry.ts for scripts that cannot import TypeScript (the screenshot tour). tests/registry.test.ts fails if this drifts from the registry.",
+  "tour": [
+    "help",
+    "about",
+    "resume",
+    "projects",
+    "homelab",
+    "now",
+    "contact",
+    "neofetch",
+    "whoami"
+  ],
+  "deepLink": [
+    "help",
+    "about",
+    "resume",
+    "projects",
+    "homelab",
+    "now",
+    "contact",
+    "neofetch"
+  ]
+}

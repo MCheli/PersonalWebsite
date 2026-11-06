@@ -2,7 +2,7 @@ FROM node:22.23.4-alpine3.24 AS builder
 
 WORKDIR /app
 
-# Build context is the repo root so services.json can be shared with the API.
+# Build context is the repo root so content/ can be shared with the API.
 COPY frontend/package*.json ./
 
 # --ignore-scripts skips the `nuxt prepare` postinstall which needs source files
@@ -11,8 +11,9 @@ COPY frontend/package*.json ./
 RUN npm ci --legacy-peer-deps --ignore-scripts
 
 COPY frontend/ ./
-# Replace the dev symlink with the real catalog file
-COPY services.json ./services.json
+# Replace the dev symlink with the real content directory (services, resume, projects)
+RUN rm -f ./content
+COPY content/ ./content/
 
 RUN npm run build
 
@@ -34,11 +35,10 @@ RUN apk upgrade --no-cache && \
 # Copy built application
 COPY --from=builder --chown=nuxtjs:nodejs /app/.output /app/.output
 
-# Create symlinks for Nuxt SSR static assets
-# Nuxt server looks for static files in server/chunks/public but they're in public
-RUN mkdir -p /app/.output/server/chunks/public && \
-    ln -sf /app/.output/public/_nuxt /app/.output/server/chunks/public/_nuxt && \
-    if [ -f /app/.output/public/favicon.png ]; then ln -sf /app/.output/public/favicon.png /app/.output/server/chunks/public/favicon.png; fi
+# Nitro serves .output/public itself: its asset manifest resolves "../public/<file>" from
+# .output/server (globalThis._importMeta_.url is set in .output/server/index.mjs), so no
+# symlinks into server/chunks/public are needed. Verified on Nuxt 3.21 by running
+# `node .output/server/index.mjs` from a foreign cwd and fetching /favicon.png and /_nuxt/*.
 
 USER nuxtjs
 

@@ -33,3 +33,16 @@ updates:
     groups:
       minor-and-patch:
         update-types: ["minor", "patch"]
+
+  # Nuxt, vitest, eslint, playwright, vue-tsc: one PR a week for minor+patch, majors on their own.
+  - package-ecosystem: npm
+    directory: "/frontend"
+    schedule:
+      interval: weekly
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    ignore:
+      # vue-tsc 3.x does not run on TypeScript 7 (ERR_PACKAGE_PATH_NOT_EXPORTED ./lib/tsc); bump by hand.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]

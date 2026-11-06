@@ -1,0 +1,18 @@
+# Build context is the repo root (docker build -f frontend/Dockerfile .), so paths are root-relative.
+# BuildKit reads <Dockerfile>.dockerignore next to the Dockerfile; patterns here keep the API,
+# node_modules (npm ci installs them), build output and tests out of the image.
+.git
+.github
+api
+docs
+scripts
+artifacts
+frontend/node_modules
+frontend/.nuxt
+frontend/.output
+frontend/dist
+frontend/tests
+frontend/vitest.config.ts
+frontend/eslint.config.mjs
+frontend/.env
+frontend/.env.*

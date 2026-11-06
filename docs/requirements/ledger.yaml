@@ -1,0 +1,559 @@
+# markcheli.com requirements ledger.
+# Source of truth for scope: docs/PRODUCT.md. Schema and rules: docs/ARCHITECTURE.md "Requirements ledger".
+# Gate: `make ledger-check` (scripts/ledger_check.py), also run by CI and `make pre-commit`.
+#
+# Every entry starts as todo with no evidence. It becomes done only with evidence:
+#   - a test that exercises the real code path:  api/test_app.py::<test_fn>  or  frontend/tests/<file>.test.ts#<title>
+#   - for anything visible (visible: true):      artifacts/screens/<route-or-command>/<viewport>.png from `make tour`
+#
+# jobs:  identify (who Mark is) · show (resume, projects, homelab) · reach (contact) · read (crawlers, assistants, API)
+#        · maintain (Mark and the agents keeping it true)
+# "the tour" = scripts/screenshot_tour.mjs at 390px (mobile) and 1440px (desktop).
+#
+# Created 2026-11-05 from docs/PRODUCT.md and docs/REVIEW-2026-11-05.md.
+
+requirements:
+
+  # ---------------------------------------------------------------------------
+  # IDENTIFY — first screen
+  # ---------------------------------------------------------------------------
+
+  - id: IDENT-001
+    title: First screen states who Mark is without typing
+    job: identify
+    area: terminal
+    priority: p0
+    visible: true
+    done_means:
+      - "On / at 390px and 1440px, before any command, the page shows Mark's name, 'Director, Product Operations & Strategy' and 'Onshape' plus the one-sentence summary from resume.json basics, as visible text (not only in the sr-only block)."
+      - "The text is server-rendered: curl of / contains it."
+    status: done
+    evidence:
+      - "frontend/tests/components.test.ts#shows name, title with company, location and summary from resume.json"
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
+      - artifacts/screens/home/mobile.png
+      - artifacts/screens/home/desktop.png
+    notes:
+      - "2026-11-05: today the first screen is a fake 'Last login' line, a figlet and host specs; the title says 'Developer'."
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: components/IdentityHeader.vue is visible and server-rendered; curl of / contains the title and summary."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: IDENT-002
+    title: Figlet replaced by the name on narrow screens
+    job: identify
+    area: terminal
+    priority: p0
+    visible: true
+    done_means:
+      - "At 390px the MARK CHELI figlet is not rendered (or is hidden) and the name appears as large text; nothing overflows horizontally (document.scrollingElement.scrollWidth <= innerWidth in the tour)."
+      - "At 1440px the figlet renders as today."
+    status: done
+    evidence:
+      - "frontend/tests/components.test.ts#renders the art and the name as text (CSS picks one per viewport)"
+      - "frontend/tests/components.test.ts#renders every block kind"
+      - artifacts/screens/home/mobile.png
+      - artifacts/screens/home/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: components/Figlet.vue renders the pre only at >=640px and the name as large text below; no horizontal overflow at 390px in the local tour."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: IDENT-003
+    title: No fake system facts
+    job: identify
+    area: terminal
+    priority: p1
+    done_means:
+      - "No 'Last login ... from local-machine', no 'Status: Operational', no fake ls listing with invented file sizes anywhere in the rendered output or the command registry (a test greps the registry output for those strings)."
+    status: done
+    evidence:
+      - "frontend/tests/registry.test.ts#never prints the banned fake strings or job-hunt wording"
+      - "frontend/tests/commands.test.ts#ls nudges toward the commands, no fake listing"
+    notes:
+      - "2026-11-05: welcome line, Last login, Status: Operational and the fake ls listing removed with the rewrite."
+
+  # ---------------------------------------------------------------------------
+  # SHOW — resume, projects, homelab, now
+  # ---------------------------------------------------------------------------
+
+  - id: SHOW-001
+    title: resume command renders resume.json
+    job: show
+    area: terminal
+    priority: p0
+    visible: true
+    done_means:
+      - "`resume` prints the headline, the current role with its highlights, previous roles one line each (position, company, dates), education, and skills by group, all read from content/resume.json (test changes a fixture value and sees it in the output)."
+      - "The output ends with links to /resume and /Mark-Cheli-Resume.pdf."
+    status: done
+    evidence:
+      - "frontend/tests/commands.test.ts#prints headline, current role with highlights, previous roles, education and skills"
+      - "frontend/tests/commands.test.ts#ends with links to /resume and the PDF"
+      - "frontend/tests/commands.test.ts#resume reflects changed highlights and keywords"
+      - artifacts/screens/cmd-resume/mobile.png
+      - artifacts/screens/cmd-resume/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: SHOW-002
+    title: /resume page is readable and printable
+    job: show
+    area: resume-page
+    priority: p0
+    visible: true
+    done_means:
+      - "GET /resume server-renders every work entry, education, certificates, skills and the profile links from resume.json; the page footer shows the `meta.lastModified` date; a Download PDF link points at /Mark-Cheli-Resume.pdf."
+      - "At 390px nothing overflows; at print media the page is black on white with no terminal chrome."
+    status: done
+    evidence:
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
+      - "frontend/tests/seo.test.ts#home graph has Person and WebSite; resume graph has the Person"
+      - scripts/tests/test_ssr.py::test_resume_and_projects_pages_render_server_side
+      - artifacts/screens/resume/mobile.png
+      - artifacts/screens/resume/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: frontend/pages/resume.vue; print stylesheet in the same file; footer shows meta.lastModified; Download PDF links /Mark-Cheli-Resume.pdf (the file itself is SHOW-003)."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: SHOW-003
+    title: Resume PDF generated from the page and kept current
+    job: show
+    area: resume-page
+    priority: p1
+    done_means:
+      - "`make resume-pdf` writes frontend/public/Mark-Cheli-Resume.pdf from /resume via Playwright print media; the file is committed."
+      - "`make check-resume-pdf` (run in CI) fails when content/resume.json's meta.lastModified is newer than the date embedded in the PDF's metadata or sidecar."
+    status: done
+    evidence:
+      - scripts/tests/test_check_resume_pdf.py::test_stale_pdf_fails
+      - scripts/tests/test_check_resume_pdf.py::test_missing_pdf_or_sidecar_fails
+      - scripts/resume_pdf.mjs
+      - scripts/check_resume_pdf.py
+      - frontend/public/Mark-Cheli-Resume.pdf
+      - frontend/public/Mark-Cheli-Resume.pdf.json
+      - scripts/tests/test_check_resume_pdf.py::test_stale_pdf_fails
+    notes:
+      - "2026-11-05: scripts/resume_pdf.mjs (Playwright print media, Letter, sidecar Mark-Cheli-Resume.pdf.json {generatedFrom, generatedAt}) and scripts/check_resume_pdf.py wired as make resume-pdf / make check-resume-pdf and in CI. The PDF is not committed yet: /resume does not exist on the tooling branch and the script refuses to print a page that is not the resume. Run `make build && make resume-pdf` after the frontend merge, commit the PDF + sidecar, then mark done."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: SHOW-004
+    title: projects command and detail view
+    job: show
+    area: terminal
+    priority: p0
+    visible: true
+    done_means:
+      - "`projects` lists featured projects first with name, tagline, stack and links; `projects all` lists every project; `projects <slug>` prints the full description and highlights; an unknown slug says so and lists the valid ones."
+    status: done
+    evidence:
+      - "frontend/tests/commands.test.ts#lists featured projects first with name, tagline, stack and links"
+      - "frontend/tests/commands.test.ts#projects all lists every project"
+      - "frontend/tests/commands.test.ts#projects <slug> prints the full description and highlights"
+      - "frontend/tests/commands.test.ts#projects <bad> lists the valid slugs"
+      - artifacts/screens/cmd-projects/mobile.png
+      - artifacts/screens/cmd-projects/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: SHOW-005
+    title: /projects page with anchors
+    job: show
+    area: projects-page
+    priority: p0
+    visible: true
+    done_means:
+      - "GET /projects server-renders a card per project from projects.json with an id equal to its slug; featured projects come first; cards show stack chips and repo / live / demo links; at 390px nothing overflows."
+    status: done
+    evidence:
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
+      - "frontend/tests/content.test.ts#featuredFirst keeps file order within each group"
+      - scripts/tests/test_ssr.py::test_resume_and_projects_pages_render_server_side
+      - artifacts/screens/projects/mobile.png
+      - artifacts/screens/projects/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: frontend/pages/projects.vue; each article has id=slug; needs an SSR fetch test once the preview server is in CI."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: SHOW-006
+    title: homelab catalog from services.json, readable on a phone
+    job: show
+    area: terminal
+    priority: p0
+    visible: true
+    done_means:
+      - "`homelab` (and `services`) renders every category and service from content/services.json with counts derived from the data; at 390px each service wraps onto its own lines (name, url, description) with no horizontal scroll; at 1440px the category layout is columnar as today."
+    status: done
+    evidence:
+      - "frontend/tests/commands.test.ts#renders every category and service with counts from the data"
+      - "frontend/tests/commands.test.ts#services is an alias"
+      - "frontend/tests/commands.test.ts#reflects a changed fixture (count goes up)"
+      - artifacts/screens/cmd-homelab/mobile.png
+      - artifacts/screens/cmd-homelab/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: SHOW-007
+    title: now command
+    job: show
+    area: terminal
+    priority: p2
+    done_means:
+      - "`now` prints the items from content/now.json with its updated date, and nothing else (test changes the fixture and sees it)."
+      - "Nothing anywhere on the site reads as job-seeking (a test greps all command output for 'open to', 'hire me', 'for hire')."
+    status: done
+    evidence:
+      - "frontend/tests/commands.test.ts#prints the items and the updated date"
+      - "frontend/tests/commands.test.ts#reflects a changed fixture and prints nothing but items and the date"
+    notes:
+      - "2026-11-05: openTo dropped at Mark's request; the command renders only items and the updated date."
+
+  - id: SHOW-008
+    title: Command bar of tappable commands
+    job: show
+    area: terminal
+    priority: p0
+    visible: true
+    done_means:
+      - "Chips for about, projects, resume, homelab, contact, help are visible on / at 390px (sticky above the keyboard) and at 1440px (under the prompt); tapping one runs the command and the output appears, identical to typing it (component test clicks a chip and asserts the output)."
+    status: done
+    evidence:
+      - "frontend/tests/components.test.ts#shows the six chips with aria-labels"
+      - "frontend/tests/components.test.ts#clicking a chip runs the command exactly as typing it"
+      - artifacts/screens/home/mobile.png
+      - artifacts/screens/cmd-help/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  # ---------------------------------------------------------------------------
+  # REACH — contact
+  # ---------------------------------------------------------------------------
+
+  - id: REACH-001
+    title: contact command and links
+    job: reach
+    area: terminal
+    priority: p0
+    visible: true
+    done_means:
+      - "`contact` prints email as a mailto link, LinkedIn and GitHub as links, and the public services from the catalog; all from content/, nothing hard-coded."
+      - "Links in command output are real <a> elements with rel=noopener; no v-html of regex-linkified strings remains."
+    status: done
+    evidence:
+      - "frontend/tests/commands.test.ts#prints email as mailto, the profiles and the public services from content"
+      - "frontend/tests/commands.test.ts#does not list LAN-only services"
+      - "frontend/tests/components.test.ts#renders links as anchors with rel=noopener noreferrer in a new tab"
+      - "frontend/tests/components.test.ts#escapes text instead of injecting HTML"
+      - artifacts/screens/cmd-contact/mobile.png
+      - artifacts/screens/cmd-contact/desktop.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: no v-html remains; components/TerminalOutput.vue renders OutputBlock[] with real anchors."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: REACH-002
+    title: Empty Enter does nothing; unknown commands suggest the closest one
+    job: reach
+    area: terminal
+    priority: p1
+    done_means:
+      - "Enter on an empty input adds nothing to history and opens nothing (test asserts window.open not called)."
+      - "`projetcs` prints 'command not found: projetcs' and 'did you mean projects?'."
+    status: done
+    evidence:
+      - "frontend/tests/useTerminal.test.ts#empty Enter adds nothing to history and opens nothing"
+      - "frontend/tests/registry.test.ts#empty input is a no-op: no output, nothing opened"
+      - "frontend/tests/registry.test.ts#unknown command says so and suggests the closest one"
+      - "frontend/tests/registry.test.ts#suggest finds the closest command within edit distance 2"
+    notes: []
+
+  - id: REACH-003
+    title: "API: POST /contact publishes to ntfy"
+    job: reach
+    area: api
+    priority: p1
+    done_means:
+      - "POST /contact with JSON {name, email, message, website} validates (name 1-100, sane email <= 254, message 10-2000; 400 with {error, field}), treats a non-empty `website` honeypot as success without sending, rate-limits 3 per IP per rolling hour (X-Real-IP, then first X-Forwarded-For hop, then remote_addr; 429), answers 503 when NTFY_PUBLISH_TOKEN is unset, publishes to NTFY_URL/NTFY_TOPIC with Bearer auth, Title 'Website message from <name>', Tags envelope, Priority 4, and answers 502 on upstream failure without logging the token."
+    status: done
+    evidence:
+      - api/test_app.py::test_contact_happy_path_publishes_to_ntfy
+      - api/test_app.py::test_contact_honeypot_returns_ok_and_sends_nothing
+      - api/test_app.py::test_contact_validation_failures
+      - api/test_app.py::test_contact_rate_limit_per_ip
+      - api/test_app.py::test_contact_rate_limit_window_rolls
+      - api/test_app.py::test_contact_client_ip_prefers_real_ip_then_forwarded_for
+      - api/test_app.py::test_contact_without_token_is_503
+      - api/test_app.py::test_contact_upstream_failure_is_502_and_token_not_logged
+      - api/test_app.py::test_404_handler
+    notes:
+      - "2026-11-05: added at Mark's request. Rate-limit table is a module-level dict per gunicorn worker (so up to 3 x workers per hour), documented in app.py. nginx /api/ route on www and the NTFY env on flask-api landed in 83rr-poweredge #31."
+
+  - id: REACH-004
+    title: message command sends a note through the API
+    job: reach
+    area: terminal
+    priority: p1
+    visible: true
+    done_means:
+      - "`message` prints 'Send me a note. Ctrl+C to cancel.' then asks 'Your name:', 'Your email:', 'Message:' in turn on the input line (the label replaces the prompt; the answer is echoed); Ctrl+C prints 'Cancelled.'; history/Tab/chips are inert while a question is pending."
+      - "Answers are validated locally (name non-empty, email with @ and a dot, message >= 10 chars) and the same question is re-asked on failure; nothing is posted until all three pass."
+      - "POSTs {name, email, message, website: ''} to <apiBase>/contact; on 2xx prints 'Sent — I'll reply to <email>.'; otherwise prints the API's error field or 'Couldn't send (<status>).' plus a mailto fallback. 'Sent' never appears without a 2xx."
+      - "`contact` ends with 'Or type `message` to send a note from here.'"
+    status: done
+    evidence:
+      - "frontend/tests/message.test.ts#prints the intro first, asks three questions, posts the answers and reports Sent"
+      - "frontend/tests/message.test.ts#re-asks the same question until the answer validates"
+      - "frontend/tests/message.test.ts#on a failed send never says Sent; shows the status and the email fallback"
+      - "frontend/tests/message.test.ts#routes each Enter to the pending question, echoes the answers and posts once"
+      - "frontend/tests/message.test.ts#Ctrl+C cancels: prints Cancelled., sends nothing, frees the prompt"
+      - "frontend/tests/message.test.ts#command bar chips are ignored while a question is pending"
+      - "frontend/tests/message.test.ts#posts JSON to <apiBase>/contact and reports ok on 2xx"
+      - artifacts/screens/cmd-message/mobile.png
+      - artifacts/screens/cmd-message/desktop.png
+    notes:
+      - "2026-11-05: implemented (commands/message.ts, pendingPrompt in composables/useTerminal.ts, utils/api.ts); screenshot pending tour."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  # ---------------------------------------------------------------------------
+  # READ — crawlers, assistants, API
+  # ---------------------------------------------------------------------------
+
+  - id: READ-001
+    title: Server-rendered content for crawlers covers resume, projects and catalog
+    job: read
+    area: seo
+    priority: p0
+    done_means:
+      - "curl of / (no JS) contains the current job title, every project name from projects.json, every service name from services.json and the profile links (a test renders the SSR HTML or fetches the preview server and asserts)."
+    status: done
+    evidence:
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
+      - "frontend/tests/components.test.ts#is hidden visually, not removed"
+      - scripts/tests/test_ssr.py::test_home_is_readable_without_javascript
+      - scripts/tests/test_ssr.py::test_json_ld_person_comes_from_resume
+    notes:
+      - "2026-11-05: components/SeoContent.vue is server-rendered on /; curl of the built server contains the title, every project and service name. A test against the preview server (or the tour) should be added by the tooling side to close this."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: READ-002
+    title: JSON-LD, titles and OG from resume.json
+    job: read
+    area: seo
+    priority: p1
+    done_means:
+      - "JSON-LD on / is a Person with name, jobTitle, worksFor, address locality, sameAs and url read from resume.json (test parses the script tag); /resume carries the same Person."
+      - "og:image and twitter:image point at /og.png, a committed 1200x630 PNG generated by `make og-image`; <title> and description derive from resume.json basics."
+    status: done
+    evidence:
+      - "frontend/tests/seo.test.ts#Person is built from resume.json"
+      - "frontend/tests/seo.test.ts#home graph has Person and WebSite; resume graph has the Person"
+      - "frontend/tests/seo.test.ts#title and description derive from resume.json basics"
+      - "frontend/tests/seo.test.ts#og:image and twitter:image point at /og.png with summary_large_image"
+      - scripts/tests/test_ssr.py::test_json_ld_person_comes_from_resume
+      - frontend/public/og.png
+    notes:
+      - "2026-11-05: tags and JSON-LD done (utils/jsonld.ts, utils/seo.ts); waiting on the committed /og.png from `make og-image`."
+      - "2026-11-05: frontend/public/og.png (1200x630) generated by scripts/og_image.mjs and committed; nuxt points og:image/twitter:image at it."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: READ-003
+    title: Sitemap and robots list the real pages
+    job: read
+    area: seo
+    priority: p1
+    done_means:
+      - "public/sitemap.xml lists /, /resume, /projects and the ?cmd= entries for every command the registry marks as `deepLink: true`; robots.txt allows all and points at the sitemap. A test compares the sitemap to the registry so a new command cannot be forgotten."
+    status: done
+    evidence:
+      - "frontend/tests/seo.test.ts#lists exactly the registry deepLink commands as ?cmd= entries"
+      - "frontend/tests/seo.test.ts#lists the three pages"
+      - "frontend/tests/seo.test.ts#robots.txt allows everything and points at the sitemap"
+      - "frontend/tests/registry.test.ts#registry.json matches the registry exports"
+    notes: []
+
+  - id: READ-004
+    title: API serves resume, projects, services, profile as JSON
+    job: read
+    area: api
+    priority: p1
+    done_means:
+      - "GET /resume returns content/resume.json; GET /projects returns content/projects.json; GET /services and GET /profile as before; all with CORS headers; the 404 handler lists every endpoint (tests for each)."
+    status: done
+    evidence:
+      - api/test_app.py::test_resume_endpoint
+      - api/test_app.py::test_projects_endpoint
+      - api/test_app.py::test_now_endpoint
+      - api/test_app.py::test_services_endpoint
+      - api/test_app.py::test_profile_endpoint
+      - api/test_app.py::test_404_handler
+      - api/test_app.py::test_cors_headers
+    notes:
+      - "2026-11-05: /resume, /projects and /now added; /profile now carries company, email and website from the catalog profile; the 404 body is compared to app.url_map so a new route cannot be left out. CI smoke-tests the built image against every content endpoint."
+
+  - id: READ-005
+    title: Weather is cached and never leaks the key
+    job: read
+    area: api
+    priority: p1
+    done_means:
+      - "/weather caches the upstream response for 10 minutes so a burst of visitors makes one OpenWeatherMap call (test with a mocked requests.get counts calls); the existing redaction tests still pass; timestamps are timezone-aware ISO strings (no utcnow deprecation warning in the test run)."
+    status: done
+    evidence:
+      - api/test_app.py::test_weather_is_cached_for_ten_minutes
+      - api/test_app.py::test_weather_cache_expires
+      - api/test_app.py::test_weather_error_is_not_cached
+      - api/test_app.py::test_weather_error_does_not_leak_api_key
+      - api/test_app.py::test_weather_error_does_not_log_api_key
+      - api/test_app.py::test_timestamps_are_timezone_aware
+      - api/pytest.ini
+    notes:
+      - "2026-11-05: module-level cache per gunicorn worker (WEATHER_CACHE_TTL = 600 s, lock around the refresh); failures are not cached. datetime.utcnow() replaced by datetime.now(UTC); api/pytest.ini turns the utcnow DeprecationWarning into an error."
+
+  # ---------------------------------------------------------------------------
+  # MAINTAIN — keeping it true
+  # ---------------------------------------------------------------------------
+
+  - id: MAINT-001
+    title: Catalog drift check against the homelab compose file
+    job: maintain
+    area: tooling
+    priority: p0
+    done_means:
+      - "`make catalog-check` (scripts/check_catalog.py) downloads docker-compose.yml and infrastructure/openclaw/docker-compose.yml from MCheli/83rr-poweredge main, collects container_name values, and fails listing (a) containers not in services.json and (b) catalog entries whose containers are not in compose; `external: true` entries and `containers: []` entries are skipped. It also HEAD/GETs every public https url in services.json and projects.json and fails on non-2xx/3xx (LAN-only urls skipped)."
+      - "A unit test runs the diff logic on fixture compose text. CI runs the check on PRs (url check allowed to warn) and weekly on a schedule (hard fail)."
+    status: done
+    evidence:
+      - scripts/tests/test_check_catalog.py::test_diff_reports_containers_missing_from_catalog
+      - scripts/tests/test_check_catalog.py::test_diff_reports_catalog_entries_missing_from_compose
+      - scripts/tests/test_check_catalog.py::test_external_and_empty_containers_are_skipped
+      - scripts/tests/test_check_catalog.py::test_public_urls_skip_lan_only_and_non_https
+      - scripts/tests/test_check_catalog.py::test_offline_main_run_with_fixture_files
+      - scripts/check_catalog.py
+      - .github/workflows/docker-publish.yml
+    notes:
+      - "2026-11-05: the catalog listed marimo and a voice-ai category that no longer exist, and missed uptime-kuma, ntfy, Dependency-Track, ASA and four databases."
+      - "2026-11-05: scripts/check_catalog.py fetches docker-compose.yml plus every per-entry `compose` override from MCheli/83rr-poweredge main (or --offline <checkout>), diffs container_name values, then HEAD/GETs public https urls (401/403 count as alive behind Cloudflare/SSO). The 39 containers in the compose files all match the catalog today. CI: --urls-warn-only in the test job; the catalog-drift job (Mondays 09:00 UTC) fails hard."
+
+  - id: MAINT-002
+    title: Requirements ledger gate
+    job: maintain
+    area: tooling
+    priority: p0
+    done_means:
+      - "scripts/ledger_check.py validates this file (ids, jobs, statuses, evidence paths resolve, done needs a test, visible+done needs a screenshot); `make ledger-check` and CI run it."
+    status: done
+    evidence:
+      - scripts/tests/test_ledger_check.py::test_done_needs_a_test_that_exists
+      - scripts/tests/test_ledger_check.py::test_visible_done_needs_screenshot
+      - scripts/tests/test_ledger_check.py::test_vitest_title_evidence
+      - scripts/tests/test_ledger_check.py::test_real_ledger_validates
+      - scripts/ledger_check.py
+      - Makefile
+    notes:
+      - "2026-11-05: ported from tallied with jobs identify/show/reach/read/maintain; evidence forms api/test_app.py::test_x, frontend/tests/<file>.test.ts#<title>, artifacts/screens/<name>/<viewport>.png, any repo path."
+
+  - id: MAINT-003
+    title: Screenshot tour
+    job: maintain
+    area: tooling
+    priority: p0
+    done_means:
+      - "`make tour` starts the built site (or uses TOUR_BASE_URL), captures /, each command in the registry marked `tour: true`, /resume and /projects at 390px and 1440px into artifacts/screens/<name>/<viewport>.png, and fails if any page has horizontal overflow. CI uploads the captures as a PR artifact."
+    status: done
+    evidence:
+      - scripts/tests/test_screenshot_tour.py::test_tour_captures_skips_404_and_fails_on_overflow
+      - scripts/tests/test_screenshot_tour.py::test_tour_allow_overflow_exits_zero
+      - scripts/screenshot_tour.mjs
+      - .github/workflows/docker-publish.yml
+    notes:
+      - "2026-11-05: capture names are home, cmd-<command>, resume, projects. Commands come from frontend/commands/registry.json (entries with tour: true) when it exists; until the registry lands the script uses a fallback list (about, resume, projects, homelab, contact, now, help, neofetch). Readiness: [data-tour-ready] or networkidle + 800 ms. A 404 route is skipped with a warning. The test serves a fixture site and asserts captures, the 404 skip and the overflow exit code. CI tour job uploads artifacts/tour on every PR."
+
+  - id: MAINT-004
+    title: Lint and typecheck gates
+    job: maintain
+    area: tooling
+    priority: p0
+    done_means:
+      - "frontend: ESLint (@nuxt/eslint) and `nuxi typecheck` (vue-tsc) pass with TypeScript strict; api: ruff passes. `make pre-commit` runs lint + typecheck + api tests + frontend tests + build + ledger-check + catalog-check; CI's test job runs the same list."
+    status: done
+    evidence:
+      - Makefile
+      - frontend/eslint.config.mjs
+      - api/ruff.toml
+      - .github/workflows/docker-publish.yml
+      - scripts/tests/test_ssr.py::test_security_headers_present
+    notes:
+      - "2026-11-05: wired. ruff (line-length 100) passes on api/ and scripts/; ESLint uses the standalone @nuxt/eslint-config flat preset (frontend/eslint.config.mjs) and also lints scripts/*.mjs; `npm run typecheck` = nuxi typecheck with vue-tsc 3 on TypeScript 5.9 (TS 7 breaks vue-tsc). make pre-commit and the CI test job run the full list. Becomes done when the rewritten frontend passes eslint and typecheck with a strict tsconfig (frontend branch)."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: MAINT-005
+    title: Single content directory shared by both containers
+    job: maintain
+    area: tooling
+    priority: p0
+    done_means:
+      - "content/ (services, resume, projects, now) is the only place facts live; frontend/content and api/content are symlinks for dev; both Dockerfiles copy the real directory; api tests and frontend tests read through the symlink; a JSON Schema per file is validated by `make content-check` (part of pre-commit)."
+    status: done
+    evidence:
+      - scripts/tests/test_content_check.py::test_real_content_is_valid
+      - scripts/tests/test_content_check.py::test_resume_schema_rejects_bad_dates_and_unknown_top_level_keys
+      - scripts/tests/test_content_check.py::test_projects_rules
+      - scripts/tests/test_content_check.py::test_services_rules
+      - api/test_app.py::test_services_endpoint
+      - frontend/tests/commands.test.ts#renders every category and service with counts from the data
+      - content/schemas/services.schema.json
+      - content/schemas/projects.schema.json
+      - content/schemas/now.schema.json
+      - content/schemas/resume.schema.json
+      - api/Dockerfile
+      - frontend/Dockerfile
+    notes:
+      - "2026-11-05: schemas are draft-07 for services/projects/now and the vendored JSON Resume v1.0.0 schema for resume.json ($comment is stripped before validating; $schema and meta are part of the official schema). content_check also enforces unique slugs and service names, github.com/MCheli repos, YYYY / YYYY-MM dates and a real meta.lastModified. The frontend test evidence points at the old suite's catalog test; swap it for the rewritten suite's when it lands."
+
+  - id: MAINT-006
+    title: Docs for agents
+    job: maintain
+    area: docs
+    priority: p1
+    done_means:
+      - "CLAUDE.md (read-first list, rules, quick start, layout), docs/PRODUCT.md, docs/ARCHITECTURE.md, docs/CONTRIBUTING-FEATURES.md (how to add a command, a content field, a page, an API endpoint, with the evidence each needs) exist and agree with the code; README.md is a short human overview pointing at them."
+    status: done
+    evidence:
+      - CLAUDE.md
+      - docs/PRODUCT.md
+      - docs/ARCHITECTURE.md
+      - docs/CONTRIBUTING-FEATURES.md
+      - README.md
+      - scripts/tests/test_ledger_check.py::test_real_ledger_validates
+    notes:
+      - "2026-11-05: written after the merge, from the final code: CLAUDE.md (rules incl. the voice rule from PRODUCT.md 'Positioning', quick start with the NUXT_PUBLIC_API_BASE override, layout, history), ARCHITECTURE.md (containers, content model, blocks/registry/execute/useTerminal, API incl. the contact flow, SEO, mobile, test harness, CI, ledger schema, security), CONTRIBUTING-FEATURES.md (nine recipes with the evidence each needs), README.md (stale API_URL dev proxy removed; pages and commands listed). Every path and make target named in them exists and was run."
+
+  # ---------------------------------------------------------------------------
+  # NFR
+  # ---------------------------------------------------------------------------
+
+  - id: NFR-SEC-001
+    title: Security headers and self-hosted font
+    job: read
+    area: frontend
+    priority: p1
+    done_means:
+      - "JetBrains Mono is served from the site (npm @fontsource/jetbrains-mono or committed woff2), not Google Fonts, so no third-party request is made on page load (test: built HTML has no fonts.googleapis.com)."
+      - "Existing headers (nosniff, frame-ancestors none, referrer policy, permissions policy) stay; the build-smoke in CI proves the page still loads with them."
+    status: done
+    evidence:
+      - "frontend/tests/seo.test.ts#title and description derive from resume.json basics"
+      - scripts/tests/test_ssr.py::test_no_third_party_requests_on_page_load
+      - scripts/tests/test_ssr.py::test_security_headers_present
+    notes:
+      - "2026-11-05: @fontsource/jetbrains-mono (latin 400/500/700) in nuxt.config css; Google Fonts link and preconnects removed; headers unchanged. Needs the build-smoke grep for fonts.googleapis.com on the tooling side to close."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: NFR-MOB-001
+    title: Input does not zoom on iOS and the keyboard fits
+    job: show
+    area: terminal
+    priority: p1
+    visible: true
+    done_means:
+      - "The command input has font-size >= 16px, autocapitalize=off, autocorrect=off, spellcheck=false, enterkeyhint=go; the suggestion/hint row has no fixed 250px margin; at 390px the prompt and input sit on one line and the command bar stays reachable."
+    status: done
+    evidence:
+      - "frontend/tests/components.test.ts#has the mobile-safe attributes"
+      - artifacts/screens/home/mobile.png
+      - artifacts/screens/cmd-help/mobile.png
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: components/TerminalPrompt.vue: font-size max(1rem,16px), autocapitalize/autocorrect off, spellcheck false, enterkeyhint go; the 250px margin is gone with the old suggestion row."
+      - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
