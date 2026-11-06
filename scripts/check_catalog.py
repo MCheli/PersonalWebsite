@@ -145,7 +145,7 @@ def diff_catalog(catalog: dict, compose_names: set[str]) -> Diff:
 # --- urls --------------------------------------------------------------------------
 
 
-def public_urls(catalog: dict, projects: dict) -> list[tuple[str, str]]:
+def public_urls(catalog: dict, projects: dict, resume: dict | None = None) -> list[tuple[str, str]]:
     """(label, url) pairs worth checking: https only, LAN-only entries skipped."""
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
@@ -155,9 +155,10 @@ def public_urls(catalog: dict, projects: dict) -> list[tuple[str, str]]:
             seen.add(value)
             out.append((label, value))
 
-    profile = catalog.get("profile", {})
-    for key in ("website", "linkedin", "github"):
-        add(f"profile.{key}", profile.get(key))
+    basics = (resume or {}).get("basics", {})
+    add("resume.basics.url", basics.get("url"))
+    for prof in basics.get("profiles", []):
+        add(f"resume.profiles.{prof.get('network', '?')}", prof.get("url"))
     add("host.repo", catalog.get("host", {}).get("repo"))
     for cat in catalog.get("categories", []):
         cat_lan = bool(cat.get("lanOnly"))
@@ -215,10 +216,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--catalog", type=Path, default=CONTENT_DIR / "services.json")
     ap.add_argument("--projects", type=Path, default=CONTENT_DIR / "projects.json")
+    ap.add_argument("--resume", type=Path, default=CONTENT_DIR / "resume.json")
     args = ap.parse_args(argv)
 
     catalog = load_json(args.catalog)
     projects = load_json(args.projects) if args.projects.exists() else {"projects": []}
+    resume = load_json(args.resume) if args.resume.exists() else {}
 
     names: set[str] = set()
     for path in compose_paths(catalog):
@@ -251,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.no_urls:
         dead: list[str] = []
-        urls = public_urls(catalog, projects)
+        urls = public_urls(catalog, projects, resume)
         for label, url in urls:
             alive, detail = check_url(url)
             mark = "ok" if alive else "DEAD"

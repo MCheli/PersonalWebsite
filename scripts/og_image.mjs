@@ -5,7 +5,7 @@
  *   make og-image      (node scripts/og_image.mjs [--out path])
  *
  * Everything on the card comes from content/: name, title, company and location from
- * resume.json basics (label is "Title · Company") and services.json profile; the host
+ * resume.json (basics + current role) and services.json host; the host
  * name from services.json for the prompt line. If basics.image is set (e.g.
  * /headshot.jpg, PRODUCT.md decision D2) the file under frontend/public is placed as a
  * circle on the right. Commit the PNG; nuxt.config points og:image at /og.png.
@@ -21,14 +21,14 @@ const OUT = path.resolve(repoRoot, outIdx >= 0 ? args[outIdx + 1] : path.join(fr
 const resume = readJson(path.join(contentDir, 'resume.json'))
 const catalog = readJson(path.join(contentDir, 'services.json'))
 const basics = resume.basics
-const profile = catalog.profile
 
 const name = basics.name
-const title = profile.title || basics.label
-const company = profile.company || ''
-const location = profile.location || [basics.location?.city, basics.location?.region].filter(Boolean).join(', ')
+const current = (resume.work && resume.work[0]) || {}
+const title = current.position || basics.label
+const company = current.name || ''
+const location = [basics.location?.city, basics.location?.region].filter(Boolean).join(', ')
 const host = catalog.host?.name || '83rr-poweredge'
-const site = (basics.url || profile.website || 'https://www.markcheli.com').replace(/^https?:\/\//, '')
+const site = (basics.url || 'https://www.markcheli.com').replace(/^https?:\/\//, '')
 
 let imageDataUrl = null
 if (basics.image) {

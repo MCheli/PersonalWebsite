@@ -40,10 +40,6 @@ services:
 
 def catalog(*services, categories=None):
     return {
-        "profile": {
-            "website": "https://www.markcheli.com",
-            "linkedin": "https://www.linkedin.com/in/x",
-        },
         "host": {"repo": "https://github.com/MCheli/83rr-poweredge"},
         "categories": categories or [{"id": "all", "title": "All", "services": list(services)}],
     }
@@ -146,8 +142,15 @@ def test_public_urls_skip_lan_only_and_non_https():
             }
         ]
     }
-    urls = [u for _, u in cc.public_urls(cat, projects)]
+    resume = {
+        "basics": {
+            "url": "https://www.markcheli.com",
+            "profiles": [{"network": "GitHub", "url": "https://github.com/MCheli"}],
+        }
+    }
+    urls = [u for _, u in cc.public_urls(cat, projects, resume)]
     assert "https://www.markcheli.com" in urls
+    assert "https://github.com/MCheli" in urls
     assert "https://github.com/MCheli/PersonalWebsite" in urls
     assert "https://p.example" in urls and "https://d.example" in urls
     assert "https://x.ops.markcheli.com" not in urls

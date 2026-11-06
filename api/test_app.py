@@ -202,24 +202,25 @@ def test_weather_error_is_not_cached(client, live_weather, monkeypatch):
 
 
 def test_profile_endpoint(client):
-    """Profile identity comes from services.json's profile block."""
+    """Profile identity comes from resume.json (basics + current role); catalog from services.json."""
     catalog = json.loads((CONTENT / "services.json").read_text())
+    resume = json.loads((CONTENT / "resume.json").read_text())
     response = client.get("/profile")
     assert response.status_code == 200
 
     data = json.loads(response.data)
-    profile = catalog["profile"]
-    assert data["name"] == profile["name"]
-    assert data["title"] == profile["title"]
-    assert data["company"] == profile["company"]
-    assert data["location"] == profile["location"]
-    assert data["email"] == profile["email"]
-    assert data["website"] == profile["website"]
+    basics = resume["basics"]
+    assert data["name"] == basics["name"]
+    assert data["title"] == resume["work"][0]["position"]
+    assert data["company"] == resume["work"][0]["name"]
+    assert data["location"] == f"{basics['location']['city']}, {basics['location']['region']}"
+    assert data["email"] == basics["email"]
+    assert data["website"] == basics["url"]
 
     links = data["links"]
-    assert links["linkedin"] == profile["linkedin"]
-    assert links["github"] == profile["github"]
-    assert "home_assistant" in links
+    for prof in basics["profiles"]:
+        assert links[prof["network"].lower()] == prof["url"]
+    assert links["home_assistant"] == "https://home.markcheli.com"  # derived from the catalog
 
     host = data["host"]
     assert host["hardware"] == catalog["host"]["hardware"]

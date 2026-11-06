@@ -137,17 +137,6 @@ export interface Host {
   repo?: string
 }
 
-export interface Profile {
-  name: string
-  title: string
-  company: string
-  location: string
-  email: string
-  website: string
-  linkedin: string
-  github: string
-}
-
 export interface Service {
   name: string
   url?: string
@@ -171,7 +160,6 @@ export interface Category {
 export interface Catalog {
   updated: string
   host: Host
-  profile: Profile
   categories: Category[]
 }
 

@@ -185,6 +185,7 @@ def get_profile():
     is a flat name -> url lookup for consumers that just want the URLs.
     """
     basics = RESUME["basics"]
+    location = basics.get("location", {})
     current = RESUME["work"][0] if RESUME.get("work") else {}
     categories = CATALOG["categories"]
 
@@ -200,7 +201,7 @@ def get_profile():
             "title": current.get("position", basics.get("label")),
             "company": current.get("name"),
             "location": ", ".join(
-                v for v in (basics.get("location", {}).get("city"), basics.get("location", {}).get("region")) if v
+                v for v in (location.get("city"), location.get("region")) if isinstance(v, str)
             ),
             "email": basics.get("email"),
             "website": basics.get("url"),

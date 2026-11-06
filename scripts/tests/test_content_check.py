@@ -91,8 +91,8 @@ def test_services_rules(content_copy):
     edit(content_copy, "services.json", lambda d: d["categories"][0]["services"][0].update(bogus=1))
     assert any("bogus" in p for p in problems(content_copy))
 
-    edit(content_copy, "services.json", lambda d: d["profile"].__setitem__("email", "not-an-email"))
-    assert any("profile/email" in p for p in problems(content_copy))
+    edit(content_copy, "resume.json", lambda d: d["basics"].__setitem__("email", "not-an-email"))
+    assert any("email" in p for p in problems(content_copy))
 
 
 def test_now_rules(content_copy):

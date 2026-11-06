@@ -18,7 +18,7 @@ Extra rules the schemas cannot express:
   - every project `repo` is https://github.com/MCheli/<repo>
   - dates: `updated` is YYYY-MM-DD; `started`, work/education/certificate dates are
     YYYY or YYYY-MM (YYYY-MM-DD also accepted, per JSON Resume)
-  - resume meta.lastModified is a real calendar date
+  - resume meta.lastModified is a real calendar date; basics.email looks like an email
 """
 
 from __future__ import annotations
@@ -116,6 +116,9 @@ def rule_problems(contents: dict[str, dict]) -> list[str]:
                 )
 
     resume = contents.get("resume.json", {})
+    email = resume.get("basics", {}).get("email", "")
+    if not isinstance(email, str) or "@" not in email or "." not in email.rsplit("@", 1)[-1]:
+        out.append("resume.json: basics.email must be a plausible email address")
     for i, w in enumerate(resume.get("work", [])):
         out += check_partial_dates("resume.json", f"work[{i}]", w, ("startDate", "endDate"))
     for i, e in enumerate(resume.get("education", [])):

@@ -89,9 +89,8 @@ export const validateProjects = (raw: unknown): ProjectsFile => {
 
 export const validateCatalog = (raw: unknown): Catalog => {
   const file = 'services.json'
-  const root = requireKeys(file, raw, ['updated', 'host', 'profile', 'categories'])
+  const root = requireKeys(file, raw, ['updated', 'host', 'categories'])
   requireKeys(file, root.host, ['name', 'displayName', 'hardware', 'os', 'kernel', 'cpu', 'memory', 'stack'], 'host.')
-  requireKeys(file, root.profile, ['name', 'title', 'company', 'location', 'email', 'website', 'linkedin', 'github'], 'profile.')
   const seen = new Set<string>()
   requireArray(file, root.categories, 'categories').forEach((c, i) => {
     const category = requireKeys(file, c, ['id', 'title', 'services'], `categories[${i}].`)
