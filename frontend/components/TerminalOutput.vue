@@ -57,6 +57,37 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
         </template>
       </dl>
 
+      <div v-else-if="block.kind === 'table'" class="output-table">
+        <div v-for="(row, j) in block.rows" :key="j" class="output-row">
+          <span class="output-name">
+            <a
+              v-if="isLink(row.name)"
+              :href="row.name.href"
+              class="output-link"
+              :target="external(row.name.href) ? '_blank' : undefined"
+              :rel="external(row.name.href) ? 'noopener noreferrer' : undefined"
+            >{{ row.name.label }}</a>
+            <template v-else>{{ row.name }}</template>
+          </span>
+          <span class="output-desc">
+            <span v-if="row.description" class="output-desc-text">{{ row.description }}</span>
+            <span v-if="row.detail && row.detail.length > 0" class="output-detail">
+              <template v-for="(part, k) in row.detail" :key="k">
+                <a
+                  v-if="isLink(part)"
+                  :href="part.href"
+                  class="output-link"
+                  :target="external(part.href) ? '_blank' : undefined"
+                  :rel="external(part.href) ? 'noopener noreferrer' : undefined"
+                >{{ part.label }}</a>
+                <span v-else>{{ part }}</span>
+                <span v-if="k < row.detail.length - 1" class="output-sep" aria-hidden="true"> · </span>
+              </template>
+            </span>
+          </span>
+        </div>
+      </div>
+
       <p v-else-if="block.kind === 'link'" class="output-text">
         <a
           :href="block.href"
@@ -104,9 +135,7 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
   margin: 0.25rem 0 0.25rem;
   font-size: 1em;
   font-weight: 700;
-  color: var(--t-info);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  color: var(--t-heading);
 }
 
 .output-rule {
@@ -140,7 +169,7 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
 
 .output-kv dt {
   display: inline;
-  color: #f2f2f2;
+  color: var(--t-key);
   font-weight: 500;
 }
 
@@ -172,10 +201,6 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
     display: block;
   }
 
-  .output-kv dt {
-    color: var(--t-key);
-  }
-
   .output-kv dt::after,
   .output-kv dd::after {
     content: none;
@@ -184,5 +209,47 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
 
 .output-sep {
   color: var(--t-muted);
+}
+
+/* Catalog table: name, then the description in the comment colour; stacked on a
+   phone, two aligned columns when there is room. Never wider than the screen. */
+.output-table {
+  margin: 0.25rem 0;
+}
+
+.output-row {
+  margin: 0 0 0.35rem;
+}
+
+.output-name {
+  display: block;
+  color: var(--t-output);
+}
+
+.output-desc {
+  display: block;
+  color: var(--t-muted);
+}
+
+.output-detail {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .output-table {
+    display: grid;
+    grid-template-columns: 23ch 1fr;
+    gap: 0.1rem 1rem;
+    max-width: 64rem;
+  }
+
+  .output-row {
+    display: contents;
+  }
+
+  .output-name,
+  .output-desc {
+    margin: 0 0 0.15rem;
+  }
 }
 </style>

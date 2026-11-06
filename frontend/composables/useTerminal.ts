@@ -141,20 +141,36 @@ export const useTerminal = (options: TerminalOptions) => {
     }
   }
 
-  /** Type a known command character by character, then run it. Unknown commands are ignored. */
+  /**
+   * Type a line character by character, pause as a hand would before Enter,
+   * then run it exactly as Enter would. This is what a chip tap and a ?cmd=
+   * deep link both do, so the transcript always shows the command being
+   * entered. The input is read-only and chips are disabled while it types.
+   */
+  const typeAndRun = async (raw: string): Promise<OutputBlock[]> => {
+    const command = raw.trim()
+    if (command.length === 0 || busy.value) return []
+    if (pending.value !== null) return run(command)
+    const delay = options.typingDelay ?? 0
+    busy.value = true
+    try {
+      for (let i = 1; i <= command.length; i++) {
+        input.value = command.slice(0, i)
+        await sleep(delay)
+      }
+      await sleep(delay * 4)
+    } finally {
+      busy.value = false
+    }
+    return run(command)
+  }
+
+  /** Type a known command and run it. Unknown commands are ignored. */
   const runDeepLink = async (raw: string): Promise<boolean> => {
     const command = raw.trim()
     const name = command.split(/\s+/)[0] ?? ''
     if (findCommand(name) === undefined) return false
-    const delay = options.typingDelay ?? 0
-    busy.value = true
-    for (let i = 1; i <= command.length; i++) {
-      input.value = command.slice(0, i)
-      await sleep(delay)
-    }
-    await sleep(delay * 4)
-    busy.value = false
-    await run(command)
+    await typeAndRun(command)
     return true
   }
 
@@ -215,6 +231,7 @@ export const useTerminal = (options: TerminalOptions) => {
     pending,
     typed: computed(() => typed.value.slice()),
     run,
+    typeAndRun,
     runDeepLink,
     print,
     clearScreen,

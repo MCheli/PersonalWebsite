@@ -35,7 +35,7 @@ import { devices, frontendDir, launchBrowser, readJson, repoRoot, resolveBase, s
 // frontend/commands/registry.json is generated from commands/registry.ts and has the shape
 // { tour: [names], deepLink: [names] } (tests/registry.test.ts keeps it in sync). The fallback
 // only matters if that file is ever removed.
-const FALLBACK_COMMANDS = ['about', 'resume', 'projects', 'homelab', 'contact', 'now', 'help', 'neofetch']
+const FALLBACK_COMMANDS = ['about', 'resume', 'projects', 'services', 'contact', 'now', 'help', 'neofetch']
 
 function tourCommands() {
   const registry = path.join(frontendDir, 'commands', 'registry.json')

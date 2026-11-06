@@ -2,10 +2,11 @@
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useHead, useRoute, useRuntimeConfig } from '#imports'
 import { neofetchBlocks } from '~/commands/system'
+import PromptSegments from '~/components/PromptSegments.vue'
 import TerminalPrompt from '~/components/TerminalPrompt.vue'
 import { useTerminal } from '~/composables/useTerminal'
 import { createApi } from '~/utils/api'
-import { content } from '~/utils/content'
+import { content, promptUser } from '~/utils/content'
 import { homeJsonLd } from '~/utils/jsonld'
 import { pageHead } from '~/utils/seo'
 
@@ -17,12 +18,16 @@ useHead({
   script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(homeJsonLd(content.resume)) }]
 })
 
-const promptHost = `user@${content.catalog.host.name}`
+const user = promptUser(content.resume)
+const host = content.catalog.host.name
 
 const api = createApi((url, options) => $fetch(url, options), config.public.apiBase)
 
 const reducedMotion = (): boolean =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/** Milliseconds per character when a chip or a deep link types a command: fast, but visible. */
+const TYPING_DELAY = 30
 
 const terminal = useTerminal({
   content,
@@ -31,7 +36,7 @@ const terminal = useTerminal({
   },
   fetchWeather: api.fetchWeather,
   sendMessage: api.sendMessage,
-  typingDelay: reducedMotion() ? 0 : 45
+  typingDelay: reducedMotion() ? 0 : TYPING_DELAY
 })
 const { entries, input, busy, pending } = terminal
 
@@ -39,6 +44,7 @@ const { entries, input, busy, pending } = terminal
 terminal.print(neofetchBlocks(content))
 
 const prompt = ref<InstanceType<typeof TerminalPrompt> | null>(null)
+const screen = ref<HTMLElement | null>(null)
 const barWrap = ref<HTMLElement | null>(null)
 const ready = ref(false)
 /** Height of the command bar when it is pinned to the bottom of a phone screen. */
@@ -54,17 +60,41 @@ const scrollToEnd = async (): Promise<void> => {
   window.scrollTo(0, document.documentElement.scrollHeight)
 }
 
-const submit = async (): Promise<void> => {
-  if (busy.value) return
-  await terminal.run(input.value)
-  await scrollToEnd()
+/**
+ * Put the echoed command line at the top of the viewport so the output is
+ * what the visitor sees next, the way a cleared terminal shows a command and
+ * its result. Falls back to the end of the page when there is no entry.
+ */
+const scrollToLastCommand = async (): Promise<void> => {
+  await nextTick()
+  const lines = screen.value?.querySelectorAll<HTMLElement>('.entry-command')
+  const last = lines && lines.length > 0 ? lines[lines.length - 1] : undefined
+  if (last === undefined || typeof last.scrollIntoView !== 'function') {
+    await scrollToEnd()
+    return
+  }
+  last.scrollIntoView({ block: 'start', behavior: 'auto' })
 }
 
+const submit = async (): Promise<void> => {
+  if (busy.value) return
+  const answering = pending.value !== null
+  await terminal.run(input.value)
+  // An answer to a question keeps the conversation in view; a command shows its output from the top.
+  if (answering) await scrollToEnd()
+  else await scrollToLastCommand()
+}
+
+/**
+ * A chip: bring the prompt into view, type the command into it, run it as
+ * Enter would, then show the output from its first line.
+ */
 const runChip = async (command: string): Promise<void> => {
   if (busy.value || pending.value !== null) return
-  await terminal.run(command)
   if (!coarsePointer()) prompt.value?.focus()
   await scrollToEnd()
+  await terminal.typeAndRun(command)
+  await scrollToLastCommand()
 }
 
 const onCancel = (): void => {
@@ -100,8 +130,8 @@ onMounted(async () => {
 
   const cmd = route.query.cmd
   if (typeof cmd === 'string' && cmd.trim().length > 0) {
-    await terminal.runDeepLink(cmd)
     await scrollToEnd()
+    if (await terminal.runDeepLink(cmd)) await scrollToLastCommand()
   }
   ready.value = true
 })
@@ -121,15 +151,18 @@ onUnmounted(() => {
     <IdentityHeader />
     <SeoContent />
 
-    <section class="screen" aria-live="polite" aria-label="Terminal output">
+    <section ref="screen" class="screen" aria-live="polite" aria-label="Terminal output">
       <article v-for="(entry, i) in entries" :key="i" class="entry">
-        <div v-if="entry.prompt" class="entry-command">
+        <div v-if="entry.prompt" class="entry-command entry-answer">
           <span class="entry-question">{{ entry.prompt }}</span>
           <span class="entry-text">{{ entry.command }}</span>
         </div>
         <div v-else-if="entry.command" class="entry-command">
-          <span class="entry-prompt">{{ promptHost }}:~$</span>
-          <span class="entry-text">{{ entry.command }}</span>
+          <PromptSegments :user="user" :host="host" />
+          <div class="entry-line">
+            <span class="entry-caret" aria-hidden="true">❯</span>
+            <span class="entry-text">{{ entry.command }}</span>
+          </div>
         </div>
         <TerminalOutput :blocks="entry.blocks" />
       </article>
@@ -138,7 +171,8 @@ onUnmounted(() => {
     <TerminalPrompt
       ref="prompt"
       v-model="input"
-      :host="promptHost"
+      :user="user"
+      :host="host"
       :busy="busy"
       :label="pending?.label"
       @submit="submit"
@@ -182,22 +216,36 @@ onUnmounted(() => {
 }
 
 .entry-command {
-  margin-bottom: 0.25rem;
+  margin: 0.75rem 0 0.25rem;
   overflow-wrap: anywhere;
+  /* Where scrollToLastCommand lands: a little air above the echoed line. */
+  scroll-margin-top: 0.5rem;
 }
 
-.entry-prompt {
+.entry-line {
+  display: flex;
+  gap: 0.5ch;
+  align-items: baseline;
+  margin-top: 0.15rem;
+}
+
+.entry-caret {
   color: var(--t-prompt);
   font-weight: 700;
+  flex: 0 0 auto;
 }
 
 .entry-question {
-  color: var(--t-info);
+  color: var(--t-question);
   font-weight: 700;
 }
 
-.entry-text {
-  color: #ffffff;
+.entry-answer .entry-text {
   margin-left: 0.5ch;
+}
+
+/* The command as typed: yellow, the way zsh-syntax-highlighting marks a valid command. */
+.entry-text {
+  color: var(--t-command);
 }
 </style>

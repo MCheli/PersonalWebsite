@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 .PHONY: help install dev dev-api dev-frontend test test-frontend test-all lint lint-api lint-frontend \
-        typecheck build tour og-image resume-pdf check-resume-pdf content-check catalog-check \
+        typecheck build tour chip-tap og-image resume-pdf check-resume-pdf content-check catalog-check \
         ledger-check pre-commit clean
 
 VENV := api/.venv
@@ -67,6 +67,9 @@ build:  ## Production build to frontend/.output (the tour, og-image and resume-p
 
 tour:  ## Screenshot every route and tour command at 390px and 1440px into artifacts/screens/ (needs make build, or TOUR_BASE_URL)
 	node scripts/screenshot_tour.mjs $(TOUR_ARGS)
+
+chip-tap:  ## Tap the services chip at 390px and capture 100/300/1200 ms into artifacts/screens/chip-tap/ (needs make build)
+	node scripts/chip_tap.mjs $(CHIP_TAP_ARGS)
 
 og-image:  ## Render frontend/public/og.png (1200x630) from content/
 	node scripts/og_image.mjs

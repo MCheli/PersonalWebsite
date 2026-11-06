@@ -11,12 +11,27 @@ export type Inline = string | { href: string, label: string }
 
 export type Tone = 'muted' | 'success' | 'info' | 'error'
 
+export interface TableRow {
+  /** The first column: a name, or a link when the thing has a url. */
+  name: Inline
+  /** The second column, rendered muted. */
+  description?: string
+  /** A second muted line under the description (a repo link, a note). */
+  detail?: Inline[]
+}
+
 export type OutputBlock =
   | { kind: 'text', text: string, tone?: Tone }
   | { kind: 'heading', text: string }
   | { kind: 'rule' }
   | { kind: 'list', items: Inline[][] }
   | { kind: 'kv', rows: { key: string, value: Inline[] }[] }
+  /**
+   * A catalog table: one row per item with a name (plain or a link), a muted
+   * description beside it and an optional second muted line (repo, notes).
+   * Two columns on wide screens, stacked on a phone; the renderer decides.
+   */
+  | { kind: 'table', rows: TableRow[] }
   | { kind: 'link', href: string, label: string }
   /** The MARK CHELI art on wide screens; the name as text on narrow ones. */
   | { kind: 'figlet' }
