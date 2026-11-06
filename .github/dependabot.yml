@@ -46,3 +46,11 @@ updates:
       # vue-tsc 3.x does not run on TypeScript 7 (ERR_PACKAGE_PATH_NOT_EXPORTED ./lib/tsc); bump by hand.
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
+      # @types/node tracks the runtime major in .nvmrc (22); a newer major is wrong, not an update.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # Nuxt 4 is a migration (new directory layout, breaking config), done deliberately, not by bot.
+      - dependency-name: nuxt
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@nuxt/vite-builder"
+        update-types: ["version-update:semver-major"]

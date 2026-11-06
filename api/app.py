@@ -40,7 +40,6 @@ NTFY_TOPIC = os.getenv("NTFY_TOPIC", "homelab")
 NTFY_PUBLISH_TOKEN = os.getenv("NTFY_PUBLISH_TOKEN", "")
 CONTACT_RATE_LIMIT = 3  # messages per CONTACT_RATE_WINDOW per client IP
 CONTACT_RATE_WINDOW = 3600  # seconds (rolling)
-EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 # Content: api/content is a symlink to ../content in the repo; the Dockerfile copies
 # the real directory in its place, so both resolve relative to app.py. Each file is
@@ -274,6 +273,18 @@ def _rate_limited(ip: str) -> bool:
         return False
 
 
+def _looks_like_email(value: str) -> bool:
+    """One '@', a dot in the domain, no whitespace. Linear-time on purpose (no regex)."""
+    local, sep, domain = value.partition("@")
+    return (
+        bool(sep)
+        and bool(local)
+        and "@" not in domain
+        and "." in domain.strip(".")
+        and not any(c.isspace() for c in value)
+    )
+
+
 def _ascii_title(name: str) -> str:
     try:
         name.encode("latin-1")
@@ -297,7 +308,7 @@ def validate_contact(body: dict) -> tuple[dict | None, tuple[str, str] | None]:
     name = " ".join(name.split())  # one line, single spaces
     if not 1 <= len(name) <= 100:
         return None, ("Name must be 1 to 100 characters", "name")
-    if len(email) > 254 or not EMAIL_RE.match(email):
+    if len(email) > 254 or not _looks_like_email(email):
         return None, ("Enter a valid email address", "email")
     if not 10 <= len(message) <= 2000:
         return None, ("Message must be 10 to 2000 characters", "message")
