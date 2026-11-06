@@ -25,7 +25,7 @@ export const contact: Command = {
       text('Public services', 'info'),
       kv(services),
       blank(),
-      muted("Email is the fastest. Type a service name to open it, 'homelab' for the whole catalog."),
+      muted("Email is the fastest. Type a service name to open it, 'services' for the whole catalog."),
       muted("Or type 'message' to send a note from here.")
     ]
   }
