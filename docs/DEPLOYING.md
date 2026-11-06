@@ -4,7 +4,7 @@ Two containers on the 83RR PowerEdge (Ubuntu, Docker Compose, NGINX, Cloudflare 
 
 ## The path
 
-1. Push to `master` (a merged PR). `.github/workflows/docker-publish.yml` runs the `test` job (the `make pre-commit` list).
+1. Push to `main` (a merged PR). `.github/workflows/docker-publish.yml` runs the `test` job (the `make pre-commit` list).
 2. `build-frontend` and `build-api` build the images from the repo root (so `content/` is copied into both) and push to `ghcr.io/mcheli/personal-website` and `ghcr.io/mcheli/flask-api`, tagged `latest` and the commit SHA.
 3. Watchtower on the R630 polls every 5 minutes (`WATCHTOWER_LABEL_ENABLE=true`; both containers carry `com.centurylinklabs.watchtower.enable=true`), pulls `:latest`, recreates the container, and removes the old image (`WATCHTOWER_CLEANUP=true`).
 
@@ -37,7 +37,7 @@ sed -i 's|ghcr.io/mcheli/personal-website:latest|ghcr.io/mcheli/personal-website
 docker compose pull personal-website && docker compose up -d --no-deps personal-website
 ```
 
-Watchtower only follows the tag a container was started with, so a SHA-pinned container stays put until you switch it back to `:latest` (edit, `pull`, `up -d --no-deps`) once master is fixed. Same recipe for `flask-api`. Commit the compose change in the homelab repo so the pin is visible.
+Watchtower only follows the tag a container was started with, so a SHA-pinned container stays put until you switch it back to `:latest` (edit, `pull`, `up -d --no-deps`) once main is fixed. Same recipe for `flask-api`. Commit the compose change in the homelab repo so the pin is visible.
 
 Alternatively retag on the registry: `docker pull ghcr.io/mcheli/personal-website:<sha> && docker tag ... :latest && docker push ...` from a machine logged in to ghcr.io; Watchtower deploys it on its next poll.
 

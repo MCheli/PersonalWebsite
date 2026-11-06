@@ -138,7 +138,7 @@ describe('PromptSegments', () => {
     expect(w.get('.seg-user').text()).toBe(promptUser(content.resume))
     expect(w.get('.seg-dir .dir-wide').text()).toBe(`~/${content.catalog.host.name}`)
     expect(w.get('.seg-dir .dir-narrow').text()).toBe('~')
-    expect(w.get('.seg-git').text()).toBe('master')
+    expect(w.get('.seg-git').text()).toBe('main')
   })
 
   it('promptUser is the first name, lower-case', () => {

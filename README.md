@@ -88,4 +88,4 @@ Neither key nor token is ever written to logs or responses (`api/test_app.py` pr
 
 ## CI
 
-`.github/workflows/docker-publish.yml`: the `test` job runs the `make pre-commit` list, then both images build; on `master` they push to ghcr.io and Watchtower deploys them. PRs also get a screenshot tour as a downloadable artifact. Mondays a scheduled job runs the catalog check with the URL check enforced, so drift between `services.json` and the homelab fails loudly. Fridays the images rebuild on fresh base images.
+`.github/workflows/docker-publish.yml`: the `test` job runs the `make pre-commit` list, then both images build; on `main` they push to ghcr.io and Watchtower deploys them. PRs also get a screenshot tour as a downloadable artifact. Mondays a scheduled job runs the catalog check with the URL check enforced, so drift between `services.json` and the homelab fails loudly. Fridays the images rebuild on fresh base images.
