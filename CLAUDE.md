@@ -81,4 +81,4 @@ The site was rebuilt on 2026-11-05 from a review of the old terminal (stale cata
 
 ## Local-checkout gotcha
 
-Mark's Mac mini clone had been four commits behind `origin/master` before this pass (security-sweep PRs merged on GitHub, never pulled): `git pull` there before branching. `.claude/worktrees/` is gitignored; worktrees left on disk by earlier sweeps are safe to delete.
+Mark's Mac mini clone had been four commits behind `origin/master` (now `origin/main`; the default branch was renamed 2026-11-06) before this pass (security-sweep PRs merged on GitHub, never pulled): `git pull` there before branching. `.claude/worktrees/` is gitignored; worktrees left on disk by earlier sweeps are safe to delete.

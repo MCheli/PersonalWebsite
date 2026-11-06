@@ -12,7 +12,7 @@ withDefaults(defineProps<{
   host: string
   /** The branch segment. The site deploys from this branch. */
   branch?: string
-}>(), { branch: 'master' })
+}>(), { branch: 'main' })
 </script>
 
 <template>
