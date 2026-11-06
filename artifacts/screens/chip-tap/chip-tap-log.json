@@ -1,0 +1,34 @@
+{
+  "chip": "services",
+  "base": "http://127.0.0.1:41809",
+  "ticks": {
+    "t100": {
+      "input": "se",
+      "busyChips": 6,
+      "entries": 0,
+      "lastCommandTop": null,
+      "scrollY": 243,
+      "at": 103,
+      "file": "artifacts/screens/chip-tap/t100.png"
+    },
+    "t300": {
+      "input": "services",
+      "busyChips": 6,
+      "entries": 0,
+      "lastCommandTop": null,
+      "scrollY": 243,
+      "at": 303,
+      "file": "artifacts/screens/chip-tap/t300.png"
+    },
+    "t1200": {
+      "input": "",
+      "busyChips": 0,
+      "entries": 1,
+      "lastCommandTop": 8,
+      "scrollY": 913,
+      "at": 1203,
+      "file": "artifacts/screens/chip-tap/t1200.png"
+    }
+  },
+  "problems": []
+}

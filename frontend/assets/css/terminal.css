@@ -1,19 +1,52 @@
-/* markcheli.com — the terminal's palette and the few global rules. */
+/* markcheli.com — the terminal's palette and the few global rules.
+   Palette: Dracula (the theme Mark's own Terminal.app runs), used with intent:
+   purple headings, pink sub-labels, orange keys, cyan links, yellow for the
+   command that was typed, green for the prompt and success, red for errors,
+   the comment colour for anything secondary. */
 
 :root {
-  --t-bg: #0a0a0a;
-  --t-prompt: #00ff00;
-  --t-output: #dddddd;
-  --t-muted: #8a8a8a;
-  --t-key: #b5b5b5;
-  --t-link: #4a9eff;
-  --t-accent: #e6e6e6;
-  --t-info: #4a9eff;
-  --t-success: #44ff44;
-  --t-error: #ff5555;
-  --t-rule: #2a2a2a;
-  --t-chip-bg: #141414;
-  --t-chip-border: #333333;
+  /* Dracula */
+  --t-bg: #282a36;
+  --t-line: #44475a;
+  --t-fg: #f8f8f2;
+  --t-comment: #6272a4;
+  --t-cyan: #8be9fd;
+  --t-green: #50fa7b;
+  --t-orange: #ffb86c;
+  --t-pink: #ff79c6;
+  --t-purple: #bd93f9;
+  --t-red: #ff5555;
+  --t-yellow: #f1fa8c;
+
+  /* Roles */
+  --t-output: var(--t-fg);
+  --t-accent: var(--t-fg);
+  --t-muted: var(--t-comment);
+  --t-heading: var(--t-purple);
+  --t-info: var(--t-pink);
+  --t-key: var(--t-orange);
+  --t-link: var(--t-cyan);
+  --t-link-underline: rgb(139 233 253 / 0.6);
+  --t-prompt: var(--t-green);
+  --t-command: var(--t-yellow);
+  --t-question: var(--t-cyan);
+  --t-success: var(--t-green);
+  --t-error: var(--t-red);
+  --t-rule: var(--t-line);
+  --t-chip-bg: var(--t-line);
+  --t-chip-fg: var(--t-cyan);
+  --t-chip-border: var(--t-line);
+  --t-chip-focus: var(--t-purple);
+
+  /* Prompt segments (Powerlevel10k rainbow: os-icon white, directory blue, branch green;
+     Dracula maps ANSI blue to its purple, which is what Mark's terminal shows). */
+  --t-seg-user-bg: var(--t-fg);
+  --t-seg-user-fg: var(--t-bg);
+  --t-seg-dir-bg: var(--t-purple);
+  --t-seg-dir-fg: var(--t-bg);
+  --t-seg-git-bg: var(--t-green);
+  --t-seg-git-fg: var(--t-bg);
+
   --t-pad: 1rem;
   color-scheme: dark;
 }
@@ -51,22 +84,28 @@ body {
   box-sizing: border-box;
 }
 
+/* Links are cyan and underlined so nobody has to guess what is clickable. */
 a {
-  color: inherit;
+  color: var(--t-link);
   text-decoration: underline;
-  text-decoration-color: var(--t-rule);
+  text-decoration-color: var(--t-link-underline);
+  text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 }
 
 a:hover {
-  color: var(--t-link);
   text-decoration-color: var(--t-link);
 }
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--t-link);
+  outline: 2px solid var(--t-chip-focus);
   outline-offset: 2px;
+}
+
+::selection {
+  background: var(--t-line);
+  color: var(--t-fg);
 }
 
 /* Long URLs wrap instead of pushing the page wider than the phone. */
@@ -96,16 +135,16 @@ dt {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--t-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: var(--t-line);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--t-comment);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -118,9 +157,21 @@ dt {
   }
 }
 
+/* Print stays black on white whatever the screen palette is. */
 @media print {
   :root {
     color-scheme: light;
+    --t-bg: #ffffff;
+    --t-fg: #000000;
+    --t-output: #000000;
+    --t-accent: #000000;
+    --t-muted: #444444;
+    --t-heading: #000000;
+    --t-info: #000000;
+    --t-key: #000000;
+    --t-link: #000000;
+    --t-prompt: #000000;
+    --t-rule: #000000;
   }
 
   html,

@@ -29,7 +29,7 @@ Every fact on the site comes from `content/`. Nothing about Mark is hard-coded i
 |---|---|---|
 | `content/resume.json` | [JSON Resume](https://jsonresume.org/schema) v1: basics, work, education, skills, certificates, interests | `resume` command · `/resume` page · `public/Mark-Cheli-Resume.pdf` · API `/resume` · JSON-LD Person · `<title>`/description |
 | `content/projects.json` | Portfolio projects: slug, name, tagline, description, highlights, stack, repo, url, demo, status, started, featured | `projects` command · `/projects` page · API `/projects` · SSR content |
-| `content/services.json` | Homelab catalog: host, profile links, categories of services with container names | `homelab` command (alias `services`) · `neofetch` · `contact` · API `/services`, `/profile` · SSR content |
+| `content/services.json` | Homelab catalog: host, profile links, categories of services with container names | `services` command (alias `homelab`) · `neofetch` · `contact` · API `/services`, `/profile` · SSR content |
 | `content/now.json` | What Mark is doing now | `now` command · SSR content |
 
 Rules:
@@ -44,11 +44,11 @@ Rules:
 
 ### `/` — the terminal
 
-Dark, monospace, the "MARK CHELI" figlet on desktop. What a visitor sees without typing anything, in order:
+Dark, monospace, the "MARK CHELI" figlet on desktop. The palette is Dracula, the theme Mark's own Terminal.app runs, used with intent: purple headings, pink sub-labels, orange keys, cyan underlined links, yellow for the command that was typed, green for the prompt and for success, red for errors, the comment colour for anything secondary. The prompt is the Powerlevel10k rainbow his shell draws: `mark` · `~/83rr-poweredge` (`~` on a phone) · `master` as powerline segments (CSS, no icon font), then `❯` and the input on the next line; echoed commands use the same prompt so the transcript reads like one session. What a visitor sees without typing anything, in order:
 
 1. **Identity line** (plain text, server-rendered, visible, not just for crawlers): "Mark Cheli — Director, Product Operations & Strategy at Onshape (PTC). Ashland, MA." and the one-sentence summary from `resume.json`.
 2. **The figlet and the host block** on wide screens. On narrow screens the figlet is replaced by the name in large text, because an 80-column figlet does not fit a 390-pixel phone (today it wraps into noise).
-3. **A command bar**: tappable chips for `about` `projects` `resume` `homelab` `contact` `help`. Tapping runs the command exactly as typing would. On desktop the chips are the hint under the prompt; on mobile they are a sticky row above the keyboard. This is how the site works for the 60% of visitors who are on a phone and will not type.
+3. **A command bar**: tappable chips for `about` `projects` `resume` `services` `contact` `help`. Tapping one brings the prompt into view, types the command into it character by character (about 30 ms a character, instant under `prefers-reduced-motion`), pauses, runs it exactly as Enter would, and scrolls the echoed command line to the top of the screen so the output is what the visitor sees next. The chips are disabled while that happens; on a touch screen the keyboard stays down. On desktop the chips are the hint under the prompt; on mobile they are a sticky row above the keyboard. This is how the site works for the 60% of visitors who are on a phone and will not type.
 4. The prompt.
 
 Commands. Each is a typed entry in one registry (`commands/`), which is the only source for `help`, tab completion and `help <cmd>`. There are no special-cased commands outside the registry.
@@ -59,7 +59,7 @@ Commands. Each is a typed entry in one registry (`commands/`), which is the only
 | `about` | Three short paragraphs from `resume.json` basics + summary, and where to go next |
 | `resume` | Headline, current role with highlights, previous roles as one line each, education, skills by group; ends with links to `/resume` (readable) and the PDF |
 | `projects` | Featured projects first: name, tagline, stack, repo/url; `projects <slug>` prints one project in full; `projects all` lists everything |
-| `homelab` (alias `services`) | The catalog, grouped by category; counts come from the data |
+| `services` (alias `homelab`) | The catalog: a header line with the host name, service and container counts and the hardware; each category as a heading with a rule; one row per service (the name is a link when it has a url, the description beside it, repo and notes on a second line); a summary of counts per category; "Type a service name … to open it." Two columns on wide screens, stacked on a phone; counts come from the data |
 | `now` | `content/now.json` |
 | `contact` | Email (as a `mailto:` link), LinkedIn, GitHub, and the public services; ends with "or type `message` to send a note from here" |
 | `message` | Interactive: asks for name, email and the message one prompt at a time (Ctrl+C cancels), then `POST /api/contact`. Success prints "Sent — I'll reply to <email>."; failure prints the reason. Never claims success unless the API returned 2xx |
@@ -69,15 +69,15 @@ Commands. Each is a typed entry in one registry (`commands/`), which is the only
 | `weather` | Weather in Ashland from the API; failure prints a one-line error |
 | `clear` (and Ctrl+L) | Clears |
 | `history` | Commands typed this session |
-| `ls` | Lists the "directories" `about/ projects/ resume/ homelab/ contact/` as a nudge, not a fake Unix listing |
+| `ls` | Lists the "directories" `about/ projects/ resume/ services/ contact/` as a nudge, not a fake Unix listing |
 | `exit` | Prints a goodbye and the links; does not close anything |
 
 Behaviour:
 
 - Empty Enter does nothing (today it opens LinkedIn in a new tab, which is surprising and gets popup-blocked).
 - Unknown command: "command not found: X" plus the closest match ("did you mean `projects`?") when one is within edit distance 2.
-- Output is **structured, not pre-formatted text**: a command returns blocks (`text`, `heading`, `list`, `kv` rows, `link`, `figlet`) and the renderer lays them out, wrapping on narrow screens instead of relying on column padding. URLs are real `<a>` elements, never regex-linkified HTML strings.
-- `?cmd=<command>` on `/` still auto-types and runs the command (crawlers and the sitemap use it). A `?cmd=` value that is not a known command is ignored.
+- Output is **structured, not pre-formatted text**: a command returns blocks (`text`, `heading`, `list`, `kv` rows, `table` rows, `link`, `figlet`) and the renderer lays them out, wrapping on narrow screens instead of relying on column padding. URLs are real `<a>` elements, never regex-linkified HTML strings.
+- `?cmd=<command>` on `/` still auto-types and runs the command (crawlers and the sitemap use it), through the same code path as a chip tap. A `?cmd=` value that is not a known command is ignored.
 - Up/Down history, Tab completion, Ctrl+C clears input, Ctrl+L clears screen, as today.
 - Clicking the page focuses the input unless text is selected. The listener is removed on unmount.
 - The input is 16px or larger so iOS does not zoom on focus; `autocapitalize`, `autocorrect` and `spellcheck` are off; `enterkeyhint="go"`.
@@ -103,7 +103,7 @@ The PDF is generated from this page by `make resume-pdf` (Playwright, print medi
 
 ### Not changing
 
-- The dark terminal aesthetic, JetBrains Mono, the green prompt, the figlet.
+- The dark terminal aesthetic (Dracula since 2026-11-06), JetBrains Mono, the green prompt caret, the figlet.
 - Two containers (Nuxt SSR + Flask) deployed by GitHub Actions → ghcr.io → Watchtower. The Flask API is small; it stays because it is part of the catalog story and costs nothing.
 - `?cmd=` deep links.
 

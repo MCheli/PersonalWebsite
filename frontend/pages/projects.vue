@@ -78,7 +78,7 @@ useHead(pageHead(content.resume, {
 .projects-head h1 {
   margin: 0;
   font-size: 1.6rem;
-  color: #ffffff;
+  color: var(--t-heading);
 }
 
 .projects-intro {
@@ -87,7 +87,7 @@ useHead(pageHead(content.resume, {
 }
 
 .projects-intro code {
-  color: var(--t-prompt);
+  color: var(--t-command);
 }
 
 .card {
@@ -99,11 +99,11 @@ useHead(pageHead(content.resume, {
 }
 
 .card-featured {
-  border-color: #3a3a3a;
+  border-color: var(--t-comment);
 }
 
 .card:target {
-  border-color: var(--t-prompt);
+  border-color: var(--t-purple);
 }
 
 .card-head {
@@ -120,12 +120,14 @@ useHead(pageHead(content.resume, {
 }
 
 .card-anchor {
-  color: #ffffff;
+  color: var(--t-fg);
   text-decoration: none;
 }
 
 .card-anchor:hover {
   color: var(--t-link);
+  text-decoration: underline;
+  text-decoration-color: var(--t-link-underline);
 }
 
 .card-meta {
@@ -137,7 +139,7 @@ useHead(pageHead(content.resume, {
 }
 
 .card-badge {
-  color: var(--t-prompt);
+  color: var(--t-orange);
 }
 
 .card-tagline {
@@ -173,7 +175,7 @@ useHead(pageHead(content.resume, {
 
 .chip {
   font-size: 0.8rem;
-  color: var(--t-key);
+  color: var(--t-fg);
   background: var(--t-chip-bg);
   border: 1px solid var(--t-chip-border);
   border-radius: 999px;
@@ -187,13 +189,7 @@ useHead(pageHead(content.resume, {
 }
 
 .card-links a {
-  color: var(--t-prompt);
-  text-decoration: none;
-}
-
-.card-links a:hover {
   color: var(--t-link);
-  text-decoration: underline;
 }
 
 .projects-foot {

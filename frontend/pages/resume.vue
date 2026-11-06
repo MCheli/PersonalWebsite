@@ -167,7 +167,7 @@ const bare = (url: string): string => url.replace(/^https?:\/\/(www\.)?/, '').re
 .resume-name {
   margin: 0;
   font-size: 1.6rem;
-  color: #ffffff;
+  color: var(--t-fg);
 }
 
 .resume-label {
@@ -189,15 +189,16 @@ const bare = (url: string): string => url.replace(/^https?:\/\/(www\.)?/, '').re
   justify-self: start;
   margin-top: 0.5rem;
   padding: 0.35rem 0.9rem;
+  background: var(--t-chip-bg);
   border: 1px solid var(--t-chip-border);
   border-radius: 999px;
-  color: var(--t-prompt);
+  color: var(--t-chip-fg);
   text-decoration: none;
   font-size: 0.9rem;
 }
 
 .resume-download:hover {
-  border-color: var(--t-prompt);
+  border-color: var(--t-chip-fg);
 }
 
 .resume-summary {
@@ -213,7 +214,7 @@ const bare = (url: string): string => url.replace(/^https?:\/\/(www\.)?/, '').re
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--t-info);
+  color: var(--t-heading);
   border-bottom: 1px solid var(--t-rule);
   padding-bottom: 0.3rem;
   margin: 0 0 0.75rem;
@@ -235,7 +236,7 @@ const bare = (url: string): string => url.replace(/^https?:\/\/(www\.)?/, '').re
 .job-title {
   margin: 0;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--t-fg);
 }
 
 .job-dates {
@@ -246,7 +247,7 @@ const bare = (url: string): string => url.replace(/^https?:\/\/(www\.)?/, '').re
 
 .job-org {
   margin: 0.1rem 0 0.3rem;
-  color: var(--t-key);
+  color: var(--t-info);
 }
 
 .job-summary {

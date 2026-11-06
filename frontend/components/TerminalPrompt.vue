@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import PromptSegments from '~/components/PromptSegments.vue'
 
 defineProps<{
-  /** The `user@host` part of the prompt. */
+  /** The user segment of the prompt. */
+  user: string
+  /** The host (directory segment) of the prompt. */
   host: string
   modelValue: string
   busy?: boolean
@@ -54,10 +57,15 @@ defineExpose({ focus })
 </script>
 
 <template>
-  <form class="prompt-line" @submit.prevent="emit('submit')">
-    <label for="terminal-command" class="prompt" :class="{ 'prompt-question': label }">
-      <template v-if="label">{{ label }}</template>
-      <template v-else><span class="prompt-host">{{ host }}:</span>~$</template>
+  <form class="prompt-line" :class="{ 'prompt-line-question': label }" @submit.prevent="emit('submit')">
+    <!-- Two lines, as Powerlevel10k draws it: the segments, then the caret and the input.
+         While a command is asking a question, the question label takes the whole prompt. -->
+    <label for="terminal-command" class="prompt">
+      <template v-if="label"><span class="prompt-question">{{ label }}</span></template>
+      <template v-else>
+        <PromptSegments :user="user" :host="host" />
+        <span class="prompt-caret" aria-hidden="true">❯</span>
+      </template>
     </label>
     <input
       id="terminal-command"
@@ -80,32 +88,53 @@ defineExpose({ focus })
 
 <style scoped>
 .prompt-line {
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-template-areas:
+    'segments segments'
+    'caret input';
   align-items: baseline;
-  gap: 0.5ch;
+  column-gap: 0.5ch;
   margin: 0.75rem 0 0.25rem;
 }
 
 .prompt {
+  display: contents;
+}
+
+.prompt :deep(.segments) {
+  grid-area: segments;
+  margin-bottom: 0.15rem;
+}
+
+.prompt-caret {
+  grid-area: caret;
   color: var(--t-prompt);
   font-weight: 700;
-  white-space: nowrap;
-  flex: 0 0 auto;
+}
+
+/* A question (the `message` flow) is one line: "name: _". */
+.prompt-line-question {
+  grid-template-areas: 'caret input';
 }
 
 .prompt-question {
-  color: var(--t-info);
+  grid-area: caret;
+  color: var(--t-question);
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .terminal-input {
-  flex: 1 1 0;
+  grid-area: input;
   min-width: 0;
   background: transparent;
   border: 0;
+  border-bottom: 1px solid transparent;
   outline: none;
   padding: 0;
   margin: 0;
-  color: #ffffff;
+  color: var(--t-command);
   caret-color: var(--t-prompt);
   font-family: inherit;
   /* 16px is the floor at which iOS Safari stops zooming the page on focus. */
@@ -113,19 +142,8 @@ defineExpose({ focus })
   line-height: inherit;
 }
 
-.terminal-input {
-  border-bottom: 1px solid transparent;
-}
-
 .terminal-input:focus-visible {
   outline: none;
   border-bottom-color: var(--t-rule);
-}
-
-/* On a phone the full user@host prompt leaves no room to type: keep the ~$. */
-@media (max-width: 640px) {
-  .prompt-host {
-    display: none;
-  }
 }
 </style>

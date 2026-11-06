@@ -38,6 +38,7 @@ requirements:
       - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
       - "2026-11-05: components/IdentityHeader.vue is visible and server-rendered; curl of / contains the title and summary."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+      - "2026-11-06: first screen restyled: Dracula palette (assets/css/terminal.css), Powerlevel10k-style prompt segments (components/PromptSegments.vue); the identity header, figlet and SSR text are unchanged. Captures re-taken by `make tour`."
   - id: IDENT-002
     title: Figlet replaced by the name on narrow screens
     job: identify
@@ -57,6 +58,7 @@ requirements:
       - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
       - "2026-11-05: components/Figlet.vue renders the pre only at >=640px and the name as large text below; no horizontal overflow at 390px in the local tour."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+      - "2026-11-06: first screen restyled: Dracula palette (assets/css/terminal.css), Powerlevel10k-style prompt segments (components/PromptSegments.vue); the identity header, figlet and SSR text are unchanged. Captures re-taken by `make tour`."
   - id: IDENT-003
     title: No fake system facts
     job: identify
@@ -173,23 +175,29 @@ requirements:
       - "2026-11-05: frontend/pages/projects.vue; each article has id=slug; needs an SSR fetch test once the preview server is in CI."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
   - id: SHOW-006
-    title: homelab catalog from services.json, readable on a phone
+    title: services catalog from services.json, readable on a phone
     job: show
     area: terminal
     priority: p0
     visible: true
     done_means:
-      - "`homelab` (and `services`) renders every category and service from content/services.json with counts derived from the data; at 390px each service wraps onto its own lines (name, url, description) with no horizontal scroll; at 1440px the category layout is columnar as today."
+      - "`services` (alias `homelab`) renders every category and service from content/services.json with counts derived from the data: a header line with the host name, service and container counts and the hardware; each category as a heading with a rule; one row per service with the name (a cyan link when it has a url, plain when it does not), the description in the muted colour beside it and repo/notes on a second muted line; a summary of counts per category; the hint 'Type a service name (plex, grafana, tallied-demo…) to open it.'"
+      - "At 390px each row stacks (name, description, detail) with no horizontal scroll; at 1440px the rows are a two-column grid with a fixed name column so every category lines up."
     status: done
     evidence:
       - "frontend/tests/commands.test.ts#renders every category and service with counts from the data"
-      - "frontend/tests/commands.test.ts#services is an alias"
+      - "frontend/tests/commands.test.ts#homelab is an alias"
+      - "frontend/tests/commands.test.ts#names the host, the counts and the hardware in the header"
+      - "frontend/tests/commands.test.ts#each service is one table row: a link when it has a url, plain when it does not, repo on the detail line"
+      - "frontend/tests/commands.test.ts#ends with the summary and the hint to type a service name"
       - "frontend/tests/commands.test.ts#reflects a changed fixture (count goes up)"
-      - artifacts/screens/cmd-homelab/mobile.png
-      - artifacts/screens/cmd-homelab/desktop.png
+      - "frontend/tests/components.test.ts#renders every block kind"
+      - artifacts/screens/cmd-services/mobile.png
+      - artifacts/screens/cmd-services/desktop.png
     notes:
       - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+      - "2026-11-06: `services` is the primary name again and `homelab` the alias (Mark: 'the services command that showed all the stuff on the server — I used that a lot — bring it back'); the chip, help, sitemap (?cmd=services) and the tour capture (cmd-services, cmd-homelab removed) follow. Output reworked as a `table` block (commands/services.ts, TerminalOutput.vue): host/counts/hardware header, category headings with rules, one row per service, summary, hint."
   - id: SHOW-007
     title: now command
     job: show
@@ -212,16 +220,26 @@ requirements:
     priority: p0
     visible: true
     done_means:
-      - "Chips for about, projects, resume, homelab, contact, help are visible on / at 390px (sticky above the keyboard) and at 1440px (under the prompt); tapping one runs the command and the output appears, identical to typing it (component test clicks a chip and asserts the output)."
+      - "Chips for about, projects, resume, services, contact, help are visible on / at 390px (sticky above the keyboard) and at 1440px (under the prompt)."
+      - "Tapping one brings the prompt into view, visibly types the command into it character by character (about 30 ms a character; instant under prefers-reduced-motion), pauses, runs it exactly as Enter would, and scrolls the echoed command line to the top of the viewport so the output is what the visitor sees next. The chips are disabled and the input is read-only while that happens; on a coarse pointer the keyboard is not raised. The input is empty afterwards (component test clicks a chip and asserts the echoed entry, the output and the empty input; the chip-tap capture shows the typing at 100 ms and 300 ms and the output at the top at 1200 ms)."
+      - "`?cmd=` deep links go through the same type-then-run path."
     status: done
     evidence:
       - "frontend/tests/components.test.ts#shows the six chips with aria-labels"
-      - "frontend/tests/components.test.ts#clicking a chip runs the command exactly as typing it"
+      - "frontend/tests/components.test.ts#clicking a chip types the command, runs it exactly as typing it, and leaves the input empty"
+      - "frontend/tests/components.test.ts#the services chip prints the catalog"
+      - "frontend/tests/components.test.ts#chips are disabled while a command types or runs"
+      - "frontend/tests/useTerminal.test.ts#fills the input character by character, then runs the line and empties it"
+      - "frontend/tests/useTerminal.test.ts#types instantly when the delay is 0 and runs exactly as Enter would"
       - artifacts/screens/home/mobile.png
       - artifacts/screens/cmd-help/desktop.png
+      - artifacts/screens/chip-tap/t100.png
+      - artifacts/screens/chip-tap/t300.png
+      - artifacts/screens/chip-tap/t1200.png
     notes:
       - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+      - "2026-11-06: Mark on the live site: 'when you select any of the options it's just not clear what happened — I thought they weren't working'. A chip now scrolls the prompt into view, types the command (useTerminal.typeAndRun, shared with ?cmd=), runs it and lands the echoed line at the top (pages/index.vue scrollToLastCommand). Evidence: `make chip-tap` (scripts/chip_tap.mjs) taps the services chip at 390px and captures artifacts/screens/chip-tap/{t100,t300,t1200}.png; it fails when the typing is not visible or the command is not at the top."
   # ---------------------------------------------------------------------------
   # REACH — contact
   # ---------------------------------------------------------------------------
@@ -557,3 +575,4 @@ requirements:
       - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
       - "2026-11-05: components/TerminalPrompt.vue: font-size max(1rem,16px), autocapitalize/autocorrect off, spellcheck false, enterkeyhint go; the 250px margin is gone with the old suggestion row."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+      - "2026-11-06: first screen restyled: Dracula palette (assets/css/terminal.css), Powerlevel10k-style prompt segments (components/PromptSegments.vue); the identity header, figlet and SSR text are unchanged. Captures re-taken by `make tour`."
