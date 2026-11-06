@@ -1,0 +1,245 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "$comment": "JSON Resume (jsonresume.org) format. Single source of truth for the `resume` command, the /resume page, the printable PDF and the Flask /resume endpoint. Keep it factual: no phone, no street address. Edit this file, run `make resume-pdf`, commit both.",
+  "basics": {
+    "name": "Mark Cheli",
+    "label": "Director, Product Operations & Strategy · Onshape (PTC)",
+    "email": "mpcheli7@gmail.com",
+    "url": "https://www.markcheli.com",
+    "summary": "Onshape is the world's fastest-growing CAD platform, cloud-native from the first line of code, and I run its Product Operations & Strategy team: the part of the product org that helps work out where to go next, keeps everyone pointed that way, and says how it went. AI runs through most of that now, in the tools R&D builds with and in the Claude rollout across the Onshape organization, which I look after. Thirteen years at PTC, intern to director, a lot of roles, all of them with a software engineer underneath. Code still gets written when something needs building, product features included. The through-line is making things: software, welding, 3D printing, three old trucks. This site runs on a server in my basement, next to the apps I've built for myself.",
+    "location": {
+      "city": "Ashland",
+      "region": "MA",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "mark-cheli-0354a163",
+        "url": "https://www.linkedin.com/in/mark-cheli-0354a163/"
+      },
+      {
+        "network": "GitHub",
+        "username": "MCheli",
+        "url": "https://github.com/MCheli"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Onshape (PTC)",
+      "location": "Boston, MA",
+      "position": "Director, Product Operations & Strategy",
+      "url": "https://www.onshape.com",
+      "startDate": "2022-01",
+      "summary": "Product Operations & Strategy is the connective tissue of the Onshape product org: the strategy and analysis that feed decisions about where the product goes, the planning cycle that turns them into work, the analytics that say how it's going, and the programs that cut across every team. The remit grows every year; AI tooling for R&D and the Onshape-wide Claude rollout are its newest parts.",
+      "highlights": [
+        "AI: how Onshape builds with it. Tooling and guidelines for R&D, and the Claude rollout, governance and budget across the Onshape organization.",
+        "Strategy, planning and analytics: the analysis behind product decisions, the planning cycle, and the product analytics and data warehouse underneath both.",
+        "Cross-cutting programs, localization and legal among them, and product management for the tools the org runs on.",
+        "Software engineering when something needs building, product features and tooling alike. Thirteen years at PTC, intern to director, across engineering, product and operations roles.",
+        "2022: interim head of business operations for the Onshape business unit."
+      ]
+    },
+    {
+      "name": "PTC",
+      "location": "Boston, MA",
+      "position": "Director, Education Product",
+      "startDate": "2021-02",
+      "endDate": "2022-01",
+      "summary": "Product for PTC's Education group: services, support, partnerships, community and marketing for the academic programs around Onshape, Creo and ThingWorx.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Boston, MA",
+      "position": "Senior Manager, Education Experience",
+      "startDate": "2020-01",
+      "endDate": "2021-02",
+      "summary": "The education customer experience after PTC acquired Onshape.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Boston, MA",
+      "position": "Senior Manager, Customer Training Technology & Research",
+      "startDate": "2019-01",
+      "endDate": "2020-01",
+      "summary": "Product for PTC's customer training: eLearning, virtual instructor-led training and in-product help. A 40-person group across the US and Pune.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Senior Software Development Manager, PTC University EdTech R&D",
+      "startDate": "2018-05",
+      "endDate": "2019-01",
+      "summary": "Engineering management for PTC's learning platforms: 35 engineers in three teams.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Technology Lead, Academic & Customer Training Products",
+      "startDate": "2017-04",
+      "endDate": "2018-05",
+      "summary": "Lead engineer and product manager for IoTU.com and the academic product line, with teams in the US and India.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Senior Full-Stack Software Engineer",
+      "startDate": "2016-10",
+      "endDate": "2017-04",
+      "summary": "Led the academic software development group. IoT education products on the MEAN stack and ThingWorx.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Academic Software Engineer",
+      "startDate": "2013-05",
+      "endDate": "2016-10",
+      "summary": "Started as a student intern, then full-time. Curriculum, demos and applications for Creo, Windchill, Mathcad and ThingWorx.",
+      "highlights": []
+    },
+    {
+      "name": "Freelance",
+      "position": "Web Developer",
+      "startDate": "2012-12",
+      "endDate": "2014-12",
+      "summary": "Small-business websites: HTML/CSS, PHP/MySQL, WordPress.",
+      "highlights": []
+    },
+    {
+      "name": "Christa McAuliffe Center / Challenger Learning Center, Framingham State University",
+      "position": "Assistant Program Facilitator",
+      "startDate": "2011-12",
+      "endDate": "2013-05",
+      "summary": "Planetarium shows and simulated space missions for middle-school groups, plus the center's IT.",
+      "highlights": []
+    }
+  ],
+  "education": [
+    {
+      "institution": "Framingham State University",
+      "url": "https://www.framingham.edu",
+      "area": "Business & Information Technology",
+      "studyType": "B.S.",
+      "startDate": "2011",
+      "endDate": "2015",
+      "score": "Summa Cum Laude, GPA 3.94",
+      "courses": []
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Certified Onshape Associate",
+      "date": "2021-01",
+      "issuer": "Onshape"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Product and strategy",
+      "keywords": [
+        "Product operations",
+        "Strategy and analysis",
+        "Planning",
+        "Product analytics",
+        "Product management",
+        "Localization",
+        "Legal and terms of use"
+      ]
+    },
+    {
+      "name": "Data",
+      "keywords": [
+        "SQL",
+        "AWS Redshift",
+        "dbt",
+        "Prefect",
+        "Streamlit",
+        "Looker"
+      ]
+    },
+    {
+      "name": "Building",
+      "keywords": [
+        "Python (Flask, FastAPI)",
+        "TypeScript (Vue, Nuxt)",
+        "PostgreSQL",
+        "Docker",
+        "GitHub Actions",
+        "Linux",
+        "Onshape"
+      ]
+    },
+    {
+      "name": "AI",
+      "keywords": [
+        "AI adoption and governance",
+        "Claude and Claude Code",
+        "GitHub Copilot",
+        "MCP servers",
+        "Agentic coding setups",
+        "AI tooling budgets"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Native speaker"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Making things",
+      "keywords": [
+        "3D printing",
+        "Welding",
+        "Woodworking",
+        "Onshape CAD"
+      ]
+    },
+    {
+      "name": "Old trucks",
+      "keywords": [
+        "1991 Honda Acty",
+        "1997 GMC Suburban",
+        "1996 Mazda B4000"
+      ]
+    },
+    {
+      "name": "Homelab and self-hosting",
+      "keywords": [
+        "Dell PowerEdge R630",
+        "Docker",
+        "Observability"
+      ]
+    },
+    {
+      "name": "Sim racing and flight sim",
+      "keywords": [
+        "iRacing",
+        "DCS",
+        "RigReady"
+      ]
+    },
+    {
+      "name": "Outdoors",
+      "keywords": [
+        "Backpacking",
+        "Car camping",
+        "Ham radio"
+      ]
+    }
+  ],
+  "meta": {
+    "canonical": "https://www.markcheli.com/resume",
+    "version": "2026-11-05",
+    "lastModified": "2026-11-05"
+  }
+}

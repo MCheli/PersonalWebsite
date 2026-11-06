@@ -1,0 +1,19 @@
+# Build context is the repo root (docker build -f api/Dockerfile .), so paths are root-relative.
+# BuildKit reads <Dockerfile>.dockerignore next to the Dockerfile; patterns here keep the
+# frontend, the venv and the tests out of the API image.
+.git
+.github
+frontend
+docs
+scripts
+artifacts
+api/.venv
+api/__pycache__
+api/.pytest_cache
+api/.coverage
+api/htmlcov
+api/test_app.py
+api/pytest.ini
+api/ruff.toml
+api/.env
+api/.env.*

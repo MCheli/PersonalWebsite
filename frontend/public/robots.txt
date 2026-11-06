@@ -1,5 +1,5 @@
-# Mark Cheli's personal site — markcheli.com
-# All public content is welcome to search engines and AI crawlers.
+# markcheli.com — Mark Cheli's personal site.
+# Everything public is welcome to search engines and AI crawlers.
 
 User-agent: *
 Allow: /

@@ -8,14 +8,15 @@ WORKDIR /app
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir pip==26.3 setuptools==84.2.1 wheel==0.48.0
 
-# Build context is the repo root so services.json can be shared with the frontend.
+# Build context is the repo root so content/ can be shared with the frontend.
 # requirements.txt is the pinned lockfile (compiled from requirements.in).
 COPY api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY api/ ./
-# Replace the dev symlink with the real catalog file
-COPY services.json ./services.json
+# Replace the dev symlink with the real content directory (services, resume, projects)
+RUN rm -f ./content
+COPY content/ ./content/
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
