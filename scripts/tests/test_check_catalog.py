@@ -149,13 +149,16 @@ def test_public_urls_skip_lan_only_and_non_https():
         }
     }
     urls = [u for _, u in cc.public_urls(cat, projects, resume)]
-    assert "https://www.markcheli.com" in urls
-    assert "https://github.com/MCheli" in urls
-    assert "https://github.com/MCheli/PersonalWebsite" in urls
-    assert "https://p.example" in urls and "https://d.example" in urls
-    assert "https://x.ops.markcheli.com" not in urls
-    assert "https://dashboard.ops.markcheli.com" not in urls
-    assert not any("minecraft" in u for u in urls)
+    # Exact-set comparison (CodeQL flagged `"https://…" in urls` as substring sanitization).
+    assert set(urls) == {
+        "https://www.markcheli.com",
+        "https://github.com/MCheli",
+        "https://github.com/MCheli/PersonalWebsite",
+        "https://github.com/MCheli/83rr-poweredge",
+        "https://p.example",
+        "https://d.example",
+        "https://github.com/MCheli/p",
+    }
     assert len(urls) == len(set(urls))
 
 
