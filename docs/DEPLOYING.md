@@ -21,7 +21,7 @@ PRs build both images without pushing and smoke-test them (healthy, slim, static
 
 Both sit on the `infrastructure` network with no published ports. NGINX (`infrastructure/nginx/conf.d/production.conf` in the homelab repo) proxies `www.markcheli.com` to `personal-website:3000` and `flask.markcheli.com` to `flask-api:5000`; `markcheli.com` redirects to `www`. Cloudflare terminates TLS at the edge with origin certificates on NGINX.
 
-Note on the API URL: NGINX routes `www.markcheli.com/api/` to `flask-api` (83rr-poweredge #31), so the site can call `/api/contact` same-origin; `https://flask.markcheli.com` still works directly. `API_URL` only matters to the Nuxt dev proxy.
+Note on the API URL: NGINX routes `www.markcheli.com/api/` to `flask-api` (83rr-poweredge #31), so the site can call `/api/contact` same-origin; `https://flask.markcheli.com` still works directly. `API_URL` is no longer read by anything (the Nuxt dev proxy went with the 2026-11 rebuild); it can be dropped from the compose file.
 
 Images run as non-root (`nuxtjs` / `appuser`), carry no curl or npm, and copy `content/` in place of the dev symlink. The frontend image serves `.output/public` through Nitro itself.
 

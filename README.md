@@ -7,7 +7,8 @@ Read first:
 - [`docs/PRODUCT.md`](docs/PRODUCT.md) — what the site is for, what it must say, what it must not do. Source of truth for scope.
 - [`docs/requirements/ledger.yaml`](docs/requirements/ledger.yaml) — every requirement with status and evidence (a test, and a tour screenshot for anything visible). `make ledger-check` validates it.
 - [`docs/DEPLOYING.md`](docs/DEPLOYING.md) — how it gets to the homelab and how to roll back.
-- `docs/ARCHITECTURE.md` and `docs/CONTRIBUTING-FEATURES.md` — how the code is laid out and how to add a command, a content field, a page or an endpoint.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/CONTRIBUTING-FEATURES.md`](docs/CONTRIBUTING-FEATURES.md) — how the code is laid out and how to add a command, a project, a page or an endpoint.
+- [`CLAUDE.md`](CLAUDE.md) — the agent-facing summary: rules, quick start, layout.
 
 ## Layout
 
@@ -19,14 +20,16 @@ api/          Flask API; content/ is a symlink to ../content
 scripts/      the gates: ledger_check.py, check_catalog.py, content_check.py, check_resume_pdf.py,
               screenshot_tour.mjs, og_image.mjs, resume_pdf.mjs (tests in scripts/tests/)
 artifacts/screens/   tour captures that the ledger points at (artifacts/tmp/ is scratch, ignored)
-docs/         PRODUCT.md, DEPLOYING.md, requirements/ledger.yaml
+docs/         PRODUCT.md, ARCHITECTURE.md, CONTRIBUTING-FEATURES.md, DEPLOYING.md, REVIEW-2026-11-05.md, requirements/ledger.yaml
 ```
 
 ## Quick start
 
 ```bash
 make install        # api/.venv + frontend/node_modules (Node 22, Python 3.11; see .nvmrc, .python-version)
-make dev            # Flask on :5000 and Nuxt on :3000 together
+NUXT_PUBLIC_API_BASE=http://localhost:5000 make dev
+                    # Flask on :5000 and Nuxt on :3000; the override points `weather` and `message` at Flask
+                    # (the default /api only exists behind the homelab nginx; there is no dev proxy)
 make pre-commit     # everything CI's test job runs: lint, typecheck, tests, build, content/ledger/catalog checks
 make help           # the full list
 ```
@@ -37,7 +40,7 @@ Other targets you will reach for:
 |---|---|
 | `make test` / `make test-frontend` | pytest (API + scripts) / vitest |
 | `make lint` / `make typecheck` | ruff + eslint / `nuxi typecheck` (vue-tsc) |
-| `make build` | production build to `frontend/.output` (the three below use it; or set `TOUR_BASE_URL`) |
+| `make build` | production build to `frontend/.output` (`tour`, `resume-pdf` and `scripts/tests/test_ssr.py` use it; or set `TOUR_BASE_URL`) |
 | `make tour` | every route and command at 390px and 1440px into `artifacts/screens/`; fails on horizontal overflow |
 | `make og-image` | regenerates `frontend/public/og.png` from `content/` (commit it) |
 | `make resume-pdf` | prints `/resume` to `frontend/public/Mark-Cheli-Resume.pdf` + sidecar (commit both) |
@@ -47,17 +50,18 @@ Playwright uses `$PLAYWRIGHT_CHROME`, else `/usr/bin/google-chrome`, else its bu
 
 ## Frontend
 
-Nuxt 3 SSR, Vue 3, JetBrains Mono. Port 3000. Image `ghcr.io/mcheli/personal-website`.
+Nuxt 3 SSR, Vue 3, TypeScript strict, JetBrains Mono self-hosted. Port 3000. Image `ghcr.io/mcheli/personal-website`.
+
+Pages: `/` (the terminal: identity line, figlet, command bar, prompt; `?cmd=<command>` auto-runs one), `/resume` (readable and printable; the PDF is generated from it), `/projects` (cards with `#slug` anchors). Commands: `help` `about` `resume` `projects` `homelab` `now` `contact` `message` `open` `neofetch` `whoami` `weather` `clear` `history` `ls` `exit`, all from `frontend/commands/registry.ts`.
 
 | Variable | Description |
 |---|---|
-| `NUXT_PUBLIC_API_BASE` | API base URL the browser calls (default `/api`; production sets it per `docs/DEPLOYING.md`) |
-| `API_URL` | Dev-only: target of the `/api` dev proxy (default `http://localhost:5000`) |
+| `NUXT_PUBLIC_API_BASE` | Base URL the browser calls for `weather` and `message` (default `/api`, which the homelab nginx routes to `flask-api`; local dev sets `http://localhost:5000`) |
 | `PORT`, `HOST` | Nitro listen address (container: `3000`, `0.0.0.0`) |
 
 ## API
 
-Flask 3 + gunicorn. Port 5000. Image `ghcr.io/mcheli/flask-api`. Permissive CORS on every route.
+Flask 3 + gunicorn. Port 5000. Image `ghcr.io/mcheli/flask-api`. Permissive CORS on every route. Reachable at `flask.markcheli.com` and, through the homelab nginx, at `www.markcheli.com/api/`.
 
 | Endpoint | Returns |
 |---|---|

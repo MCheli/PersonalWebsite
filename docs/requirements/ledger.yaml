@@ -509,9 +509,16 @@ requirements:
     priority: p1
     done_means:
       - "CLAUDE.md (read-first list, rules, quick start, layout), docs/PRODUCT.md, docs/ARCHITECTURE.md, docs/CONTRIBUTING-FEATURES.md (how to add a command, a content field, a page, an API endpoint, with the evidence each needs) exist and agree with the code; README.md is a short human overview pointing at them."
-    status: todo
-    evidence: []
-    notes: []
+    status: done
+    evidence:
+      - CLAUDE.md
+      - docs/PRODUCT.md
+      - docs/ARCHITECTURE.md
+      - docs/CONTRIBUTING-FEATURES.md
+      - README.md
+      - scripts/tests/test_ledger_check.py::test_real_ledger_validates
+    notes:
+      - "2026-11-05: written after the merge, from the final code: CLAUDE.md (rules incl. the voice rule from PRODUCT.md 'Positioning', quick start with the NUXT_PUBLIC_API_BASE override, layout, history), ARCHITECTURE.md (containers, content model, blocks/registry/execute/useTerminal, API incl. the contact flow, SEO, mobile, test harness, CI, ledger schema, security), CONTRIBUTING-FEATURES.md (nine recipes with the evidence each needs), README.md (stale API_URL dev proxy removed; pages and commands listed). Every path and make target named in them exists and was run."
 
   # ---------------------------------------------------------------------------
   # NFR
