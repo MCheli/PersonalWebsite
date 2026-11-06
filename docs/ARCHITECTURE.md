@@ -16,7 +16,7 @@ How the code is put together and the rules that keep it that way. What the site 
 content/
   resume.json        JSON Resume v1: basics, work, education, skills, certificates, languages, interests, meta
   projects.json      { updated, projects: [ {slug, name, tagline, description, highlights, stack, repo, url?, demo?, status, started, featured} ] }
-  services.json      { updated, host, profile, categories: [ {id, title, lanOnly?, services: [ {name, url?, description, repo?, containers?, external?, compose?, lanOnly?} ]} ] }
+  services.json      { updated, host, categories: [ {id, title, lanOnly?, services: [ {name, url?, description, repo?, containers?, external?, compose?, lanOnly?} ]} ] }
   now.json           { updated, items: [string] }
   schemas/           services/projects/now (draft-07, written here); resume (the vendored JSON Resume v1.0.0 schema, draft-04)
 frontend/
@@ -63,7 +63,7 @@ Both builds run from the repo root so `COPY content/` works: each Dockerfile doe
 - `services.json` is also checked against the world: `make catalog-check` (`scripts/check_catalog.py`) downloads `docker-compose.yml` and every per-entry `compose` override from `MCheli/83rr-poweredge` main, collects `container_name` values and diffs them against the catalog (a `name` must be a container unless `containers: [...]` lists the real ones, `[]` meaning "not a container", or `external: true`), then HEAD/GETs every public https url in `services.json` and `projects.json` (`lanOnly` skipped; 401/403 count as alive behind Cloudflare Access). `--no-urls`, `--urls-warn-only`, `--offline <checkout>` for dev and CI.
 - Generated from content and committed: `frontend/public/og.png` (`make og-image`), `frontend/public/Mark-Cheli-Resume.pdf` plus its sidecar `{generatedFrom, generatedAt}` (`make resume-pdf`). `scripts/check_resume_pdf.py` fails CI when `meta.lastModified` is newer than `generatedFrom`.
 
-Known duplication: `services.json` `profile` (name, title, company, location, email, website, linkedin, github) repeats `resume.json` `basics`. The frontend reads only `basics`; the API's `/profile` and `scripts/og_image.mjs` read `profile` first. Change both together until one of them goes.
+Identity lives only in `resume.json` (`basics` plus `work[0]`): the frontend, the API's `/profile`, `scripts/og_image.mjs` and the catalog URL check all read it from there. `services.json` holds the host and the catalog, nothing about Mark.
 
 ## Frontend
 

@@ -32,7 +32,7 @@ make pre-commit                               # the CI test job's list
 
 Title, summary, a role, a highlight, a skill, an interest, the location, a profile link.
 
-1. Edit `content/resume.json` (JSON Resume v1). Keep the voice rule in front of you: `docs/PRODUCT.md`, "Positioning" (it took three passes on 2026-11-05 to get right; the first was inflated, the second bland). Email, city and public profile links only; dates `YYYY-MM` or `YYYY`. Bump `meta.lastModified` and `meta.version` to today.
+1. Edit `content/resume.json` (JSON Resume v1). Keep the voice rule in front of you: `docs/PRODUCT.md`, "Positioning" (it took five passes with Mark on 2026-11-05; the failure modes are inflation and blandness, and both are described there). Email, city and public profile links only; dates `YYYY-MM` or `YYYY`. Bump `meta.lastModified` and `meta.version` to today.
 2. `make content-check`. The schema is the vendored JSON Resume schema plus the repo's date rules.
 3. `make test-frontend` and `make test`: the tests read the real content, so a removed key or a renamed network shows up here (`tests/content.test.ts`, `tests/commands.test.ts`, `api/test_app.py::test_resume_endpoint`).
 4. `make build && make resume-pdf` and commit `frontend/public/Mark-Cheli-Resume.pdf` and `Mark-Cheli-Resume.pdf.json`. CI runs `scripts/check_resume_pdf.py` and fails when the sidecar's `generatedFrom` is older than `meta.lastModified`.

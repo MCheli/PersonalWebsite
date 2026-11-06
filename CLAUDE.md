@@ -77,7 +77,7 @@ docs/                        PRODUCT.md · ARCHITECTURE.md · CONTRIBUTING-FEATU
 
 ## History
 
-The site was rebuilt on 2026-11-05 from a review of the old terminal (stale catalog, no resume, "Developer" as the title, unreadable on a phone); the resume took three passes before the voice was right. `docs/REVIEW-2026-11-05.md` has what was wrong, what shipped (section 6) and what is left for Mark (section 7).
+The site was rebuilt on 2026-11-05 from a review of the old terminal (stale catalog, no resume, "Developer" as the title, unreadable on a phone); the resume took five passes with Mark before the voice was right. `docs/REVIEW-2026-11-05.md` has what was wrong, what shipped (section 6) and what is left for Mark (section 7).
 
 ## Local-checkout gotcha
 
