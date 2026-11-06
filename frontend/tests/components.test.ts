@@ -9,7 +9,7 @@ import TerminalPrompt from '~/components/TerminalPrompt.vue'
 import { useTerminal } from '~/composables/useTerminal'
 import { content } from '~/utils/content'
 import { FIGLET } from '~/utils/figlet'
-import { sampleWeather } from './helpers'
+import { terminalOptions } from './helpers'
 
 const stubs = { Figlet }
 
@@ -89,13 +89,13 @@ describe('CommandBar', () => {
   })
 
   it('clicking a chip runs the command exactly as typing it', async () => {
-    const terminal = useTerminal({ content, open: () => {}, fetchWeather: () => Promise.resolve(sampleWeather) })
+    const terminal = useTerminal(terminalOptions())
     const w = mount(CommandBar, { props: { onRun: (c: string) => terminal.run(c) } })
     await w.findAll('button')[1]!.trigger('click')
     await new Promise(resolve => setTimeout(resolve, 0))
     expect(terminal.entries.value).toHaveLength(1)
     expect(terminal.entries.value[0]!.command).toBe('projects')
-    const typedTerminal = useTerminal({ content, open: () => {}, fetchWeather: () => Promise.resolve(sampleWeather) })
+    const typedTerminal = useTerminal(terminalOptions())
     await typedTerminal.run('projects')
     expect(typedTerminal.entries.value[0]!.blocks).toEqual(terminal.entries.value[0]!.blocks)
   })

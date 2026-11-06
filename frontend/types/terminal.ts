@@ -22,6 +22,27 @@ export type OutputBlock =
   | { kind: 'figlet' }
   | { kind: 'blank' }
 
+/** What the terminal posts to the API's /contact endpoint. */
+export interface ContactMessage {
+  name: string
+  email: string
+  message: string
+  /** Honeypot; always empty from the terminal. */
+  website: string
+}
+
+export type SendResult =
+  | { ok: true }
+  | { ok: false, status?: number, error?: string }
+
+/** Thrown into a command awaiting ctx.prompt() when the visitor presses Ctrl+C. */
+export class PromptCancelled extends Error {
+  constructor() {
+    super('cancelled')
+    this.name = 'PromptCancelled'
+  }
+}
+
 export interface Weather {
   location: string
   temperature: number
@@ -42,7 +63,12 @@ export interface CommandContext {
   clear: () => void
   /** Commands typed so far this session, oldest first. */
   history: readonly string[]
+  /** Append output now, before the command returns (for multi-step commands). */
+  print: (blocks: OutputBlock[]) => void
+  /** Ask the visitor a question on the input line; rejects with PromptCancelled on Ctrl+C. */
+  prompt: (label: string) => Promise<string>
   fetchWeather: () => Promise<Weather>
+  sendMessage: (message: ContactMessage) => Promise<SendResult>
 }
 
 export interface Command {
@@ -63,5 +89,13 @@ export interface Command {
 export interface HistoryEntry {
   /** Empty for output not typed by the visitor (the neofetch on load). */
   command: string
+  /** When set, this line was an answer to a prompt with this label, not a command. */
+  prompt?: string
   blocks: OutputBlock[]
+}
+
+export interface PendingPrompt {
+  label: string
+  onAnswer: (answer: string) => void
+  onCancel: () => void
 }

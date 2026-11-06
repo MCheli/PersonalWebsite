@@ -14,9 +14,12 @@ import {
 import registryJson from '~/commands/registry.json'
 import registryRaw from '~/commands/registry.json?raw'
 import { content } from '~/utils/content'
-import { makeContext } from './helpers'
+import { makeContext, scriptedContext } from './helpers'
 
-const EXPECTED = ['help', 'about', 'resume', 'projects', 'homelab', 'now', 'contact', 'open', 'neofetch', 'whoami', 'weather', 'clear', 'history', 'ls', 'exit']
+const EXPECTED = ['help', 'about', 'resume', 'projects', 'homelab', 'now', 'contact', 'message', 'open', 'neofetch', 'whoami', 'weather', 'clear', 'history', 'ls', 'exit']
+
+/** Answers that satisfy the interactive `message` command when a loop runs every command. */
+const ANSWERS = ['Test Visitor', 'visitor@example.com', 'A message long enough to pass.']
 
 describe('registry', () => {
   it('lists every command from PRODUCT.md, in help order', () => {
@@ -34,7 +37,7 @@ describe('registry', () => {
 
   it('every command produces blocks for a plain invocation', async () => {
     for (const c of commands) {
-      const ctx = makeContext()
+      const ctx = scriptedContext(ANSWERS)
       const out = await c.run([], ctx)
       expect(Array.isArray(out), c.name).toBe(true)
       if (c.name !== 'clear') expect(out.length, c.name).toBeGreaterThan(0)
@@ -150,7 +153,7 @@ describe('execute', () => {
   it('never prints the banned fake strings or job-hunt wording', async () => {
     const banned = ['Last login', 'Status: Operational', 'local-machine', 'drwxr-xr-x', 'Open to', 'open to roles', 'hire me', 'for hire']
     for (const c of commands) {
-      const ctx = makeContext({ history: ['help', 'about'] })
+      const ctx = scriptedContext(ANSWERS, { history: ['help', 'about'] })
       const text = blocksText(await c.run([], ctx))
       for (const phrase of banned) expect(text, `${c.name} prints "${phrase}"`).not.toContain(phrase)
     }
@@ -162,7 +165,7 @@ describe('execute', () => {
 
   it('every link a command prints is absolute, a mailto, or a site path', async () => {
     for (const c of commands) {
-      const hrefs = blockHrefs(await c.run([], makeContext()))
+      const hrefs = blockHrefs(await c.run([], scriptedContext(ANSWERS)))
       for (const href of hrefs) {
         expect(href, `${c.name}: ${href}`).toMatch(/^(https?:\/\/|mailto:|\/)/)
       }

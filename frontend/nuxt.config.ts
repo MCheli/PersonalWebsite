@@ -37,8 +37,11 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      // The Flask API the `weather` command calls. Override with NUXT_PUBLIC_API_BASE.
-      apiBase: 'https://flask.markcheli.com'
+      // Where `weather` and `message` call the Flask API. Relative by default:
+      // the homelab nginx routes www.markcheli.com/api/* to flask-api, so the
+      // browser never crosses origins. Override with NUXT_PUBLIC_API_BASE —
+      // local dev sets it to http://localhost:5000 (the API listening directly).
+      apiBase: '/api'
     }
   }
 })

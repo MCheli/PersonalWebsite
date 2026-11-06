@@ -234,6 +234,29 @@ requirements:
       - "frontend/tests/registry.test.ts#suggest finds the closest command within edit distance 2"
     notes: []
 
+  - id: REACH-004
+    title: message command sends a note through the API
+    job: reach
+    area: terminal
+    priority: p1
+    visible: true
+    done_means:
+      - "`message` prints 'Send me a note. Ctrl+C to cancel.' then asks 'Your name:', 'Your email:', 'Message:' in turn on the input line (the label replaces the prompt; the answer is echoed); Ctrl+C prints 'Cancelled.'; history/Tab/chips are inert while a question is pending."
+      - "Answers are validated locally (name non-empty, email with @ and a dot, message >= 10 chars) and the same question is re-asked on failure; nothing is posted until all three pass."
+      - "POSTs {name, email, message, website: ''} to <apiBase>/contact; on 2xx prints 'Sent — I'll reply to <email>.'; otherwise prints the API's error field or 'Couldn't send (<status>).' plus a mailto fallback. 'Sent' never appears without a 2xx."
+      - "`contact` ends with 'Or type `message` to send a note from here.'"
+    status: in_progress
+    evidence:
+      - "frontend/tests/message.test.ts#prints the intro first, asks three questions, posts the answers and reports Sent"
+      - "frontend/tests/message.test.ts#re-asks the same question until the answer validates"
+      - "frontend/tests/message.test.ts#on a failed send never says Sent; shows the status and the email fallback"
+      - "frontend/tests/message.test.ts#routes each Enter to the pending question, echoes the answers and posts once"
+      - "frontend/tests/message.test.ts#Ctrl+C cancels: prints Cancelled., sends nothing, frees the prompt"
+      - "frontend/tests/message.test.ts#command bar chips are ignored while a question is pending"
+      - "frontend/tests/message.test.ts#posts JSON to <apiBase>/contact and reports ok on 2xx"
+    notes:
+      - "2026-11-05: implemented (commands/message.ts, pendingPrompt in composables/useTerminal.ts, utils/api.ts); screenshot pending tour."
+
   # ---------------------------------------------------------------------------
   # READ — crawlers, assistants, API
   # ---------------------------------------------------------------------------

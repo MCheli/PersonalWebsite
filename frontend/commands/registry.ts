@@ -10,6 +10,7 @@ import { about } from './about'
 import { contact } from './contact'
 import { help } from './help'
 import { homelab } from './homelab'
+import { message } from './message'
 import { now } from './now'
 import { open, openTargets } from './open'
 import { projects } from './projects'
@@ -26,6 +27,7 @@ export const commands: readonly Command[] = [
   homelab,
   now,
   contact,
+  message,
   open,
   neofetch,
   whoami,

@@ -4,7 +4,7 @@ import { error, heading, kv, muted } from './blocks'
 export const weather: Command = {
   name: 'weather',
   description: 'Current weather in Ashland, MA (from the API)',
-  longDescription: 'Fetches the current conditions from the Flask API (flask.markcheli.com/weather). If the API is down it says so in one line.',
+  longDescription: 'Fetches the current conditions from the site API (/api/weather). If the API is down it says so in one line.',
   run: async (_args, ctx) => {
     try {
       const w = await ctx.fetchWeather()

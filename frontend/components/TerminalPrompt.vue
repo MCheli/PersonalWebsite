@@ -6,6 +6,8 @@ defineProps<{
   host: string
   modelValue: string
   busy?: boolean
+  /** A question label that replaces the prompt while a command waits for an answer. */
+  label?: string
 }>()
 
 const emit = defineEmits<{
@@ -53,8 +55,9 @@ defineExpose({ focus })
 
 <template>
   <form class="prompt-line" @submit.prevent="emit('submit')">
-    <label for="terminal-command" class="prompt">
-      <span class="prompt-host">{{ host }}:</span>~$
+    <label for="terminal-command" class="prompt" :class="{ 'prompt-question': label }">
+      <template v-if="label">{{ label }}</template>
+      <template v-else><span class="prompt-host">{{ host }}:</span>~$</template>
     </label>
     <input
       id="terminal-command"
@@ -88,6 +91,10 @@ defineExpose({ focus })
   font-weight: 700;
   white-space: nowrap;
   flex: 0 0 auto;
+}
+
+.prompt-question {
+  color: var(--t-info);
 }
 
 .terminal-input {

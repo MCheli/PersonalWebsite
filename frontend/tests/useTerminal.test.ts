@@ -1,17 +1,11 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { useTerminal } from '~/composables/useTerminal'
-import { content } from '~/utils/content'
-import { sampleWeather } from './helpers'
+import { terminalOptions } from './helpers'
 
 const make = () => {
-  const open = vi.fn<(url: string) => void>()
-  const terminal = useTerminal({
-    content,
-    open,
-    fetchWeather: () => Promise.resolve(sampleWeather),
-    typingDelay: 0
-  })
-  return { terminal, open }
+  const options = terminalOptions()
+  const terminal = useTerminal(options)
+  return { terminal, open: options.open }
 }
 
 describe('useTerminal', () => {

@@ -58,18 +58,33 @@ const emit = defineEmits<{ run: [command: string] }>()
   cursor: default;
 }
 
-/* On a phone the bar sits above the keyboard so a command is always one tap away. */
+/* On a phone the bar is pinned to the bottom of the screen so a command is
+   always one tap away; pages/index.vue pads the page by its height. */
 @media (max-width: 640px) {
   .command-bar {
-    position: sticky;
+    position: fixed;
+    left: 0;
+    right: 0;
     bottom: 0;
     z-index: 2;
-    margin: 0 calc(-1 * var(--t-pad));
+    margin: 0;
     padding: 0.6rem var(--t-pad);
     padding-bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
     background: var(--t-bg);
     border-top: 1px solid var(--t-rule);
     gap: 0.4rem;
+  }
+
+  /* Fade the output into the bar so a line under its edge reads as "scroll", not "cut". */
+  .command-bar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 1.5rem;
+    background: linear-gradient(to top, var(--t-bg), transparent);
+    pointer-events: none;
   }
 
   .chip {
