@@ -1,375 +1,162 @@
-import catalog from '~/content/services.json'
+/**
+ * Terminal state: what was typed, what came back, the input line, history
+ * recall and tab completion. No DOM access; the page injects `open` and the
+ * weather fetcher so this runs unchanged under vitest.
+ */
+import { computed, ref, type Ref } from 'vue'
+import { execute } from '~/commands/execute'
+import { commandNames, completions, findCommand } from '~/commands/registry'
+import { openTargets } from '~/commands/open'
+import type { SiteContent } from '~/types/content'
+import type { CommandContext, HistoryEntry, OutputBlock, Weather } from '~/types/terminal'
 
-type Service = {
-  name: string
-  url?: string
-  description?: string
-  repo?: string
+export interface TerminalOptions {
+  content: SiteContent
+  open: (url: string) => void
+  fetchWeather: () => Promise<Weather>
+  /** Milliseconds per character when auto-typing a deep link; 0 types instantly. */
+  typingDelay?: number
 }
 
-type Category = {
-  id: string
-  title: string
-  lanOnly?: boolean
-  services: Service[]
-}
+const sleep = (ms: number): Promise<void> =>
+  ms <= 0 ? Promise.resolve() : new Promise(resolve => setTimeout(resolve, ms))
 
-type Catalog = {
-  host: {
-    name: string
-    displayName: string
-    hardware: string
-    os: string
-    kernel: string
-    cpu: string
-    memory: string
-    stack: string
-  }
-  profile: {
-    name: string
-    title: string
-    location: string
-    linkedin: string
-    github: string
-  }
-  categories: Category[]
-}
+/** Longest common prefix of a non-empty list. */
+const commonPrefix = (words: string[]): string =>
+  words.reduce((acc, word) => {
+    let i = 0
+    while (i < acc.length && i < word.length && acc[i] === word[i]) i++
+    return acc.slice(0, i)
+  })
 
-const DIVIDER = '──────────────────────────────────────────────────────────────────────'
+export const useTerminal = (options: TerminalOptions) => {
+  const entries: Ref<HistoryEntry[]> = ref([])
+  const typed: Ref<string[]> = ref([])
+  const input = ref('')
+  const busy = ref(false)
 
-const totalServices = (c: Catalog): number =>
-  c.categories.reduce((sum, cat) => sum + cat.services.length, 0)
+  let historyIndex = -1
+  let draft = ''
+  let cleared = false
 
-const renderServiceCatalog = (c: Catalog): string => {
-  const total = totalServices(c)
-  const rule = '═'.repeat(70)
-  const header = [
-    rule,
-    `  ${c.host.displayName} Homelab — Service Catalog`,
-    `  ${total} containers · ${c.host.hardware} · ${c.host.os.replace(/ LTS$/, '')} · ${c.host.stack}`,
-    rule,
-    ''
-  ].join('\n')
-
-  const sections = c.categories.map(cat => {
-    const lines: string[] = []
-    lines.push(`▶ ${cat.title}`)
-    lines.push(DIVIDER)
-
-    const hasRepos = cat.services.some(s => s.repo)
-    const hasUrls = cat.services.some(s => s.url)
-    // Dynamic column width: longest URL in this category + 2 spaces, min 35
-    const urlColWidth = Math.max(
-      35,
-      ...cat.services.map(s => (s.url?.length ?? 0) + 2)
-    )
-
-    for (const svc of cat.services) {
-      const name = svc.name.padEnd(22)
-
-      if (hasRepos) {
-        // Detailed vertical layout for categories with GitHub links
-        if (svc.url) {
-          lines.push(`  ${name}${svc.url}`)
-          if (svc.description) lines.push(`                        ${svc.description}`)
-          if (svc.repo) lines.push(`                        repo: ${svc.repo}`)
-        } else {
-          lines.push(`  ${name}${svc.description || ''}`)
-          if (svc.repo) lines.push(`                        repo: ${svc.repo}`)
-        }
-        lines.push('')
-      } else if (hasUrls) {
-        if (svc.url) {
-          const urlCol = svc.url.padEnd(urlColWidth)
-          lines.push(`  ${name}${urlCol}${svc.description || ''}`.trimEnd())
-        } else {
-          lines.push(`  ${name}${svc.description || ''}`)
-        }
-      } else {
-        lines.push(`  ${name}${svc.description || ''}`)
-      }
-    }
-    return lines.join('\n')
-  }).join('\n\n')
-
-  const counts = c.categories.map(cat => `${cat.services.length} ${cat.id}`).join(' · ')
-  const footer = [
-    '',
-    DIVIDER,
-    `Summary:  ${counts}  (${total} total)`,
-    'Delivery: GitHub Actions → ghcr.io → Watchtower rolling restarts',
-    'Security: Cloudflare (Full Strict) · LAN allowlist on *.ops · isolated nets',
-    '',
-    'Type a service name (plex, grafana, tallied-demo…) to open it.',
-    "Tip: run 'github' to browse all my repos, 'contact' for links."
-  ].join('\n')
-
-  return header + sections + footer
-}
-
-const findService = (c: Catalog, name: string): Service | undefined => {
-  for (const cat of c.categories) {
-    const match = cat.services.find(s => s.name === name)
-    if (match) return match
-  }
-  return undefined
-}
-
-export const useTerminal = () => {
-  const history = ref<string[]>([])
-  const currentCommand = ref('')
-  const historyIndex = ref(-1)
-
-  const data = catalog as Catalog
-
-  const shortcuts: Record<string, string> = {
-    linkedin: data.profile.linkedin,
-    github: data.profile.github,
-    cookbook: 'https://cookbook.markcheli.com',
-    home: 'https://home.markcheli.com',
-    jupyter: 'https://data.markcheli.com',
-    plex: 'https://videos.markcheli.com',
-    seafile: 'https://files.markcheli.com',
-    minecraft: 'https://minecraft.markcheli.com',
-    tallied: 'https://money.markcheli.com',
-    'tallied-demo': 'https://money-demo.markcheli.com',
-    tasks: 'https://tasks.markcheli.com',
-    'tasks-demo': 'https://tasks-demo.markcheli.com',
-    grafana: 'https://dashboard.ops.markcheli.com'
-  }
-
-  const commands = {
-    help: {
-      description: 'Show available commands',
-      action: () => `Available commands:
-
-help                    Show this help message
-clear                   Clear terminal screen
-whoami                  Display user information
-ls                      List available services
-services                List all services and infrastructure
-neofetch                Display system information
-weather                 Check weather in Ashland, MA
-about                   About Mark Cheli
-contact                 Contact information
-
-Open shortcuts:
-  linkedin, github, cookbook, home, jupyter, plex, seafile,
-  minecraft, tallied, tallied-demo, tasks, tasks-demo, grafana
-
-exit                    Exit terminal
-
-Use 'help <command>' for more information about a specific command.`
+  const ctx: CommandContext = {
+    content: options.content,
+    open: options.open,
+    clear: () => {
+      entries.value = []
+      cleared = true
     },
-
-    clear: {
-      description: 'Clear the terminal screen',
-      action: () => 'CLEAR_SCREEN'
+    get history() {
+      return typed.value
     },
-
-    neofetch: {
-      description: 'Display system information',
-      action: () => `
-     ███╗   ███╗ █████╗ ██████╗ ██╗  ██╗
-     ████╗ ████║██╔══██╗██╔══██╗██║ ██╔╝
-     ██╔████╔██║███████║██████╔╝█████╔╝
-     ██║╚██╔╝██║██╔══██║██╔══██╗██╔═██╗
-     ██║ ╚═╝ ██║██║  ██║██║  ██║██║  ██╗
-     ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
-
-      ██████╗██╗  ██╗███████╗██╗     ██╗
-     ██╔════╝██║  ██║██╔════╝██║     ██║
-     ██║     ███████║█████╗  ██║     ██║
-     ██║     ██╔══██║██╔══╝  ██║     ██║
-     ╚██████╗██║  ██║███████╗███████╗██║
-      ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝
-
-     Development | Engineering | Strategy | Data Analysis | Operations
-     ────────────────────────────────────────
-     OS: ${data.host.os}
-     Host: ${data.host.hardware}
-     Kernel: ${data.host.kernel}
-     CPU: ${data.host.cpu}
-     Memory: ${data.host.memory}
-     ────────────────────────────────────────
-     Services: ${totalServices(data)} containers running
-     Status: Operational
-     ────────────────────────────────────────`
-    },
-
-    whoami: {
-      description: 'Display current user information',
-      action: () => `mark-cheli
-Developer | Software Engineer | Infrastructure Enthusiast
-Location: ${data.profile.location}
-Status: Building cool things`
-    },
-
-    ls: {
-      description: 'List available services',
-      action: () => `total ${data.categories.length + 3}
-drwxr-xr-x  2 mark users  4096 services/
-drwxr-xr-x  2 mark users  4096 infrastructure/
--rw-r--r--  1 mark users   256 profile.json
--rw-r--r--  1 mark users   128 weather.api
--rw-r--r--  1 mark users   512 links.txt
--rw-r--r--  1 mark users    64 contact.info
-
-Use 'services' to view all available services and infrastructure.`
-    },
-
-    about: {
-      description: 'About Mark Cheli',
-      action: () => `I'm Mark Cheli. I live in ${data.profile.location} and work at PTC
-on Onshape, the SaaS-native CAD platform PTC acquired in 2019.
-Before Onshape I worked across PTC's IoT (ThingWorx), CAD (Creo),
-PLM (Windchill), and Academic Programs groups.
-
-I'm the director of Onshape's Product Operations & Strategy
-team. Day to day that's a mix of product-led growth, internal
-AI adoption, product analytics, the operating cadence the org
-runs on, and shipping full-stack code on early-stage initiatives
-where speed beats handoff.
-
-This site runs on a Dell PowerEdge R630 in my basement. Type
-'services' for the catalog of what's on it, 'github' for code,
-'linkedin' to connect.`
-    },
-
-    contact: {
-      description: 'Contact information',
-      action: () => {
-        const lines: string[] = []
-        lines.push('Contact Information:')
-        lines.push('')
-        lines.push('Professional:')
-        lines.push(`  LinkedIn: ${data.profile.linkedin}`)
-        lines.push(`  GitHub:   ${data.profile.github}`)
-        lines.push('')
-        lines.push('Public Services:')
-        for (const cat of data.categories) {
-          if (cat.lanOnly) continue
-          for (const svc of cat.services) {
-            if (!svc.url) continue
-            const label = svc.name.padEnd(20)
-            lines.push(`  ${label}${svc.url}`)
-          }
-        }
-        lines.push('')
-        lines.push('Infrastructure:')
-        lines.push('  All services are self-hosted on my homelab infrastructure')
-        lines.push('  Built with Docker, NGINX, Cloudflare, and GitHub Actions')
-        return lines.join('\n')
-      }
-    }
-  } as const
-
-  const executeCommand = async (command: string): Promise<string> => {
-    const cmd = command.toLowerCase().trim()
-
-    if (commands[cmd]) return commands[cmd].action()
-
-    if (shortcuts[cmd]) {
-      window.open(shortcuts[cmd], '_blank')
-      return `Opening ${cmd}...`
-    }
-
-    if (cmd === 'services') return renderServiceCatalog(data)
-
-    if (cmd === 'weather') {
-      try {
-        const weather = await $fetch('https://flask.markcheli.com/weather')
-        return `Weather in ${weather.location}:
-
-Temperature: ${weather.temperature}°F (feels like ${weather.feels_like}°F)
-Conditions: ${weather.description}
-Humidity: ${weather.humidity}%
-Wind Speed: ${weather.wind_speed} mph
-
-Data source: ${weather.source}
-Last updated: ${new Date(weather.timestamp).toLocaleString()}`
-      } catch (error) {
-        return 'Error: Unable to fetch weather information'
-      }
-    }
-
-    if (cmd === 'exit') return 'Thanks for visiting! Feel free to explore my services.'
-
-    if (cmd.startsWith('help ')) {
-      const helpCmd = cmd.substring(5)
-      if (commands[helpCmd]) return `${helpCmd}: ${commands[helpCmd].description}`
-      return `Unknown command: ${helpCmd}`
-    }
-
-    // Unknown command — check if it matches a catalog service name for a hint
-    const svc = findService(data, cmd)
-    if (svc && svc.url) {
-      window.open(svc.url.startsWith('http') ? svc.url : `https://${svc.url}`, '_blank')
-      return `Opening ${cmd}...`
-    }
-
-    return `Command not found: ${command}
-
-Type 'help' to see available commands.`
+    fetchWeather: options.fetchWeather
   }
 
-  const addToHistory = (command: string) => {
-    if (command.trim() && history.value[history.value.length - 1] !== command) {
-      history.value.push(command)
-    }
-    historyIndex.value = -1
+  /** Add output that nobody typed (the banner on load). */
+  const print = (blocks: OutputBlock[]): void => {
+    entries.value.push({ command: '', blocks })
   }
 
-  const navigateHistory = (direction: 'up' | 'down') => {
-    if (direction === 'up' && historyIndex.value < history.value.length - 1) {
-      historyIndex.value++
-    } else if (direction === 'down' && historyIndex.value > -1) {
-      historyIndex.value--
-    }
+  const clearScreen = (): void => {
+    entries.value = []
+  }
 
-    if (historyIndex.value >= 0) {
-      currentCommand.value = history.value[history.value.length - 1 - historyIndex.value]
-    } else {
-      currentCommand.value = ''
+  /** Run one line exactly as if it had been typed and Enter pressed. */
+  const run = async (raw: string): Promise<OutputBlock[]> => {
+    const command = raw.trim()
+    if (command.length === 0) {
+      input.value = ''
+      return []
+    }
+    busy.value = true
+    if (typed.value[typed.value.length - 1] !== command) typed.value.push(command)
+    historyIndex = -1
+    draft = ''
+    cleared = false
+    try {
+      const blocks = await execute(command, ctx)
+      if (!cleared) entries.value.push({ command, blocks })
+      return blocks
+    } finally {
+      input.value = ''
+      busy.value = false
     }
   }
 
-  const getCommandCompletions = (partial: string): string[] => {
-    const allCommands = [
-      ...Object.keys(commands),
-      ...Object.keys(shortcuts),
-      'services',
-      'weather',
-      'exit'
-    ]
-    return allCommands.filter(cmd => cmd.startsWith(partial.toLowerCase()))
+  /** Type a known command character by character, then run it. Unknown commands are ignored. */
+  const runDeepLink = async (raw: string): Promise<boolean> => {
+    const command = raw.trim()
+    const name = command.split(/\s+/)[0] ?? ''
+    if (findCommand(name) === undefined) return false
+    const delay = options.typingDelay ?? 0
+    busy.value = true
+    for (let i = 1; i <= command.length; i++) {
+      input.value = command.slice(0, i)
+      await sleep(delay)
+    }
+    await sleep(delay * 4)
+    busy.value = false
+    await run(command)
+    return true
   }
 
-  const getTabCompletion = (input: string): string => {
-    const parts = input.trim().split(' ')
-    const partial = parts[parts.length - 1]
+  const historyUp = (): void => {
+    if (typed.value.length === 0) return
+    if (historyIndex === -1) draft = input.value
+    if (historyIndex < typed.value.length - 1) historyIndex++
+    input.value = typed.value[typed.value.length - 1 - historyIndex] ?? ''
+  }
 
-    if (parts.length === 1) {
-      const completions = getCommandCompletions(partial)
-      if (completions.length === 1) return completions[0]
-      if (completions.length > 1) {
-        return completions.reduce((acc, cmd) => {
-          let i = 0
-          while (i < acc.length && i < cmd.length && acc[i] === cmd[i]) i++
-          return acc.substring(0, i)
-        })
-      }
-    }
-    return input
+  const historyDown = (): void => {
+    if (historyIndex === -1) return
+    historyIndex--
+    input.value = historyIndex === -1 ? draft : (typed.value[typed.value.length - 1 - historyIndex] ?? '')
+  }
+
+  /** Candidates for the word being typed, aware of which command it is an argument to. */
+  const candidatesFor = (words: string[]): string[] => {
+    const partial = (words[words.length - 1] ?? '').toLowerCase()
+    if (words.length <= 1) return completions(partial, options.content)
+    const command = (words[0] ?? '').toLowerCase()
+    let pool: string[] = []
+    if (command === 'help') pool = commandNames()
+    else if (command === 'projects') pool = ['all', ...options.content.projects.projects.map(p => p.slug)]
+    else if (command === 'open') pool = openTargets(options.content).map(t => t.name)
+    return pool.filter(w => w.startsWith(partial)).sort()
+  }
+
+  /** Tab: complete the current word as far as it is unambiguous. */
+  const complete = (): string[] => {
+    const raw = input.value
+    if (raw.trim().length === 0) return []
+    const words = raw.split(/\s+/)
+    const matches = candidatesFor(words)
+    if (matches.length === 0) return []
+    const completed = matches.length === 1 ? `${matches[0]} ` : commonPrefix(matches)
+    const head = words.slice(0, -1)
+    input.value = [...head, completed].join(' ')
+    return matches
+  }
+
+  const cancelInput = (): void => {
+    input.value = ''
+    historyIndex = -1
   }
 
   return {
-    history,
-    currentCommand,
-    executeCommand,
-    addToHistory,
-    navigateHistory,
-    getTabCompletion,
-    commands: Object.keys(commands)
+    entries,
+    input,
+    busy,
+    typed: computed(() => typed.value.slice()),
+    run,
+    runDeepLink,
+    print,
+    clearScreen,
+    historyUp,
+    historyDown,
+    complete,
+    cancelInput
   }
 }
+
+export type Terminal = ReturnType<typeof useTerminal>
