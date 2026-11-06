@@ -1,5 +1,4 @@
-import type { Command } from '~/types/terminal'
-import type { Inline } from '~/types/terminal'
+import type { Command, Inline } from '~/types/terminal'
 import { currentWork, dateRange, locationLine, previousWork } from '~/utils/content'
 import { a, blank, heading, kv, list, muted, text } from './blocks'
 import { RESUME_PDF_PATH } from './open'
