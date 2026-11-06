@@ -79,7 +79,7 @@ export const projects: Command = {
       return [
         error(`projects: no project called "${arg}"`),
         text('Valid slugs:'),
-        list(all.map(p => [p.slug, `— ${p.name}`]))
+        list(all.map(p => [`${p.slug} — ${p.name}`]))
       ]
     }
     return detailBlocks(project)

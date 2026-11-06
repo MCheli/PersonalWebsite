@@ -493,3 +493,41 @@ def test_cors_headers(client):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+def test_contact_strips_control_characters_from_name(client, contact):
+    """A newline in the name cannot reach the ntfy Title header."""
+    response = client.post(
+        "/contact",
+        json={
+            "name": "Eve\r\nX-Injected: 1",
+            "email": "eve@example.com",
+            "message": "hello there friend",
+        },
+        headers={"X-Real-IP": "10.9.9.1"},
+    )
+    assert response.status_code == 200
+    assert contact[0]["headers"]["Title"] == "Website message from Eve X-Injected: 1"
+
+
+def test_contact_non_latin_name_goes_to_body_only(client, contact):
+    response = client.post(
+        "/contact",
+        json={"name": "张伟", "email": "zw@example.com", "message": "hello there friend"},
+        headers={"X-Real-IP": "10.9.9.2"},
+    )
+    assert response.status_code == 200
+    assert contact[0]["headers"]["Title"] == "Website message"
+    assert "张伟".encode() in contact[0]["data"]
+
+
+def test_contact_rate_limit_table_is_pruned(monkeypatch):
+    monkeypatch.setattr(app_module, "_contact_hits", {})
+    clock = [0.0]
+    monkeypatch.setattr(app_module.time, "monotonic", lambda: clock[0])
+    for i in range(1100):
+        app_module._rate_limited(f"10.0.{i // 256}.{i % 256}")
+    assert len(app_module._contact_hits) == 1100
+    clock[0] = 7200.0
+    app_module._rate_limited("10.99.99.99")
+    assert len(app_module._contact_hits) == 1

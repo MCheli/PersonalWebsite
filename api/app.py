@@ -259,6 +259,12 @@ def client_ip() -> str:
 def _rate_limited(ip: str) -> bool:
     now = time.monotonic()
     with _contact_lock:
+        if len(_contact_hits) > 1000:  # forget IPs whose window has fully expired
+            expired = [
+                k for k, v in _contact_hits.items() if not v or now - v[-1] >= CONTACT_RATE_WINDOW
+            ]
+            for k in expired:
+                del _contact_hits[k]
         hits = [t for t in _contact_hits.get(ip, []) if now - t < CONTACT_RATE_WINDOW]
         if len(hits) >= CONTACT_RATE_LIMIT:
             _contact_hits[ip] = hits
@@ -268,14 +274,27 @@ def _rate_limited(ip: str) -> bool:
         return False
 
 
+def _ascii_title(name: str) -> str:
+    try:
+        name.encode("latin-1")
+    except UnicodeEncodeError:
+        return "Website message"
+    return f"Website message from {name}"
+
+
 def validate_contact(body: dict) -> tuple[dict | None, tuple[str, str] | None]:
     """Return (clean fields, None) or (None, (error message, field))."""
 
     def text(key: str) -> str:
         value = body.get(key, "")
-        return value.strip() if isinstance(value, str) else ""
+        if not isinstance(value, str):
+            return ""
+        # Control characters never belong in a name, address or note; they would also
+        # break the ntfy headers the name is placed in.
+        return "".join(ch for ch in value if ch.isprintable() or ch in "\n\t").strip()
 
     name, email, message = text("name"), text("email"), text("message")
+    name = " ".join(name.split())  # one line, single spaces
     if not 1 <= len(name) <= 100:
         return None, ("Name must be 1 to 100 characters", "name")
     if len(email) > 254 or not EMAIL_RE.match(email):
@@ -311,7 +330,8 @@ def post_contact():
             f"{NTFY_URL}/{NTFY_TOPIC}",
             headers={
                 "Authorization": f"Bearer {NTFY_PUBLISH_TOKEN}",
-                "Title": f"Website message from {fields['name']}",
+                # HTTP headers are latin-1; a name outside that range goes in the body only.
+                "Title": _ascii_title(fields["name"]),
                 "Tags": "envelope",
                 "Priority": "4",
             },
