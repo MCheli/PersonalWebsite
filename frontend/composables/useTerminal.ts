@@ -1,4 +1,4 @@
-import catalog from '~/services.json'
+import catalog from '~/content/services.json'
 
 type Service = {
   name: string

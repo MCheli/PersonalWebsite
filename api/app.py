@@ -33,9 +33,10 @@ def redact_api_key(text):
     return text
 
 # Service catalog — single source of truth shared with the frontend.
-# Symlinked from api/services.json -> ../services.json so pytest and Docker
-# both resolve it alongside app.py.
-CATALOG_PATH = Path(__file__).parent / 'services.json'
+# api/content is a symlink to ../content in the repo; the Dockerfile copies the
+# real directory in its place, so both resolve relative to app.py.
+CONTENT_DIR = Path(__file__).parent / 'content'
+CATALOG_PATH = CONTENT_DIR / 'services.json'
 with CATALOG_PATH.open() as f:
     CATALOG = json.load(f)
 

@@ -1,0 +1,262 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "$comment": "JSON Resume (jsonresume.org) format. Single source of truth for the `resume` command, the /resume page, the printable PDF and the Flask /resume endpoint. Keep it factual: no phone, no street address. Edit this file, run `make resume-pdf`, commit both.",
+  "basics": {
+    "name": "Mark Cheli",
+    "label": "Director, Product Operations & Strategy · Onshape (PTC)",
+    "email": "mpcheli7@gmail.com",
+    "url": "https://www.markcheli.com",
+    "summary": "Product and operations leader who still ships code. I run Onshape's Product Operations & Strategy team at PTC: product-led growth, product analytics and the data warehouse, internal AI adoption, localization operations, and the planning cadence the R&D org runs on. Thirteen years at PTC from intern to director, with stops leading engineering teams of 35+ and a 40-person training-products organization. At home I run a 40-container homelab and build the apps on it.",
+    "location": {
+      "city": "Ashland",
+      "region": "MA",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "mark-cheli-0354a163",
+        "url": "https://www.linkedin.com/in/mark-cheli-0354a163/"
+      },
+      {
+        "network": "GitHub",
+        "username": "MCheli",
+        "url": "https://github.com/MCheli"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "PTC — Onshape",
+      "location": "Boston, MA",
+      "position": "Director, Product Operations & Strategy",
+      "url": "https://www.onshape.com",
+      "startDate": "2022-01",
+      "summary": "Lead the product-operations and analytics function for Onshape, PTC's SaaS-native CAD platform. Scope spans product-led growth, product analytics and the data warehouse, internal AI adoption, localization operations, the org's planning and review cadence, and hands-on full-stack development on early-stage initiatives.",
+      "highlights": [
+        "Own the product analytics platform: AWS Redshift warehouse, dbt models, Prefect orchestration, Streamlit dashboards and Looker — the data the product, GTM and leadership teams plan against.",
+        "Drive internal AI adoption across R&D: agentic-harness guidelines for GitHub Copilot, evaluation of Claude via LiteLLM over AWS Bedrock for 1,000+ users, custom MCP servers for the warehouse and data dictionary, and a proposed budget and governance model for AI developer tools.",
+        "Run the product-led growth program: the PLG discovery program and its epics, onboarding and in-app messaging work, signup analytics, and the API rate-limit and quota policy tied to plan tiers.",
+        "Run localization operations for an 11-locale product: translation-management vendor selection and renegotiation, XLIFF/TBX pipelines, and a ~1,300-term glossary.",
+        "Ship production code when speed beats handoff: internal Flask services connecting Onshape to Salesforce, billing and the warehouse; a Python admin library; internal product and admin portals.",
+        "Served as interim Director of Business Operations for the Onshape business unit (Jun–Sep 2022): lead routing, CPQ and executive dashboards.",
+        "Hire and manage a small product-ops/analytics team plus developers and interns; own FY planning epics and tech-debt planning for the group."
+      ]
+    },
+    {
+      "name": "PTC",
+      "location": "Boston, MA",
+      "position": "Director, Education Product",
+      "startDate": "2021-02",
+      "endDate": "2022-01",
+      "summary": "Led product for PTC's Education organization: services, support, partnerships, community and marketing for the academic programs that put Onshape, Creo and ThingWorx into schools and universities.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Boston, MA",
+      "position": "Senior Manager, Education Experience",
+      "startDate": "2020-01",
+      "endDate": "2021-02",
+      "summary": "Owned the end-to-end experience for PTC's education customers after the Onshape acquisition.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Boston, MA",
+      "position": "Senior Manager, Customer Training Technology & Research",
+      "startDate": "2019-01",
+      "endDate": "2020-01",
+      "summary": "Head of product for PTC's customer training: eLearning, virtual instructor-led training and in-product guidance. Led a 40+ person organization across the US and Pune, India.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Senior Software Development Manager, PTC University EdTech R&D",
+      "startDate": "2018-05",
+      "endDate": "2019-01",
+      "summary": "Managed 35+ engineers in three teams building PTC's learning platforms.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Technology Lead, Academic & Customer Training Products",
+      "startDate": "2017-04",
+      "endDate": "2018-05",
+      "summary": "Lead engineer and product manager for IoTU.com and the academic product line, with teams in the US and India.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Senior Full-Stack Software Engineer",
+      "startDate": "2016-10",
+      "endDate": "2017-04",
+      "summary": "Led the Academic Software Development group. IoT education products on the MEAN stack and ThingWorx.",
+      "highlights": []
+    },
+    {
+      "name": "PTC",
+      "location": "Needham, MA",
+      "position": "Academic Software Engineer",
+      "startDate": "2013-05",
+      "endDate": "2016-10",
+      "summary": "Joined as a student intern while finishing my degree, then full-time. Built curriculum, demos and applications for Creo, Windchill, Mathcad and ThingWorx.",
+      "highlights": []
+    },
+    {
+      "name": "Freelance",
+      "position": "Web Developer",
+      "startDate": "2012-12",
+      "endDate": "2014-12",
+      "summary": "Small-business websites: HTML/CSS, PHP/MySQL, WordPress.",
+      "highlights": []
+    },
+    {
+      "name": "Christa McAuliffe Center / Challenger Learning Center, Framingham State University",
+      "position": "Assistant Program Facilitator",
+      "startDate": "2011-12",
+      "endDate": "2013-05",
+      "summary": "Ran planetarium shows and simulated space missions for middle-school groups; handled the center's IT.",
+      "highlights": []
+    }
+  ],
+  "education": [
+    {
+      "institution": "Framingham State University",
+      "url": "https://www.framingham.edu",
+      "area": "Business & Information Technology",
+      "studyType": "B.S.",
+      "startDate": "2011",
+      "endDate": "2015",
+      "score": "Summa Cum Laude, GPA 3.94",
+      "courses": []
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Certified Onshape Associate",
+      "date": "2021-01",
+      "issuer": "Onshape"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Product & operations leadership",
+      "keywords": [
+        "Product operations",
+        "Product strategy",
+        "Product-led growth",
+        "Annual planning & operating cadence",
+        "Hiring & management",
+        "Localization operations"
+      ]
+    },
+    {
+      "name": "Data & analytics",
+      "keywords": [
+        "SQL",
+        "AWS Redshift",
+        "dbt",
+        "Prefect",
+        "Streamlit",
+        "Looker / LookML",
+        "pandas",
+        "Plotly",
+        "Product analytics"
+      ]
+    },
+    {
+      "name": "AI adoption & tooling",
+      "keywords": [
+        "Agentic coding harnesses",
+        "GitHub Copilot",
+        "Claude / Claude Code",
+        "MCP servers",
+        "LiteLLM on AWS Bedrock",
+        "AI governance & budgets"
+      ]
+    },
+    {
+      "name": "Software engineering",
+      "keywords": [
+        "Python",
+        "Flask",
+        "FastAPI",
+        "TypeScript",
+        "Vue 3",
+        "Nuxt",
+        "Node.js",
+        "PostgreSQL",
+        "Docker",
+        "GitHub Actions",
+        "NGINX",
+        "Linux"
+      ]
+    },
+    {
+      "name": "Hardware & home automation",
+      "keywords": [
+        "Home Assistant",
+        "ESP32 / ESPHome",
+        "3D printing",
+        "Electron desktop apps"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Native speaker"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Homelab & self-hosting",
+      "keywords": [
+        "Dell PowerEdge R630",
+        "Docker",
+        "Observability"
+      ]
+    },
+    {
+      "name": "Sim racing & flight sim",
+      "keywords": [
+        "iRacing",
+        "DCS",
+        "RigReady"
+      ]
+    },
+    {
+      "name": "Old trucks",
+      "keywords": [
+        "1991 Honda Acty",
+        "1997 GMC Suburban",
+        "1996 Mazda B4000"
+      ]
+    },
+    {
+      "name": "Outdoors",
+      "keywords": [
+        "Backpacking",
+        "Car camping",
+        "Ham radio"
+      ]
+    },
+    {
+      "name": "Making",
+      "keywords": [
+        "3D printing",
+        "Welding",
+        "Woodworking"
+      ]
+    }
+  ],
+  "meta": {
+    "canonical": "https://www.markcheli.com/resume",
+    "version": "2026-11-05",
+    "lastModified": "2026-11-05"
+  }
+}

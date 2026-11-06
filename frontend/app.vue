@@ -121,7 +121,7 @@
 </template>
 
 <script setup>
-import catalog from '~/services.json'
+import catalog from '~/content/services.json'
 
 const { executeCommand, addToHistory, navigateHistory, currentCommand, getTabCompletion } = useTerminal()
 const route = useRoute()

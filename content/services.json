@@ -1,0 +1,263 @@
+{
+  "$comment": "Homelab service catalog. Single source of truth for the terminal's `homelab` command, the SSR crawler content, and the Flask /services + /profile endpoints. `name` must match the container_name in MCheli/83rr-poweredge docker-compose.yml unless `containers` lists the real container names or `external` is true (runs on other hardware, proxied by the R630). scripts/check_catalog.py diffs this file against the compose file.",
+  "updated": "2026-11-05",
+  "host": {
+    "name": "83rr-poweredge",
+    "displayName": "83RR PowerEdge",
+    "hardware": "Dell PowerEdge R630",
+    "os": "Ubuntu 24.04.3 LTS",
+    "kernel": "6.8.0-generic",
+    "cpu": "Intel Xeon (16 cores)",
+    "memory": "128GB DDR4",
+    "stack": "Docker Compose + NGINX + Cloudflare",
+    "repo": "https://github.com/MCheli/83rr-poweredge"
+  },
+  "profile": {
+    "name": "Mark Cheli",
+    "title": "Director, Product Operations & Strategy",
+    "company": "Onshape (PTC)",
+    "location": "Ashland, MA",
+    "email": "mpcheli7@gmail.com",
+    "website": "https://www.markcheli.com",
+    "linkedin": "https://www.linkedin.com/in/mark-cheli-0354a163/",
+    "github": "https://github.com/MCheli"
+  },
+  "categories": [
+    {
+      "id": "custom",
+      "title": "Custom applications (built by me)",
+      "services": [
+        {
+          "name": "personal-website",
+          "url": "https://www.markcheli.com",
+          "description": "Nuxt 3 terminal-style site (you are here)",
+          "repo": "https://github.com/MCheli/PersonalWebsite"
+        },
+        {
+          "name": "flask-api",
+          "url": "https://flask.markcheli.com",
+          "description": "Flask API behind the site: weather, profile, resume, catalog as JSON",
+          "repo": "https://github.com/MCheli/PersonalWebsite"
+        },
+        {
+          "name": "cookbook",
+          "url": "https://cookbook.markcheli.com",
+          "description": "Static recipe site, grocery-list builder, printable PDFs",
+          "repo": "https://github.com/MCheli/cookbook"
+        },
+        {
+          "name": "tallied",
+          "url": "https://money.markcheli.com",
+          "description": "Household finance dashboard — FastAPI + Vue 3 + Postgres, Google SSO",
+          "repo": "https://github.com/MCheli/tallied"
+        },
+        {
+          "name": "tallied-demo",
+          "url": "https://money-demo.markcheli.com",
+          "description": "Live demo of Tallied: a made-up household, read-only",
+          "repo": "https://github.com/MCheli/tallied"
+        },
+        {
+          "name": "tasks",
+          "url": "https://tasks.markcheli.com",
+          "description": "Cycle-based task manager — FastAPI + Vue 3 + Postgres",
+          "repo": "https://github.com/MCheli/tasks"
+        },
+        {
+          "name": "tasks-demo",
+          "url": "https://tasks-demo.markcheli.com",
+          "description": "Live demo of Tasks: a made-up person's task lists, read-only",
+          "repo": "https://github.com/MCheli/tasks"
+        },
+        {
+          "name": "daily-report",
+          "url": "https://report.ops.markcheli.com",
+          "lanOnly": true,
+          "description": "Morning brief printed at 5 AM on a thermal receipt printer (tasks, calendar, finances, weather, server health)",
+          "repo": "https://github.com/MCheli/daily-report"
+        },
+        {
+          "name": "energy-monitor",
+          "url": "https://energy.ops.markcheli.com",
+          "lanOnly": true,
+          "description": "Whole-home energy monitor: maps CT clamps to breakers, calibrates, prints a panel reference (panel-tool)",
+          "repo": "https://github.com/MCheli/energy-monitor"
+        },
+        {
+          "name": "homelab-infra",
+          "description": "Infrastructure-as-code for this entire stack (compose, nginx, monitoring, backups)",
+          "repo": "https://github.com/MCheli/83rr-poweredge",
+          "containers": []
+        }
+      ]
+    },
+    {
+      "id": "self-hosted",
+      "title": "Self-hosted services (third-party)",
+      "services": [
+        {
+          "name": "plex",
+          "url": "https://videos.markcheli.com",
+          "description": "Media streaming"
+        },
+        {
+          "name": "seafile",
+          "url": "https://files.markcheli.com",
+          "description": "File sync and share (Seafile 13)"
+        },
+        {
+          "name": "home-assistant",
+          "url": "https://home.markcheli.com",
+          "description": "Smart home — runs on a Home Assistant Yellow, proxied here",
+          "external": true
+        },
+        {
+          "name": "uptime-kuma",
+          "url": "https://status.markcheli.com",
+          "description": "Public status page and uptime monitoring"
+        },
+        {
+          "name": "ntfy",
+          "url": "https://ntfy.markcheli.com",
+          "description": "Push notifications for homelab alerts"
+        },
+        {
+          "name": "minecraft",
+          "url": "minecraft.markcheli.com:25565",
+          "description": "Paper server (Java), 2GB"
+        },
+        {
+          "name": "asa",
+          "description": "ARK: Survival Ascended dedicated server (private)"
+        }
+      ]
+    },
+    {
+      "id": "observability",
+      "title": "Observability (LAN-only · *.ops.markcheli.com)",
+      "lanOnly": true,
+      "services": [
+        {
+          "name": "grafana",
+          "url": "https://dashboard.ops.markcheli.com",
+          "description": "Dashboards for system, Docker, NGINX, containers and Dependency-Track"
+        },
+        {
+          "name": "prometheus",
+          "url": "https://prometheus.ops.markcheli.com",
+          "description": "Metrics DB · 30-day retention"
+        },
+        {
+          "name": "cadvisor",
+          "url": "https://cadvisor.ops.markcheli.com",
+          "description": "Per-container CPU/memory/IO metrics"
+        },
+        {
+          "name": "opensearch-dashboards",
+          "url": "https://logs.ops.markcheli.com",
+          "description": "Log search UI · daily index rotation"
+        },
+        {
+          "name": "opensearch",
+          "url": "https://opensearch.ops.markcheli.com",
+          "description": "Log storage and cluster API"
+        },
+        {
+          "name": "dependency-track",
+          "url": "https://deptrack.ops.markcheli.com",
+          "description": "SBOM + CVE tracking for every running container (nightly Syft scans, alerts to ntfy)",
+          "containers": [
+            "deptrack-apiserver",
+            "deptrack-frontend"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "infra",
+      "title": "Infrastructure containers (behind the scenes)",
+      "services": [
+        {
+          "name": "nginx",
+          "description": "Reverse proxy + TLS (Cloudflare origin certs; Let's Encrypt wildcard for *.ops)"
+        },
+        {
+          "name": "fluent-bit",
+          "description": "Ships Docker, Plex and Seafile logs → OpenSearch"
+        },
+        {
+          "name": "node-exporter",
+          "description": "Host metrics for Prometheus (CPU/mem/disk/net)"
+        },
+        {
+          "name": "nginx-exporter",
+          "description": "NGINX connection and request metrics"
+        },
+        {
+          "name": "watchtower",
+          "description": "Auto-deploys new ghcr.io/mcheli/* images (5-minute poll)"
+        },
+        {
+          "name": "seafile-db",
+          "description": "MariaDB 10.11 backend for Seafile"
+        },
+        {
+          "name": "seafile-memcached",
+          "description": "Cache layer for Seafile"
+        },
+        {
+          "name": "seafile-redis",
+          "description": "Redis for Seafile 13"
+        },
+        {
+          "name": "seafile-notification",
+          "description": "Seafile notification server"
+        },
+        {
+          "name": "tallied-scheduler",
+          "description": "Background scheduler sidecar for Tallied (same image)"
+        },
+        {
+          "name": "tallied-db",
+          "description": "PostgreSQL 16 backend for Tallied (SSL required)"
+        },
+        {
+          "name": "tallied-demo-db",
+          "description": "PostgreSQL 16 backend for the Tallied demo"
+        },
+        {
+          "name": "tasks-db",
+          "description": "PostgreSQL 16 backend for Tasks"
+        },
+        {
+          "name": "tasks-demo-db",
+          "description": "PostgreSQL 16 backend for the Tasks demo"
+        },
+        {
+          "name": "energy-monitor-db",
+          "description": "PostgreSQL 16 backend for the energy monitor"
+        },
+        {
+          "name": "deptrack-db",
+          "description": "PostgreSQL 17 backend for Dependency-Track"
+        }
+      ]
+    },
+    {
+      "id": "isolated",
+      "title": "Isolated deployment",
+      "services": [
+        {
+          "name": "openclaw",
+          "url": "https://openclaw.ops.markcheli.com",
+          "lanOnly": true,
+          "description": "Self-hosted AI agent on a dedicated proxy-only network: no Docker socket, capabilities dropped",
+          "containers": [
+            "openclaw"
+          ],
+          "compose": "infrastructure/openclaw/docker-compose.yml"
+        }
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@ FROM node:22.23.4-alpine3.24 AS builder
 
 WORKDIR /app
 
-# Build context is the repo root so services.json can be shared with the API.
+# Build context is the repo root so content/ can be shared with the API.
 COPY frontend/package*.json ./
 
 # --ignore-scripts skips the `nuxt prepare` postinstall which needs source files
@@ -11,8 +11,9 @@ COPY frontend/package*.json ./
 RUN npm ci --legacy-peer-deps --ignore-scripts
 
 COPY frontend/ ./
-# Replace the dev symlink with the real catalog file
-COPY services.json ./services.json
+# Replace the dev symlink with the real content directory (services, resume, projects)
+RUN rm -f ./content
+COPY content/ ./content/
 
 RUN npm run build
 
