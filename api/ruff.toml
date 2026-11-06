@@ -8,6 +8,7 @@ select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "DTZ"]
 ignore = []
 
 [lint.per-file-ignores]
+"**/tests/*.py" = ["E501"]
 "test_app.py" = ["E501"]
 
 [format]
