@@ -283,6 +283,181 @@ def test_now_endpoint(client):
     assert isinstance(data["items"], list)
 
 
+# --- contact -------------------------------------------------------------------
+
+GOOD_CONTACT = {
+    "name": "Ada Lovelace",
+    "email": "ada@example.com",
+    "message": "I would like to talk about a product operations role.",
+    "website": "",
+}
+
+
+@pytest.fixture
+def contact(monkeypatch):
+    """A configured ntfy token, an empty rate-limit table and a recording requests.post."""
+    calls = []
+
+    class Ok:
+        status_code = 200
+
+        def raise_for_status(self):
+            pass
+
+    def fake_post(url, headers=None, data=None, timeout=None):
+        calls.append({"url": url, "headers": headers, "data": data, "timeout": timeout})
+        return Ok()
+
+    monkeypatch.setattr(app_module, "NTFY_PUBLISH_TOKEN", "tk_secret_123")
+    monkeypatch.setattr(app_module, "NTFY_URL", "http://ntfy")
+    monkeypatch.setattr(app_module, "NTFY_TOPIC", "homelab")
+    monkeypatch.setattr(app_module.requests, "post", fake_post)
+    app_module._contact_hits.clear()
+    yield calls
+    app_module._contact_hits.clear()
+
+
+def post_contact(client, body, **headers):
+    return client.post("/contact", json=body, headers=headers or None)
+
+
+def test_contact_happy_path_publishes_to_ntfy(client, contact):
+    response = post_contact(client, GOOD_CONTACT)
+    assert response.status_code == 200
+    assert json.loads(response.data) == {"ok": True}
+
+    assert len(contact) == 1
+    call = contact[0]
+    assert call["url"] == "http://ntfy/homelab"
+    assert call["headers"]["Authorization"] == "Bearer tk_secret_123"
+    assert call["headers"]["Title"] == "Website message from Ada Lovelace"
+    assert call["headers"]["Tags"] == "envelope"
+    assert call["headers"]["Priority"] == "4"
+    assert call["timeout"] == 5
+    assert call["data"].decode() == (
+        "I would like to talk about a product operations role.\n\nFrom: Ada Lovelace <ada@example.com>"
+    )
+
+
+def test_contact_honeypot_returns_ok_and_sends_nothing(client, contact):
+    response = post_contact(client, {**GOOD_CONTACT, "website": "http://spam.example"})
+    assert response.status_code == 200
+    assert json.loads(response.data) == {"ok": True}
+    assert contact == []
+
+
+@pytest.mark.parametrize(
+    ("override", "field"),
+    [
+        ({"name": ""}, "name"),
+        ({"name": "   "}, "name"),
+        ({"name": "x" * 101}, "name"),
+        ({"name": 42}, "name"),
+        ({"email": "not-an-email"}, "email"),
+        ({"email": "two@@example.com"}, "email"),
+        ({"email": "nodot@example"}, "email"),
+        ({"email": "a@" + "b" * 250 + ".com"}, "email"),
+        ({"message": "too short"}, "message"),
+        ({"message": "m" * 2001}, "message"),
+    ],
+)
+def test_contact_validation_failures(client, contact, override, field):
+    response = post_contact(client, {**GOOD_CONTACT, **override})
+    assert response.status_code == 400
+    data = json.loads(response.data)
+    assert data["field"] == field
+    assert data["error"]
+    assert contact == []
+
+
+def test_contact_rejects_non_json_body(client, contact):
+    response = client.post("/contact", data="name=x", content_type="text/plain")
+    assert response.status_code == 400
+    assert json.loads(response.data)["field"] == "body"
+    assert contact == []
+
+
+def test_contact_rate_limit_per_ip(client, contact):
+    for _ in range(3):
+        assert post_contact(client, GOOD_CONTACT, **{"X-Real-IP": "203.0.113.7"}).status_code == 200
+    fourth = post_contact(client, GOOD_CONTACT, **{"X-Real-IP": "203.0.113.7"})
+    assert fourth.status_code == 429
+    assert json.loads(fourth.data) == {"error": "Too many messages; try again later"}
+    assert len(contact) == 3
+    # Another visitor is unaffected
+    assert post_contact(client, GOOD_CONTACT, **{"X-Real-IP": "203.0.113.8"}).status_code == 200
+
+
+def test_contact_rate_limit_window_rolls(client, contact, monkeypatch):
+    clock = {"now": 5000.0}
+    monkeypatch.setattr(app_module.time, "monotonic", lambda: clock["now"])
+    for _ in range(3):
+        assert post_contact(client, GOOD_CONTACT).status_code == 200
+    assert post_contact(client, GOOD_CONTACT).status_code == 429
+    clock["now"] += app_module.CONTACT_RATE_WINDOW + 1
+    assert post_contact(client, GOOD_CONTACT).status_code == 200
+
+
+def test_contact_client_ip_prefers_real_ip_then_forwarded_for(client, contact):
+    hdr = {"X-Forwarded-For": "198.51.100.1, 10.0.0.2", "X-Real-IP": "203.0.113.9"}
+    for _ in range(3):
+        assert post_contact(client, GOOD_CONTACT, **hdr).status_code == 200
+    # Same X-Real-IP, different XFF: still the same client
+    hdr2 = {"X-Forwarded-For": "198.51.100.2", "X-Real-IP": "203.0.113.9"}
+    assert post_contact(client, GOOD_CONTACT, **hdr2).status_code == 429
+    # No X-Real-IP: the first X-Forwarded-For hop identifies the client
+    for _ in range(3):
+        assert (
+            post_contact(
+                client, GOOD_CONTACT, **{"X-Forwarded-For": "198.51.100.5, 10.0.0.2"}
+            ).status_code
+            == 200
+        )
+    assert (
+        post_contact(
+            client, GOOD_CONTACT, **{"X-Forwarded-For": "198.51.100.5, 10.0.0.3"}
+        ).status_code
+        == 429
+    )
+
+
+def test_contact_without_token_is_503(client, contact, monkeypatch):
+    monkeypatch.setattr(app_module, "NTFY_PUBLISH_TOKEN", "")
+    response = post_contact(client, GOOD_CONTACT)
+    assert response.status_code == 503
+    assert json.loads(response.data) == {"error": "Contact is not configured"}
+    assert contact == []
+
+
+def test_contact_upstream_failure_is_502_and_token_not_logged(client, contact, monkeypatch, caplog):
+    import logging
+
+    def fail(url, headers=None, data=None, timeout=None):
+        raise requests.ConnectionError(
+            f"HTTPConnectionPool(host='ntfy'): Max retries exceeded with url: {url} "
+            f"(Authorization: Bearer {headers['Authorization'].split()[1]})"
+        )
+
+    monkeypatch.setattr(app_module.requests, "post", fail)
+    with caplog.at_level(logging.DEBUG):
+        response = post_contact(client, GOOD_CONTACT)
+    assert response.status_code == 502
+    assert json.loads(response.data) == {"error": "Could not deliver the message"}
+    assert b"tk_secret_123" not in response.data
+    assert caplog.records
+    assert "tk_secret_123" not in caplog.text
+    assert "REDACTED" in caplog.text
+    for record in caplog.records:
+        assert record.exc_info is None
+
+
+def test_contact_cors(client, contact):
+    response = client.post(
+        "/contact", json=GOOD_CONTACT, headers={"Origin": "https://www.markcheli.com"}
+    )
+    assert response.headers.get("Access-Control-Allow-Origin") in ("*", "https://www.markcheli.com")
+
+
 def test_404_handler(client):
     """The 404 body lists every endpoint the app registers."""
     response = client.get("/nonexistent")

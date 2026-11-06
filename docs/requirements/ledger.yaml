@@ -191,6 +191,27 @@ requirements:
     evidence: []
     notes: []
 
+  - id: REACH-003
+    title: "API: POST /contact publishes to ntfy"
+    job: reach
+    area: api
+    priority: p1
+    done_means:
+      - "POST /contact with JSON {name, email, message, website} validates (name 1-100, sane email <= 254, message 10-2000; 400 with {error, field}), treats a non-empty `website` honeypot as success without sending, rate-limits 3 per IP per rolling hour (X-Real-IP, then first X-Forwarded-For hop, then remote_addr; 429), answers 503 when NTFY_PUBLISH_TOKEN is unset, publishes to NTFY_URL/NTFY_TOPIC with Bearer auth, Title 'Website message from <name>', Tags envelope, Priority 4, and answers 502 on upstream failure without logging the token."
+    status: done
+    evidence:
+      - api/test_app.py::test_contact_happy_path_publishes_to_ntfy
+      - api/test_app.py::test_contact_honeypot_returns_ok_and_sends_nothing
+      - api/test_app.py::test_contact_validation_failures
+      - api/test_app.py::test_contact_rate_limit_per_ip
+      - api/test_app.py::test_contact_rate_limit_window_rolls
+      - api/test_app.py::test_contact_client_ip_prefers_real_ip_then_forwarded_for
+      - api/test_app.py::test_contact_without_token_is_503
+      - api/test_app.py::test_contact_upstream_failure_is_502_and_token_not_logged
+      - api/test_app.py::test_404_handler
+    notes:
+      - "2026-11-05: added at Mark's request. Rate-limit table is a module-level dict per gunicorn worker (so up to 3 x workers per hour), documented in app.py. nginx /api/ route on www and the NTFY env on flask-api landed in 83rr-poweredge #31."
+
   # ---------------------------------------------------------------------------
   # READ — crawlers, assistants, API
   # ---------------------------------------------------------------------------

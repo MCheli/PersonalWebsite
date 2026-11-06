@@ -17,7 +17,7 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 load_dotenv()
@@ -32,6 +32,15 @@ ASHLAND_LON = -71.4633
 WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather"
 WEATHER_CACHE_TTL = 600  # seconds; a burst of visitors makes one upstream call
 APPID_PATTERN = re.compile(r'(appid=)[^&\s\'"]+', re.IGNORECASE)
+
+# Contact form -> ntfy. The homelab compose sets NTFY_PUBLISH_TOKEN on flask-api; without it
+# the endpoint answers 503 rather than dropping messages silently.
+NTFY_URL = os.getenv("NTFY_URL", "http://ntfy").rstrip("/")
+NTFY_TOPIC = os.getenv("NTFY_TOPIC", "homelab")
+NTFY_PUBLISH_TOKEN = os.getenv("NTFY_PUBLISH_TOKEN", "")
+CONTACT_RATE_LIMIT = 3  # messages per CONTACT_RATE_WINDOW per client IP
+CONTACT_RATE_WINDOW = 3600  # seconds (rolling)
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 # Content: api/content is a symlink to ../content in the repo; the Dockerfile copies
 # the real directory in its place, so both resolve relative to app.py. Each file is
@@ -59,6 +68,7 @@ ENDPOINTS = [
     "/resume",
     "/projects",
     "/now",
+    "/contact",
 ]
 
 
@@ -68,10 +78,12 @@ def now_iso() -> str:
 
 
 def redact_api_key(text: str) -> str:
-    """Strip the OpenWeatherMap key from text bound for the logs."""
+    """Strip the OpenWeatherMap key and the ntfy token from text bound for the logs."""
     text = APPID_PATTERN.sub(r"\1REDACTED", text)
     if WEATHER_API_KEY and WEATHER_API_KEY != "demo-key":
         text = text.replace(WEATHER_API_KEY, "REDACTED")
+    if NTFY_PUBLISH_TOKEN:
+        text = text.replace(NTFY_PUBLISH_TOKEN, "REDACTED")
     return text
 
 
@@ -223,6 +235,95 @@ def get_projects():
 def get_now():
     """What Mark is doing now (content/now.json)."""
     return jsonify(NOW)
+
+
+# --- contact -------------------------------------------------------------------
+#
+# Per-IP rate limit: a module-level {ip: [timestamps]} dict guarded by a lock. gunicorn
+# runs several workers and each keeps its own copy, so the effective limit is up to
+# CONTACT_RATE_LIMIT per worker per hour; good enough to stop a loop, not a quota.
+_contact_hits: dict[str, list[float]] = {}
+_contact_lock = threading.Lock()
+
+
+def client_ip() -> str:
+    """The visitor's IP behind nginx: X-Real-IP, else the first X-Forwarded-For hop."""
+    real = (request.headers.get("X-Real-IP") or "").strip()
+    if real:
+        return real
+    forwarded = (request.headers.get("X-Forwarded-For") or "").split(",")[0].strip()
+    return forwarded or (request.remote_addr or "unknown")
+
+
+def _rate_limited(ip: str) -> bool:
+    now = time.monotonic()
+    with _contact_lock:
+        hits = [t for t in _contact_hits.get(ip, []) if now - t < CONTACT_RATE_WINDOW]
+        if len(hits) >= CONTACT_RATE_LIMIT:
+            _contact_hits[ip] = hits
+            return True
+        hits.append(now)
+        _contact_hits[ip] = hits
+        return False
+
+
+def validate_contact(body: dict) -> tuple[dict | None, tuple[str, str] | None]:
+    """Return (clean fields, None) or (None, (error message, field))."""
+
+    def text(key: str) -> str:
+        value = body.get(key, "")
+        return value.strip() if isinstance(value, str) else ""
+
+    name, email, message = text("name"), text("email"), text("message")
+    if not 1 <= len(name) <= 100:
+        return None, ("Name must be 1 to 100 characters", "name")
+    if len(email) > 254 or not EMAIL_RE.match(email):
+        return None, ("Enter a valid email address", "email")
+    if not 10 <= len(message) <= 2000:
+        return None, ("Message must be 10 to 2000 characters", "message")
+    return {"name": name, "email": email, "message": message}, None
+
+
+@app.route("/contact", methods=["POST"])
+def post_contact():
+    """Contact form: validates, rate-limits per IP, publishes to ntfy.
+
+    `website` is a honeypot field: bots fill it, people never see it. A non-empty value
+    gets a 200 and nothing else, so the bot cannot tell it was caught.
+    """
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return jsonify({"error": "Send a JSON object", "field": "body"}), 400
+    if str(body.get("website") or "").strip():
+        return jsonify({"ok": True})
+    fields, problem = validate_contact(body)
+    if problem:
+        message, field = problem
+        return jsonify({"error": message, "field": field}), 400
+    if _rate_limited(client_ip()):
+        return jsonify({"error": "Too many messages; try again later"}), 429
+    if not NTFY_PUBLISH_TOKEN:
+        app.logger.error("Contact message dropped: NTFY_PUBLISH_TOKEN is not set")
+        return jsonify({"error": "Contact is not configured"}), 503
+    try:
+        response = requests.post(
+            f"{NTFY_URL}/{NTFY_TOPIC}",
+            headers={
+                "Authorization": f"Bearer {NTFY_PUBLISH_TOKEN}",
+                "Title": f"Website message from {fields['name']}",
+                "Tags": "envelope",
+                "Priority": "4",
+            },
+            data=f"{fields['message']}\n\nFrom: {fields['name']} <{fields['email']}>".encode(),
+            timeout=5,
+        )
+        response.raise_for_status()
+    except requests.RequestException as e:
+        app.logger.error(
+            "Contact delivery to ntfy failed: %s: %s", type(e).__name__, redact_api_key(str(e))
+        )
+        return jsonify({"error": "Could not deliver the message"}), 502
+    return jsonify({"ok": True})
 
 
 @app.errorhandler(404)

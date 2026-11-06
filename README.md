@@ -67,6 +67,7 @@ Flask 3 + gunicorn. Port 5000. Image `ghcr.io/mcheli/flask-api`. Permissive CORS
 | `/now` | `content/now.json` |
 | `/profile` | name, title, company, location, email, website, flat `links`, host block and the catalog |
 | `/weather` | Ashland, MA weather from OpenWeatherMap, cached 10 minutes per worker; demo data without a key |
+| `POST /contact` | JSON `{name, email, message, website}` → publishes to ntfy; `website` is a honeypot (non-empty → 200 and dropped). 400 `{error, field}` on validation, 429 after 3 messages per IP per rolling hour (per worker), 503 when `NTFY_PUBLISH_TOKEN` is unset, 502 when ntfy fails |
 | `/health`, `/ping` | liveness |
 
 Unknown paths get a 404 JSON body listing the endpoints.
@@ -74,10 +75,12 @@ Unknown paths get a 404 JSON body listing the endpoints.
 | Variable | Description |
 |---|---|
 | `OPENWEATHER_API_KEY` | OpenWeatherMap key; unset or `demo-key` returns demo data |
+| `NTFY_PUBLISH_TOKEN` | Bearer token for publishing contact messages to ntfy; unset → `/contact` answers 503 |
+| `NTFY_URL`, `NTFY_TOPIC` | ntfy base URL and topic (defaults `http://ntfy`, `homelab`) |
 | `FLASK_ENV` | `development` enables debug when run with `python app.py` |
 | `PORT` | listen port for `python app.py` (default `5000`; gunicorn binds 5000 in the image) |
 
-The key is never written to logs or responses (`api/test_app.py` proves it).
+Neither key nor token is ever written to logs or responses (`api/test_app.py` proves it).
 
 ## CI
 

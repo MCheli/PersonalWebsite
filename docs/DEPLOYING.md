@@ -17,11 +17,11 @@ PRs build both images without pushing and smoke-test them (healthy, slim, static
 | Container | Image | Environment | Health |
 |---|---|---|---|
 | `personal-website` | `ghcr.io/mcheli/personal-website:latest` | `NODE_ENV=production`, `NUXT_PUBLIC_API_BASE=/api`, `API_URL=http://flask-api:5000` | `wget --spider http://127.0.0.1:3000/` |
-| `flask-api` | `ghcr.io/mcheli/flask-api:latest` | `FLASK_ENV=production`, `OPENWEATHER_API_KEY` from the server's `.env` | `GET /health` |
+| `flask-api` | `ghcr.io/mcheli/flask-api:latest` | `FLASK_ENV=production`, `OPENWEATHER_API_KEY` and `NTFY_PUBLISH_TOKEN` (plus optional `NTFY_URL`, `NTFY_TOPIC`) from the server's `.env` | `GET /health` |
 
 Both sit on the `infrastructure` network with no published ports. NGINX (`infrastructure/nginx/conf.d/production.conf` in the homelab repo) proxies `www.markcheli.com` to `personal-website:3000` and `flask.markcheli.com` to `flask-api:5000`; `markcheli.com` redirects to `www`. Cloudflare terminates TLS at the edge with origin certificates on NGINX.
 
-Note on the API URL: the browser calls `https://flask.markcheli.com` directly today. `NUXT_PUBLIC_API_BASE=/api` and `API_URL` only matter to the dev proxy; there is no `/api` route on `www.markcheli.com` in NGINX (PRODUCT.md decision D4).
+Note on the API URL: NGINX routes `www.markcheli.com/api/` to `flask-api` (83rr-poweredge #31), so the site can call `/api/contact` same-origin; `https://flask.markcheli.com` still works directly. `API_URL` only matters to the Nuxt dev proxy.
 
 Images run as non-root (`nuxtjs` / `appuser`), carry no curl or npm, and copy `content/` in place of the dev symlink. The frontend image serves `.output/public` through Nitro itself.
 
