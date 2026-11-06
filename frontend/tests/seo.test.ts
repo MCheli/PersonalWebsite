@@ -43,7 +43,7 @@ describe('JSON-LD', () => {
     expect(p['@type']).toBe('Person')
     expect(p.name).toBe(content.resume.basics.name)
     expect(p.jobTitle).toBe('Director, Product Operations & Strategy')
-    expect(p.worksFor).toEqual({ '@type': 'Organization', name: 'PTC — Onshape', url: 'https://www.onshape.com' })
+    expect(p.worksFor).toEqual({ '@type': 'Organization', name: content.resume.work[0]!.name, url: 'https://www.onshape.com' })
     expect(p.address.addressLocality).toBe('Ashland')
     expect(p.address.addressRegion).toBe('MA')
     expect(p.sameAs).toEqual(content.resume.basics.profiles.map(x => x.url))
