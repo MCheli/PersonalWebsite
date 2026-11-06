@@ -2,10 +2,10 @@ name: Build and Publish Docker Images
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   # PRs run every gate, the screenshot tour, and build both images but never log in or push.
   pull_request:
-    branches: [master]
+    branches: [main]
   # Weekly rebuild on a freshly pulled base so OS security fixes land without a code change.
   # Friday 08:00 UTC, so Saturday's security sweep sees the result.
   schedule:
@@ -166,8 +166,8 @@ jobs:
 
   build-frontend:
     needs: test
-    # Watchtower deploys :latest, so only master ever publishes (manual runs on other branches skip).
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    # Watchtower deploys :latest, so only main ever publishes (manual runs on other branches skip).
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -230,7 +230,7 @@ jobs:
 
   build-api:
     needs: test
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read

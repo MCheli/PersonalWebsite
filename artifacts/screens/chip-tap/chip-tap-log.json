@@ -1,6 +1,6 @@
 {
   "chip": "services",
-  "base": "http://127.0.0.1:41809",
+  "base": "http://127.0.0.1:36081",
   "ticks": {
     "t100": {
       "input": "se",
@@ -26,7 +26,7 @@
       "entries": 1,
       "lastCommandTop": 8,
       "scrollY": 913,
-      "at": 1203,
+      "at": 1204,
       "file": "artifacts/screens/chip-tap/t1200.png"
     }
   },
