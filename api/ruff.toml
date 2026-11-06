@@ -1,0 +1,14 @@
+# ruff for the API and the repo scripts (../scripts). `make lint` runs `ruff check` and `ruff format --check`.
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "content"]
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "DTZ"]
+ignore = []
+
+[lint.per-file-ignores]
+"test_app.py" = ["E501"]
+
+[format]
+quote-style = "double"
