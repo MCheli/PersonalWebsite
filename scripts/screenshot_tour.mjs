@@ -80,12 +80,13 @@ const VIEWPORTS = {
 }
 
 async function settle(page) {
-  const ready = page.waitForSelector('[data-tour-ready]', { timeout: 8000, state: 'attached' }).then(() => 'ready').catch(() => null)
-  const idle = page.waitForLoadState('networkidle', { timeout: 15000 }).then(() => sleep(800)).then(() => 'idle').catch(() => 'timeout')
+  // Whichever comes first: the page's own readiness marker, or network idle + 800 ms.
+  const ready = page.waitForSelector('[data-tour-ready]', { timeout: 8000, state: 'attached' }).then(() => 'ready').catch(() => 'no-marker')
+  const idle = page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {}).then(() => sleep(800)).then(() => 'idle')
   const first = await Promise.race([ready, idle])
-  if (first !== 'ready') await ready.catch(() => {})
-  // The old terminal auto-types ?cmd= one character at a time; give the animation time
-  // to finish even when the page has no readiness marker.
+  if (first === 'ready') return
+  // No marker yet: the old terminal auto-types ?cmd= one character at a time, so give
+  // the animation time to finish before measuring and capturing.
   if (!(await page.$('[data-tour-ready]'))) await sleep(1500)
 }
 
