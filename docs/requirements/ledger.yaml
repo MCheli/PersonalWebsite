@@ -27,10 +27,14 @@ requirements:
     done_means:
       - "On / at 390px and 1440px, before any command, the page shows Mark's name, 'Director, Product Operations & Strategy' and 'Onshape' plus the one-sentence summary from resume.json basics, as visible text (not only in the sr-only block)."
       - "The text is server-rendered: curl of / contains it."
-    status: todo
-    evidence: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/components.test.ts#shows name, title with company, location and summary from resume.json"
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
     notes:
       - "2026-11-05: today the first screen is a fake 'Last login' line, a figlet and host specs; the title says 'Developer'."
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: components/IdentityHeader.vue is visible and server-rendered; curl of / contains the title and summary."
 
   - id: IDENT-002
     title: Figlet replaced by the name on narrow screens
@@ -41,9 +45,13 @@ requirements:
     done_means:
       - "At 390px the MARK CHELI figlet is not rendered (or is hidden) and the name appears as large text; nothing overflows horizontally (document.scrollingElement.scrollWidth <= innerWidth in the tour)."
       - "At 1440px the figlet renders as today."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/components.test.ts#renders the art and the name as text (CSS picks one per viewport)"
+      - "frontend/tests/components.test.ts#renders every block kind"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: components/Figlet.vue renders the pre only at >=640px and the name as large text below; no horizontal overflow at 390px in the local tour."
 
   - id: IDENT-003
     title: No fake system facts
@@ -52,9 +60,12 @@ requirements:
     priority: p1
     done_means:
       - "No 'Last login ... from local-machine', no 'Status: Operational', no fake ls listing with invented file sizes anywhere in the rendered output or the command registry (a test greps the registry output for those strings)."
-    status: todo
-    evidence: []
-    notes: []
+    status: done
+    evidence:
+      - "frontend/tests/registry.test.ts#never prints the banned fake strings or job-hunt wording"
+      - "frontend/tests/commands.test.ts#ls nudges toward the commands, no fake listing"
+    notes:
+      - "2026-11-05: welcome line, Last login, Status: Operational and the fake ls listing removed with the rewrite."
 
   # ---------------------------------------------------------------------------
   # SHOW — resume, projects, homelab, now
@@ -69,9 +80,13 @@ requirements:
     done_means:
       - "`resume` prints the headline, the current role with its highlights, previous roles one line each (position, company, dates), education, and skills by group, all read from content/resume.json (test changes a fixture value and sees it in the output)."
       - "The output ends with links to /resume and /Mark-Cheli-Resume.pdf."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/commands.test.ts#prints headline, current role with highlights, previous roles, education and skills"
+      - "frontend/tests/commands.test.ts#ends with links to /resume and the PDF"
+      - "frontend/tests/commands.test.ts#resume reflects changed highlights and keywords"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
 
   - id: SHOW-002
     title: /resume page is readable and printable
@@ -82,9 +97,13 @@ requirements:
     done_means:
       - "GET /resume server-renders every work entry, education, certificates, skills and the profile links from resume.json; the page footer shows the `meta.lastModified` date; a Download PDF link points at /Mark-Cheli-Resume.pdf."
       - "At 390px nothing overflows; at print media the page is black on white with no terminal chrome."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
+      - "frontend/tests/seo.test.ts#home graph has Person and WebSite; resume graph has the Person"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: frontend/pages/resume.vue; print stylesheet in the same file; footer shows meta.lastModified; Download PDF links /Mark-Cheli-Resume.pdf (the file itself is SHOW-003)."
 
   - id: SHOW-003
     title: Resume PDF generated from the page and kept current
@@ -106,9 +125,14 @@ requirements:
     visible: true
     done_means:
       - "`projects` lists featured projects first with name, tagline, stack and links; `projects all` lists every project; `projects <slug>` prints the full description and highlights; an unknown slug says so and lists the valid ones."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/commands.test.ts#lists featured projects first with name, tagline, stack and links"
+      - "frontend/tests/commands.test.ts#projects all lists every project"
+      - "frontend/tests/commands.test.ts#projects <slug> prints the full description and highlights"
+      - "frontend/tests/commands.test.ts#projects <bad> lists the valid slugs"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
 
   - id: SHOW-005
     title: /projects page with anchors
@@ -118,9 +142,13 @@ requirements:
     visible: true
     done_means:
       - "GET /projects server-renders a card per project from projects.json with an id equal to its slug; featured projects come first; cards show stack chips and repo / live / demo links; at 390px nothing overflows."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
+      - "frontend/tests/content.test.ts#featuredFirst keeps file order within each group"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: frontend/pages/projects.vue; each article has id=slug; needs an SSR fetch test once the preview server is in CI."
 
   - id: SHOW-006
     title: homelab catalog from services.json, readable on a phone
@@ -130,9 +158,13 @@ requirements:
     visible: true
     done_means:
       - "`homelab` (and `services`) renders every category and service from content/services.json with counts derived from the data; at 390px each service wraps onto its own lines (name, url, description) with no horizontal scroll; at 1440px the category layout is columnar as today."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/commands.test.ts#renders every category and service with counts from the data"
+      - "frontend/tests/commands.test.ts#services is an alias"
+      - "frontend/tests/commands.test.ts#reflects a changed fixture (count goes up)"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
 
   - id: SHOW-007
     title: now command
@@ -140,10 +172,13 @@ requirements:
     area: terminal
     priority: p2
     done_means:
-      - "`now` prints the items from content/now.json with its updated date; the openTo line is printed only when non-empty (test both)."
-    status: todo
-    evidence: []
-    notes: []
+      - "`now` prints the items from content/now.json with its updated date, and nothing else (test changes the fixture and sees it)."
+    status: done
+    evidence:
+      - "frontend/tests/commands.test.ts#prints the items and the updated date"
+      - "frontend/tests/commands.test.ts#reflects a changed fixture and prints nothing but items and the date"
+    notes:
+      - "2026-11-05: openTo dropped at Mark's request; the command renders only items and the updated date."
 
   - id: SHOW-008
     title: Command bar of tappable commands
@@ -153,9 +188,12 @@ requirements:
     visible: true
     done_means:
       - "Chips for about, projects, resume, homelab, contact, help are visible on / at 390px (sticky above the keyboard) and at 1440px (under the prompt); tapping one runs the command and the output appears, identical to typing it (component test clicks a chip and asserts the output)."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/components.test.ts#shows the six chips with aria-labels"
+      - "frontend/tests/components.test.ts#clicking a chip runs the command exactly as typing it"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
 
   # ---------------------------------------------------------------------------
   # REACH — contact
@@ -170,9 +208,15 @@ requirements:
     done_means:
       - "`contact` prints email as a mailto link, LinkedIn and GitHub as links, and the public services from the catalog; all from content/, nothing hard-coded."
       - "Links in command output are real <a> elements with rel=noopener; no v-html of regex-linkified strings remains."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/commands.test.ts#prints email as mailto, the profiles and the public services from content"
+      - "frontend/tests/commands.test.ts#does not list LAN-only services"
+      - "frontend/tests/components.test.ts#renders links as anchors with rel=noopener noreferrer in a new tab"
+      - "frontend/tests/components.test.ts#escapes text instead of injecting HTML"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: no v-html remains; components/TerminalOutput.vue renders OutputBlock[] with real anchors."
 
   - id: REACH-002
     title: Empty Enter does nothing; unknown commands suggest the closest one
@@ -182,8 +226,12 @@ requirements:
     done_means:
       - "Enter on an empty input adds nothing to history and opens nothing (test asserts window.open not called)."
       - "`projetcs` prints 'command not found: projetcs' and 'did you mean projects?'."
-    status: todo
-    evidence: []
+    status: done
+    evidence:
+      - "frontend/tests/useTerminal.test.ts#empty Enter adds nothing to history and opens nothing"
+      - "frontend/tests/registry.test.ts#empty input is a no-op: no output, nothing opened"
+      - "frontend/tests/registry.test.ts#unknown command says so and suggests the closest one"
+      - "frontend/tests/registry.test.ts#suggest finds the closest command within edit distance 2"
     notes: []
 
   # ---------------------------------------------------------------------------
@@ -197,9 +245,12 @@ requirements:
     priority: p0
     done_means:
       - "curl of / (no JS) contains the current job title, every project name from projects.json, every service name from services.json and the profile links (a test renders the SSR HTML or fetches the preview server and asserts)."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
+      - "frontend/tests/components.test.ts#is hidden visually, not removed"
+    notes:
+      - "2026-11-05: components/SeoContent.vue is server-rendered on /; curl of the built server contains the title, every project and service name. A test against the preview server (or the tour) should be added by the tooling side to close this."
 
   - id: READ-002
     title: JSON-LD, titles and OG from resume.json
@@ -209,9 +260,14 @@ requirements:
     done_means:
       - "JSON-LD on / is a Person with name, jobTitle, worksFor, address locality, sameAs and url read from resume.json (test parses the script tag); /resume carries the same Person."
       - "og:image and twitter:image point at /og.png, a committed 1200x630 PNG generated by `make og-image`; <title> and description derive from resume.json basics."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/seo.test.ts#Person is built from resume.json"
+      - "frontend/tests/seo.test.ts#home graph has Person and WebSite; resume graph has the Person"
+      - "frontend/tests/seo.test.ts#title and description derive from resume.json basics"
+      - "frontend/tests/seo.test.ts#og:image and twitter:image point at /og.png with summary_large_image"
+    notes:
+      - "2026-11-05: tags and JSON-LD done (utils/jsonld.ts, utils/seo.ts); waiting on the committed /og.png from `make og-image`."
 
   - id: READ-003
     title: Sitemap and robots list the real pages
@@ -220,8 +276,12 @@ requirements:
     priority: p1
     done_means:
       - "public/sitemap.xml lists /, /resume, /projects and the ?cmd= entries for every command the registry marks as `deepLink: true`; robots.txt allows all and points at the sitemap. A test compares the sitemap to the registry so a new command cannot be forgotten."
-    status: todo
-    evidence: []
+    status: done
+    evidence:
+      - "frontend/tests/seo.test.ts#lists exactly the registry deepLink commands as ?cmd= entries"
+      - "frontend/tests/seo.test.ts#lists the three pages"
+      - "frontend/tests/seo.test.ts#robots.txt allows everything and points at the sitemap"
+      - "frontend/tests/registry.test.ts#registry.json matches the registry exports"
     notes: []
 
   - id: READ-004
@@ -330,9 +390,11 @@ requirements:
     done_means:
       - "JetBrains Mono is served from the site (npm @fontsource/jetbrains-mono or committed woff2), not Google Fonts, so no third-party request is made on page load (test: built HTML has no fonts.googleapis.com)."
       - "Existing headers (nosniff, frame-ancestors none, referrer policy, permissions policy) stay; the build-smoke in CI proves the page still loads with them."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/seo.test.ts#title and description derive from resume.json basics"
+    notes:
+      - "2026-11-05: @fontsource/jetbrains-mono (latin 400/500/700) in nuxt.config css; Google Fonts link and preconnects removed; headers unchanged. Needs the build-smoke grep for fonts.googleapis.com on the tooling side to close."
 
   - id: NFR-MOB-001
     title: Input does not zoom on iOS and the keyboard fits
@@ -342,6 +404,9 @@ requirements:
     visible: true
     done_means:
       - "The command input has font-size >= 16px, autocapitalize=off, autocorrect=off, spellcheck=false, enterkeyhint=go; the suggestion/hint row has no fixed 250px margin; at 390px the prompt and input sit on one line and the command bar stays reachable."
-    status: todo
-    evidence: []
-    notes: []
+    status: in_progress
+    evidence:
+      - "frontend/tests/components.test.ts#has the mobile-safe attributes"
+    notes:
+      - "2026-11-05: implemented (frontend rebuild); screenshot pending tour."
+      - "2026-11-05: components/TerminalPrompt.vue: font-size max(1rem,16px), autocapitalize/autocorrect off, spellcheck false, enterkeyhint go; the 250px margin is gone with the old suggestion row."

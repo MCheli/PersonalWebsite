@@ -74,7 +74,6 @@ const location = locationLine(resume)
     </ul>
 
     <h2>Now</h2>
-    <p v-if="now.openTo">{{ now.openTo }}</p>
     <ul>
       <li v-for="item in now.items" :key="item">{{ item }}</li>
     </ul>

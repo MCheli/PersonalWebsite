@@ -181,8 +181,6 @@ export interface Catalog {
 
 export interface Now {
   updated: string
-  /** Rendered only when non-empty (PRODUCT.md decision D1). */
-  openTo: string
   items: string[]
 }
 

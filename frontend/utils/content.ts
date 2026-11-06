@@ -107,9 +107,9 @@ export const validateCatalog = (raw: unknown): Catalog => {
 
 export const validateNow = (raw: unknown): Now => {
   const file = 'now.json'
-  const root = requireKeys(file, raw, ['updated', 'openTo', 'items'])
+  const root = requireKeys(file, raw, ['updated', 'items'])
   requireArray(file, root.items, 'items')
-  if (typeof root.openTo !== 'string') throw new ContentError(file, '"openTo" must be a string (empty to hide)')
+  requireString(file, root.updated, 'updated')
   return raw as Now
 }
 

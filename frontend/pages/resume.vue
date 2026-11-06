@@ -310,6 +310,10 @@ const bare = (url: string): string => url.replace(/^https?:\/\/(www\.)?/, '').re
 }
 
 /* Print: black on white, no chrome, a document a recruiter can staple. */
+@page {
+  margin: 0.6in 0.7in;
+}
+
 @media print {
   .resume {
     max-width: none;

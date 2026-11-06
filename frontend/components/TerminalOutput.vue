@@ -140,7 +140,7 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
 
 .output-kv dt {
   display: inline;
-  color: var(--t-key);
+  color: #f2f2f2;
   font-weight: 500;
 }
 
@@ -170,6 +170,10 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
   .output-kv dt,
   .output-kv dd {
     display: block;
+  }
+
+  .output-kv dt {
+    color: var(--t-key);
   }
 
   .output-kv dt::after,
