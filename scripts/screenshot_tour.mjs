@@ -32,20 +32,17 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { devices, frontendDir, launchBrowser, readJson, repoRoot, resolveBase, sleep } from './lib/browser.mjs'
 
-// TODO(frontend): replace with frontend/commands/registry.json once the registry lands;
-// this fallback mirrors the commands PRODUCT.md marks as deep-linkable.
+// frontend/commands/registry.json is generated from commands/registry.ts and has the shape
+// { tour: [names], deepLink: [names] } (tests/registry.test.ts keeps it in sync). The fallback
+// only matters if that file is ever removed.
 const FALLBACK_COMMANDS = ['about', 'resume', 'projects', 'homelab', 'contact', 'now', 'help', 'neofetch']
 
 function tourCommands() {
   const registry = path.join(frontendDir, 'commands', 'registry.json')
   if (!fs.existsSync(registry)) return { commands: FALLBACK_COMMANDS, source: 'fallback list' }
   const raw = readJson(registry)
-  const entries = Array.isArray(raw) ? raw : Array.isArray(raw.commands) ? raw.commands : Object.values(raw)
-  const names = []
-  for (const e of entries) {
-    if (typeof e === 'string') names.push(e)
-    else if (e && typeof e.name === 'string' && (e.tour === undefined || e.tour)) names.push(e.name)
-  }
+  const names = Array.isArray(raw?.tour) ? raw.tour.filter((n) => typeof n === 'string') : []
+  if (names.length === 0) throw new Error(`${registry}: expected a non-empty "tour" array of command names`)
   return { commands: names, source: path.relative(repoRoot, registry) }
 }
 

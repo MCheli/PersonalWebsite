@@ -1,0 +1,270 @@
+{
+  "capturedAt": "2026-11-06T01:23:50.843Z",
+  "base": "http://127.0.0.1:41867",
+  "captures": {
+    "home/mobile": {
+      "route": "/",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 958,
+      "overflow": false,
+      "file": "artifacts/screens/home/mobile.png"
+    },
+    "cmd-help/mobile": {
+      "route": "/?cmd=help",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1674,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-help/mobile.png"
+    },
+    "cmd-about/mobile": {
+      "route": "/?cmd=about",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1776,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-about/mobile.png"
+    },
+    "cmd-resume/mobile": {
+      "route": "/?cmd=resume",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 3683,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-resume/mobile.png"
+    },
+    "cmd-projects/mobile": {
+      "route": "/?cmd=projects",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1773,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-projects/mobile.png"
+    },
+    "cmd-homelab/mobile": {
+      "route": "/?cmd=homelab",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 3890,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-homelab/mobile.png"
+    },
+    "cmd-now/mobile": {
+      "route": "/?cmd=now",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1593,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-now/mobile.png"
+    },
+    "cmd-contact/mobile": {
+      "route": "/?cmd=contact",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1696,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-contact/mobile.png"
+    },
+    "cmd-neofetch/mobile": {
+      "route": "/?cmd=neofetch",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1336,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-neofetch/mobile.png"
+    },
+    "cmd-whoami/mobile": {
+      "route": "/?cmd=whoami",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1037,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-whoami/mobile.png"
+    },
+    "resume/mobile": {
+      "route": "/resume",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 4603,
+      "overflow": false,
+      "file": "artifacts/screens/resume/mobile.png"
+    },
+    "projects/mobile": {
+      "route": "/projects",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 6407,
+      "overflow": false,
+      "file": "artifacts/screens/projects/mobile.png"
+    },
+    "home/desktop": {
+      "route": "/",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 900,
+      "overflow": false,
+      "file": "artifacts/screens/home/desktop.png"
+    },
+    "cmd-help/desktop": {
+      "route": "/?cmd=help",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 1350,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-help/desktop.png"
+    },
+    "cmd-about/desktop": {
+      "route": "/?cmd=about",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 1198,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-about/desktop.png"
+    },
+    "cmd-resume/desktop": {
+      "route": "/?cmd=resume",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 2235,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-resume/desktop.png"
+    },
+    "cmd-projects/desktop": {
+      "route": "/?cmd=projects",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 1434,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-projects/desktop.png"
+    },
+    "cmd-homelab/desktop": {
+      "route": "/?cmd=homelab",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 2472,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-homelab/desktop.png"
+    },
+    "cmd-now/desktop": {
+      "route": "/?cmd=now",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 1158,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-now/desktop.png"
+    },
+    "cmd-contact/desktop": {
+      "route": "/?cmd=contact",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 1437,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-contact/desktop.png"
+    },
+    "cmd-neofetch/desktop": {
+      "route": "/?cmd=neofetch",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 1336,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-neofetch/desktop.png"
+    },
+    "cmd-whoami/desktop": {
+      "route": "/?cmd=whoami",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 924,
+      "overflow": false,
+      "file": "artifacts/screens/cmd-whoami/desktop.png"
+    },
+    "resume/desktop": {
+      "route": "/resume",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 3152,
+      "overflow": false,
+      "file": "artifacts/screens/resume/desktop.png"
+    },
+    "projects/desktop": {
+      "route": "/projects",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 4499,
+      "overflow": false,
+      "file": "artifacts/screens/projects/desktop.png"
+    }
+  }
+}

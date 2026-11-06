@@ -4,11 +4,25 @@
   "title": "Now page (content/now.json)",
   "type": "object",
   "additionalProperties": false,
-  "required": ["updated", "openTo", "items"],
+  "required": [
+    "updated",
+    "items"
+  ],
   "properties": {
-    "$comment": { "type": "string" },
-    "updated": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
-    "openTo": { "type": "string", "description": "Rendered only when non-empty (PRODUCT.md decision D1)." },
-    "items": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+    "$comment": {
+      "type": "string"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
   }
 }

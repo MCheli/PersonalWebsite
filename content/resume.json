@@ -3,7 +3,7 @@
   "$comment": "JSON Resume (jsonresume.org) format. Single source of truth for the `resume` command, the /resume page, the printable PDF and the Flask /resume endpoint. Keep it factual: no phone, no street address. Edit this file, run `make resume-pdf`, commit both.",
   "basics": {
     "name": "Mark Cheli",
-    "label": "Director, Product Operations & Strategy — Onshape at PTC",
+    "label": "Director, Product Operations & Strategy · Onshape (PTC)",
     "email": "mpcheli7@gmail.com",
     "url": "https://www.markcheli.com",
     "summary": "I steer how Onshape's R&D organization plans, measures and builds: the operating cadence, the adoption of AI across product development, the analytics leadership plans against, and the strategy work that sets direction. I am a builder by nature who now spends most days steering the organization — and I still prototype the answer before asking for it. Thirteen years at PTC from intern to director, including engineering teams of 35+ and a 40-person training-products organization. At home: a 40-container homelab and the apps that run on it.",

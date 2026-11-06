@@ -33,7 +33,7 @@ const external = (href: string): boolean => !href.startsWith('/') && !href.start
               :rel="external(part.href) ? 'noopener noreferrer' : undefined"
             >{{ part.label }}</a>
             <span v-else>{{ part }}</span>
-            <template v-if="k < item.length - 1"> </template>
+            <template v-if="k < item.length - 1"/>
           </template>
         </li>
       </ul>
