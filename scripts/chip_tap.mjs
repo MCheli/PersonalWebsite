@@ -45,7 +45,9 @@ try {
   if (!resp || resp.status() >= 400) throw new Error(`/ returned ${resp?.status()}`)
   await page.waitForSelector('[data-tour-ready]', { timeout: 10000, state: 'attached' })
 
-  const chip = page.locator(`.command-bar .chip`, { hasText: new RegExp(`^${CHIP}$`) })
+  // CHIP comes from the command line: escape it so it matches literally, never as a pattern.
+  const chipText = CHIP.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const chip = page.locator(`.command-bar .chip`, { hasText: new RegExp(`^${chipText}$`) })
   if ((await chip.count()) !== 1) throw new Error(`no chip called "${CHIP}"`)
   fs.mkdirSync(OUT, { recursive: true })
 

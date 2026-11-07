@@ -25,7 +25,9 @@ WORKDIR /app
 # Take Alpine security fixes newer than the base tag and create a non-root user.
 # The runtime only needs `node`: strip npm, npx, corepack and yarn (and their bundled deps).
 # No curl: the healthcheck uses busybox wget.
+# zlib is named with a floor so the build fails rather than ship a zlib older than 1.4-r0.
 RUN apk upgrade --no-cache && \
+    apk add --no-cache --upgrade 'zlib>=1.4-r0' && \
     rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
            /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
            /usr/local/bin/yarn /usr/local/bin/yarnpkg /opt/yarn-* /root/.npm && \
