@@ -1,6 +1,6 @@
 # markcheli.com — Mark Cheli's personal site
 
-Nuxt 3 SSR terminal on `/` (plus `/resume` and `/projects` as readable pages) and a small Flask API, both reading the same four JSON files in `content/`. Two containers on the homelab, deployed by GitHub Actions → ghcr.io → Watchtower. Personal site, not a product. The terminal is the personality; the job is that a hiring manager on a phone learns who Mark is, what he built and how to reach him in under a minute, without the site ever reading as a job search.
+Nuxt 4 SSR terminal on `/` (plus `/resume` and `/projects` as readable pages) and a small Flask API, both reading the same four JSON files in `content/`. Two containers on the homelab, deployed by GitHub Actions → ghcr.io → Watchtower. Personal site, not a product. The terminal is the personality; the job is that a hiring manager on a phone learns who Mark is, what he built and how to reach him in under a minute, without the site ever reading as a job search.
 
 ## Read first
 
@@ -55,7 +55,7 @@ API env: `api/.env` (`OPENWEATHER_API_KEY`, `NTFY_PUBLISH_TOKEN`, optional `NTFY
 ```
 content/                     resume.json (JSON Resume v1) · projects.json · services.json (homelab catalog) · now.json
 content/schemas/             one JSON Schema per file; `make content-check`
-frontend/                    Nuxt 3 SSR; content/ → ../content (symlink; the Dockerfile copies the real dir)
+frontend/                    Nuxt 4 SSR (Nuxt 3 directory layout); content/ → ../content (symlink; the Dockerfile copies the real dir)
   commands/                  one file per command, registry.ts (the only list), registry.json (generated view), execute.ts, blocks.ts
   composables/useTerminal.ts terminal state: entries, input, history, Tab, the pending prompt
   components/                TerminalOutput, TerminalPrompt, CommandBar, Figlet, IdentityHeader, SeoContent

@@ -1,6 +1,6 @@
 # markcheli.com
 
-Mark Cheli's personal site: a terminal-style Nuxt 3 app at [www.markcheli.com](https://www.markcheli.com) and a small Flask API at [flask.markcheli.com](https://flask.markcheli.com). Every fact on the site comes from the JSON files in `content/`; both containers ship that directory.
+Mark Cheli's personal site: a terminal-style Nuxt 4 app at [www.markcheli.com](https://www.markcheli.com) and a small Flask API at [flask.markcheli.com](https://flask.markcheli.com). Every fact on the site comes from the JSON files in `content/`; both containers ship that directory.
 
 Read first:
 
@@ -15,7 +15,7 @@ Read first:
 ```
 content/      resume.json (JSON Resume), projects.json, services.json (homelab catalog), now.json
               schemas/ — JSON Schemas; `make content-check` validates
-frontend/     Nuxt 3 SSR app (terminal on /, /resume, /projects); content/ is a symlink to ../content
+frontend/     Nuxt 4 SSR app (terminal on /, /resume, /projects); content/ is a symlink to ../content
 api/          Flask API; content/ is a symlink to ../content
 scripts/      the gates: ledger_check.py, check_catalog.py, content_check.py, check_resume_pdf.py,
               screenshot_tour.mjs, og_image.mjs, resume_pdf.mjs (tests in scripts/tests/)
@@ -50,7 +50,7 @@ Playwright uses `$PLAYWRIGHT_CHROME`, else `/usr/bin/google-chrome`, else its bu
 
 ## Frontend
 
-Nuxt 3 SSR, Vue 3, TypeScript strict, JetBrains Mono self-hosted. Port 3000. Image `ghcr.io/mcheli/personal-website`.
+Nuxt 4 SSR, Vue 3, TypeScript strict, JetBrains Mono self-hosted. Port 3000. Image `ghcr.io/mcheli/personal-website`.
 
 Pages: `/` (the terminal: identity line, figlet, command bar, prompt; `?cmd=<command>` auto-runs one), `/resume` (readable and printable; the PDF is generated from it), `/projects` (cards with `#slug` anchors). Commands: `help` `about` `resume` `projects` `services` `now` `contact` `message` `open` `neofetch` `whoami` `weather` `clear` `history` `ls` `exit`, all from `frontend/commands/registry.ts`.
 
