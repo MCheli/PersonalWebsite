@@ -18,7 +18,7 @@ export interface PageSeo {
 
 export interface HeadInput {
   title: string
-  link: { rel: string, href: string }[]
+  link: { rel: 'canonical', href: string }[]
   meta: ({ name: string, content: string } | { property: string, content: string })[]
 }
 
