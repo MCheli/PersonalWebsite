@@ -1,6 +1,6 @@
 {
   "$comment": "Homelab service catalog. Single source of truth for the terminal's `homelab` command, the SSR crawler content, and the Flask /services endpoint (identity comes from resume.json). `name` must match the container_name in MCheli/83rr-poweredge docker-compose.yml unless `containers` lists the real container names or `external` is true (runs on other hardware, proxied by the R630). scripts/check_catalog.py diffs this file against the compose file.",
-  "updated": "2026-11-05",
+  "updated": "2026-11-14",
   "host": {
     "name": "83rr-poweredge",
     "displayName": "83RR PowerEdge",
@@ -72,6 +72,11 @@
           "lanOnly": true,
           "description": "Whole-home energy monitor: maps CT clamps to breakers, calibrates, prints a panel reference (panel-tool)",
           "repo": "https://github.com/MCheli/energy-monitor"
+        },
+        {
+          "name": "homelab-mcp",
+          "description": "Remote MCP server: a claude.ai connector to my notes (Google sign-in)",
+          "repo": "https://github.com/MCheli/83rr-poweredge"
         },
         {
           "name": "homelab-infra",

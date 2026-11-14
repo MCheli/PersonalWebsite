@@ -1,4 +1,4 @@
-FROM node:22.23.4-alpine3.24 AS builder
+FROM node:22.23.5-alpine3.24 AS builder
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ COPY content/ ./content/
 RUN npm run build
 
 # Production image
-FROM node:22.23.4-alpine3.24 AS runner
+FROM node:22.23.5-alpine3.24 AS runner
 
 WORKDIR /app
 
