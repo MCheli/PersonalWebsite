@@ -1,6 +1,6 @@
 {
   "$comment": "Portfolio projects. Single source of truth for the terminal's `projects` command, the /projects page, the SSR crawler content and the Flask /projects endpoint. Order = display order; `featured` projects come first in summaries. `slug` is what `projects <slug>` and `open <slug>` accept. Keep descriptions factual; link to repos so the code speaks for itself.",
-  "updated": "2026-11-05",
+  "updated": "2026-11-14",
   "projects": [
     {
       "slug": "tallied",
@@ -187,13 +187,13 @@
       "slug": "personal-website",
       "name": "This site",
       "tagline": "A terminal you can type into, that search engines and AI assistants can still read.",
-      "description": "Nuxt 3 SSR with a Flask API, shipped as two containers from GitHub Actions. The 2016 original was static HTML; it became a Spring Boot app on Heroku in 2017, a Firebase site in 2019, and this in 2025. Everything you see is rendered from three JSON files (resume, projects, service catalog) that the API also serves.",
+      "description": "Nuxt 4 SSR with a Flask API, shipped as two containers from GitHub Actions. The 2016 original was static HTML; it became a Spring Boot app on Heroku in 2017, a Firebase site in 2019, and this in 2025. Everything you see is rendered from three JSON files (resume, projects, service catalog) that the API also serves.",
       "highlights": [
         "Full content is server-rendered for crawlers; the terminal is progressive enhancement",
         "Maintained mostly by AI agents working from docs/PRODUCT.md and a requirements ledger"
       ],
       "stack": [
-        "Nuxt 3",
+        "Nuxt 4",
         "Vue 3",
         "TypeScript",
         "Flask",

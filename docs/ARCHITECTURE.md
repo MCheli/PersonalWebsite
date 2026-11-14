@@ -4,7 +4,7 @@ How the code is put together and the rules that keep it that way. What the site 
 
 ## Stack
 
-- **Frontend** `frontend/`: Nuxt 3 (SSR, Nitro), Vue 3 `<script setup lang="ts">`, TypeScript strict, `@fontsource/jetbrains-mono` (self-hosted). ESLint via `@nuxt/eslint-config`; `nuxi typecheck` (vue-tsc 3 on TypeScript 5.9). Node 22 (`.nvmrc`, the image, CI).
+- **Frontend** `frontend/`: Nuxt 4 (SSR, Nitro; Nuxt 3 directory layout via `srcDir`), Vue 3 `<script setup lang="ts">`, TypeScript strict, `@fontsource/jetbrains-mono` (self-hosted). ESLint via `@nuxt/eslint-config`; `nuxi typecheck` (vue-tsc 3 on TypeScript 5.9). Node 22 (`.nvmrc`, the image, CI).
 - **API** `api/`: Flask 3, flask-cors, requests, python-dotenv, gunicorn (2 workers in the image). Python 3.11 (`.python-version`, the image, CI). ruff for lint and format. `api/requirements.txt` is the pinned lockfile compiled from `requirements.in`.
 - **Content** `content/`: four JSON files and a JSON Schema per file. No database, no CMS.
 - **Scripts** `scripts/`: Python gates (`ledger_check.py`, `content_check.py`, `check_catalog.py`, `check_resume_pdf.py`) and Playwright scripts (`screenshot_tour.mjs`, `og_image.mjs`, `resume_pdf.mjs`, sharing `lib/browser.mjs`). Playwright is a frontend devDependency; the scripts resolve it from `frontend/node_modules`.
