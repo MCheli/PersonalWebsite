@@ -6,7 +6,7 @@ Flask==3.1.3
 Flask-CORS==6.0.5
 requests==2.34.2
 python-dotenv==1.2.4
-gunicorn==26.2.0
+gunicorn==27.0.0
 # Dev / CI: tests, lint, and the repo scripts in ../scripts (ledger, catalog and content checks)
 pytest==9.2.0
 pytest-flask==1.3.0
