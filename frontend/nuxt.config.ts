@@ -7,6 +7,13 @@
 declare const process: { env: Record<string, string | undefined> }
 
 export default defineNuxtConfig({
+  // Nuxt 4 defaults srcDir to app/. Keep the Nuxt 3 layout (pages/, components/, ... at
+  // the frontend root) so the upgrade does not move every file.
+  srcDir: '.',
+  dir: { app: 'app' },
+  // Nuxt 4 inlines only component styles; inline the global CSS too, as Nuxt 3 did,
+  // so the first paint does not wait on a separate stylesheet request.
+  features: { inlineStyles: true },
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   typescript: {
     strict: true,
