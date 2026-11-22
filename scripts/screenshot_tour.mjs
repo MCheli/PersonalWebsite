@@ -15,6 +15,7 @@
  *   cmd-<command> /?cmd=<command>   for each command in the registry marked for the tour
  *   resume        /resume
  *   projects      /projects
+ *   privacy       /privacy
  *
  * Commands come from frontend/commands/registry.json when it exists (entries with
  * `tour: true`, or every entry when the flag is absent); otherwise the list below.
@@ -58,6 +59,7 @@ const CAPTURES = [
   ...commands.map((c) => [`cmd-${c}`, `/?cmd=${encodeURIComponent(c)}`]),
   ['resume', '/resume'],
   ['projects', '/projects'],
+  ['privacy', '/privacy'],
 ].filter(([name]) => selected.length === 0 || selected.includes(name))
 
 if (CAPTURES.length === 0) {

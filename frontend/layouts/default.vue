@@ -13,6 +13,7 @@ const linkedin = profileByNetwork(content.resume, 'LinkedIn')
       <NuxtLink to="/projects">projects</NuxtLink>
       <a v-if="github" :href="github.url" target="_blank" rel="noopener noreferrer">github</a>
       <a v-if="linkedin" :href="linkedin.url" target="_blank" rel="noopener noreferrer">linkedin</a>
+      <NuxtLink to="/privacy" class="site-nav-privacy">privacy</NuxtLink>
     </nav>
     <main class="site-main">
       <slot />
@@ -50,6 +51,15 @@ const linkedin = profileByNetwork(content.resume, 'LinkedIn')
 }
 
 .site-nav a.router-link-active {
+  color: var(--t-fg);
+}
+
+.site-nav a.site-nav-privacy {
+  margin-left: auto;
+  color: var(--t-muted);
+}
+
+.site-nav a.site-nav-privacy.router-link-active {
   color: var(--t-fg);
 }
 

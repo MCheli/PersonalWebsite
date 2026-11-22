@@ -7,6 +7,7 @@ Files and schemas:
   services.json -> services.schema.json   (draft-07, written here)
   projects.json -> projects.schema.json   (draft-07, written here)
   now.json      -> now.schema.json        (draft-07, written here)
+  privacy.json  -> privacy.schema.json    (draft-07, written here)
   resume.json   -> resume.schema.json     (JSON Resume v1.0.0, vendored; draft-04)
 
 The resume schema has additionalProperties: false at the top level and does not
@@ -43,6 +44,7 @@ FILES = {
     "services.json": ("services.schema.json", Draft7Validator),
     "projects.json": ("projects.schema.json", Draft7Validator),
     "now.json": ("now.schema.json", Draft7Validator),
+    "privacy.json": ("privacy.schema.json", Draft7Validator),
     "resume.json": ("resume.schema.json", Draft4Validator),
 }
 
