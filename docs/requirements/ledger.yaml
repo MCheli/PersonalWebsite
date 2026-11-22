@@ -327,6 +327,26 @@ requirements:
     notes:
       - "2026-11-05: implemented (commands/message.ts, pendingPrompt in composables/useTerminal.ts, utils/api.ts); screenshot pending tour."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: REACH-005
+    title: /privacy page states how the site and its apps handle data
+    job: reach
+    area: privacy-page
+    priority: p1
+    visible: true
+    done_means:
+      - "GET /privacy server-renders every heading and paragraph of content/privacy.json, its `updated` date and a mailto link to resume.json basics.email; nothing in the copy is typed into the Vue file."
+      - "The nav on every page links /privacy, so it is reachable from the home page (Google's OAuth consent screen for the Homelab MCP connector needs that); the sitemap lists it."
+      - "At 390px nothing overflows."
+    status: done
+    evidence:
+      - "frontend/tests/content.test.ts#rejects a privacy.json section without paragraphs, naming it"
+      - "frontend/tests/seo.test.ts#lists the four pages"
+      - scripts/tests/test_ssr.py::test_privacy_page_renders_server_side_and_is_linked
+      - artifacts/screens/privacy/mobile.png
+      - artifacts/screens/privacy/desktop.png
+    notes:
+      - "2026-11-22: added for the Homelab MCP connector's Google consent screen (openid and email only). content/privacy.json + schema, pages/privacy.vue, nav link in layouts/default.vue; awaiting Mark's review of the wording; tour captures come from the PR's CI tour (no browser download in the authoring sandbox)."
+      - "2026-11-22: tour captures committed; closed."
   # ---------------------------------------------------------------------------
   # READ — crawlers, assistants, API
   # ---------------------------------------------------------------------------
@@ -373,15 +393,15 @@ requirements:
     area: seo
     priority: p1
     done_means:
-      - "public/sitemap.xml lists /, /resume, /projects and the ?cmd= entries for every command the registry marks as `deepLink: true`; robots.txt allows all and points at the sitemap. A test compares the sitemap to the registry so a new command cannot be forgotten."
+      - "public/sitemap.xml lists /, /resume, /projects, /privacy and the ?cmd= entries for every command the registry marks as `deepLink: true`; robots.txt allows all and points at the sitemap. A test compares the sitemap to the registry so a new command cannot be forgotten."
     status: done
     evidence:
       - "frontend/tests/seo.test.ts#lists exactly the registry deepLink commands as ?cmd= entries"
-      - "frontend/tests/seo.test.ts#lists the three pages"
+      - "frontend/tests/seo.test.ts#lists the four pages"
       - "frontend/tests/seo.test.ts#robots.txt allows everything and points at the sitemap"
       - "frontend/tests/registry.test.ts#registry.json matches the registry exports"
-    notes: []
-
+    notes:
+      - "2026-11-22: /privacy added to the sitemap; the test is now 'lists the four pages'."
   - id: READ-004
     title: API serves resume, projects, services, profile as JSON
     job: read

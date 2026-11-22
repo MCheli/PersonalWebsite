@@ -12,10 +12,11 @@ describe('sitemap.xml and robots.txt', () => {
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]!)
   const base = siteUrl(content.resume)
 
-  it('lists the three pages', () => {
+  it('lists the four pages', () => {
     expect(locs).toContain(`${base}/`)
     expect(locs).toContain(`${base}/resume`)
     expect(locs).toContain(`${base}/projects`)
+    expect(locs).toContain(`${base}/privacy`)
   })
 
   it('lists exactly the registry deepLink commands as ?cmd= entries', () => {
@@ -27,7 +28,7 @@ describe('sitemap.xml and robots.txt', () => {
   })
 
   it('has no other entries', () => {
-    expect(locs).toHaveLength(3 + deepLinkCommands().length)
+    expect(locs).toHaveLength(4 + deepLinkCommands().length)
   })
 
   it('robots.txt allows everything and points at the sitemap', () => {
