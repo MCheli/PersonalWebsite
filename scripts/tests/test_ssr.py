@@ -95,6 +95,21 @@ def test_resume_and_projects_pages_render_server_side(site):
         assert f'id="{project["slug"]}"' in projects, project["slug"]
 
 
+def test_privacy_page_renders_server_side_and_is_linked(site):
+    privacy = _load("privacy.json")
+    page = _get(site, "/privacy")
+    assert privacy["updated"] in page
+    assert privacy["intro"] in page
+    for section in privacy["sections"]:
+        assert section["heading"] in page, section["heading"]
+        for paragraph in section["paragraphs"]:
+            assert paragraph in page, paragraph
+    assert f'href="mailto:{_load("resume.json")["basics"]["email"]}"' in page
+    # The nav on every page links it; Google's consent screen needs it reachable from /.
+    for path in ("/", "/resume", "/projects"):
+        assert 'href="/privacy"' in _get(site, path), path
+
+
 def test_json_ld_person_comes_from_resume(site):
     html = _get(site, "/")
     scripts = re.findall(
