@@ -104,6 +104,30 @@
       "featured": true
     },
     {
+      "slug": "cookbook",
+      "name": "Cookbook",
+      "tagline": "The recipes I actually cook, and the week of groceries that comes out of them.",
+      "description": "The recipes are public to browse. Signed in, you plan a week: the chosen recipes become one grocery list, each item matched to the Whole Foods product you bought last time and sent to your Whole Foods cart on Amazon. The AI parts (adapting a recipe to what's in the kitchen, importing one from a web page or a photo, a typed or spoken chat about what to cook) run on each user's own Anthropic key. Recipes still print the way I like them on paper.",
+      "highlights": [
+        "FastAPI + PostgreSQL + Vue 3, Google sign-in, AI on the user's own key",
+        "Public read-only demo with a fictional cook, reset nightly"
+      ],
+      "stack": [
+        "FastAPI",
+        "PostgreSQL",
+        "Vue 3",
+        "Tailwind",
+        "Claude API",
+        "Docker"
+      ],
+      "repo": "https://github.com/MCheli/cookbook",
+      "url": "https://cookbook.markcheli.com",
+      "demo": "https://cookbook-demo.markcheli.com",
+      "status": "active",
+      "started": "2025-05",
+      "featured": true
+    },
+    {
       "slug": "lidar-grade-explorer",
       "name": "LiDAR Grade Explorer",
       "tagline": "Plan the earthwork for a flat pad from an iPhone LiDAR scan.",
@@ -163,30 +187,6 @@
       "repo": "https://github.com/MCheli/daily-report",
       "status": "active",
       "started": "2026-04",
-      "featured": false
-    },
-    {
-      "slug": "cookbook",
-      "name": "Cookbook",
-      "tagline": "The recipes I actually cook, and the week of groceries that comes out of them.",
-      "description": "The recipes are public to browse. Signed in, you plan a week: the chosen recipes become one grocery list, each item matched to the Whole Foods product you bought last time and sent to your Whole Foods cart on Amazon. The AI parts (adapting a recipe to what's in the kitchen, importing one from a web page or a photo, a typed or spoken chat about what to cook) run on each user's own Anthropic key. Recipes still print the way I like them on paper.",
-      "highlights": [
-        "FastAPI + PostgreSQL + Vue 3, Google sign-in, AI on the user's own key",
-        "Public read-only demo with a fictional cook, reset nightly"
-      ],
-      "stack": [
-        "FastAPI",
-        "PostgreSQL",
-        "Vue 3",
-        "Tailwind",
-        "Claude API",
-        "Docker"
-      ],
-      "repo": "https://github.com/MCheli/cookbook",
-      "url": "https://cookbook.markcheli.com",
-      "demo": "https://cookbook-demo.markcheli.com",
-      "status": "active",
-      "started": "2025-05",
       "featured": false
     },
     {
