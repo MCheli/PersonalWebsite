@@ -1,6 +1,6 @@
 {
-  "capturedAt": "2026-11-22T19:21:46.498Z",
-  "base": "http://127.0.0.1:62422",
+  "capturedAt": "2026-11-22T19:37:03.929Z",
+  "base": "http://127.0.0.1:63217",
   "captures": {
     "home/mobile": {
       "route": "/",
@@ -53,7 +53,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1925,
+      "scrollHeight": 2100,
       "overflow": false,
       "file": "artifacts/screens/cmd-projects/mobile.png"
     },
@@ -130,7 +130,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 6662,
+      "scrollHeight": 6686,
       "overflow": false,
       "file": "artifacts/screens/projects/mobile.png"
     },
@@ -185,7 +185,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1552,
+      "scrollHeight": 1664,
       "overflow": false,
       "file": "artifacts/screens/cmd-projects/desktop.png"
     },
