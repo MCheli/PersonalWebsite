@@ -96,6 +96,24 @@ def test_external_and_empty_containers_are_skipped():
     assert diff.ok
 
 
+def test_not_shown_containers_need_no_catalog_entry():
+    cat = catalog({"name": "nginx"})
+    diff = cc.diff_catalog(
+        cat, {"nginx", "house-transcriber"}, not_shown={"house-transcriber": "why"}
+    )
+    assert diff.ok
+    # Anything not on the list still has to be catalogued.
+    diff = cc.diff_catalog(
+        cat, {"nginx", "house-transcriber", "newthing"}, not_shown={"house-transcriber": "why"}
+    )
+    assert diff.missing_from_catalog == ["newthing"]
+
+
+def test_default_not_shown_list_covers_house_transcriber():
+    assert "house-transcriber" in cc.NOT_SHOWN
+    assert cc.diff_catalog(catalog({"name": "nginx"}), {"nginx", "house-transcriber"}).ok
+
+
 def test_compose_paths_include_per_entry_overrides_once():
     cat = catalog(
         {"name": "a"},
