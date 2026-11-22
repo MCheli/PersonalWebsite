@@ -337,13 +337,16 @@ requirements:
       - "GET /privacy server-renders every heading and paragraph of content/privacy.json, its `updated` date and a mailto link to resume.json basics.email; nothing in the copy is typed into the Vue file."
       - "The nav on every page links /privacy, so it is reachable from the home page (Google's OAuth consent screen for the Homelab MCP connector needs that); the sitemap lists it."
       - "At 390px nothing overflows."
-    status: in_progress
+    status: done
     evidence:
       - "frontend/tests/content.test.ts#rejects a privacy.json section without paragraphs, naming it"
       - "frontend/tests/seo.test.ts#lists the four pages"
       - scripts/tests/test_ssr.py::test_privacy_page_renders_server_side_and_is_linked
+      - artifacts/screens/privacy/mobile.png
+      - artifacts/screens/privacy/desktop.png
     notes:
       - "2026-11-22: added for the Homelab MCP connector's Google consent screen (openid and email only). content/privacy.json + schema, pages/privacy.vue, nav link in layouts/default.vue; awaiting Mark's review of the wording; tour captures come from the PR's CI tour (no browser download in the authoring sandbox)."
+      - "2026-11-22: tour captures committed; closed."
   # ---------------------------------------------------------------------------
   # READ — crawlers, assistants, API
   # ---------------------------------------------------------------------------
