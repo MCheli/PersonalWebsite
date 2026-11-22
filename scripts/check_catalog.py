@@ -10,7 +10,9 @@ Two questions, answered by a machine instead of by Mark remembering:
      - a service's `name` must be a container, unless it lists its real containers in
        `containers: [...]` (empty list = not a container, e.g. a repo entry), or it is
        `external: true` (runs elsewhere, proxied by the R630);
-     - every compose container must appear in the catalog.
+     - every compose container must appear in the catalog, except the few in NOT_SHOWN:
+       private household services that run on the R630 but are deliberately not listed
+       on the site (they're documented in the homelab repo instead).
 2. Do the public URLs still answer? HEAD then GET on every https url in
    services.json and projects.json (url, demo, repo), skipping `lanOnly: true`
    entries and categories and non-http values. 2xx/3xx/401/403 count as alive
@@ -54,6 +56,12 @@ USER_AGENT = (
 )
 ALIVE_STATUSES = {401, 403}
 TIMEOUT = 10
+# Containers that run on the R630 but are deliberately left off the public site. Mark decided
+# each one; add a name here only on his say-so, with the date. Everything else in compose
+# must be in content/services.json.
+NOT_SHOWN: dict[str, str] = {
+    "house-transcriber": "2026-11-22: indoor-camera speech to AI Context; private",
+}
 CONTAINER_NAME_RE = re.compile(r"^\s*container_name:\s*['\"]?([A-Za-z0-9][A-Za-z0-9_.-]*)")
 
 
@@ -128,7 +136,10 @@ def expected_containers(svc: dict) -> list[str]:
     return [svc["name"]]
 
 
-def diff_catalog(catalog: dict, compose_names: set[str]) -> Diff:
+def diff_catalog(
+    catalog: dict, compose_names: set[str], not_shown: dict[str, str] | None = None
+) -> Diff:
+    hidden = set(NOT_SHOWN if not_shown is None else not_shown)
     diff = Diff()
     claimed: set[str] = set()
     for cat in catalog.get("categories", []):
@@ -137,7 +148,7 @@ def diff_catalog(catalog: dict, compose_names: set[str]) -> Diff:
                 claimed.add(name)
                 if name not in compose_names:
                     diff.missing_from_compose.append(f"{svc['name']} -> {name}")
-    diff.missing_from_catalog = sorted(compose_names - claimed)
+    diff.missing_from_catalog = sorted(compose_names - claimed - hidden)
     diff.missing_from_compose.sort()
     return diff
 
@@ -250,7 +261,9 @@ def main(argv: list[str] | None = None) -> int:
         for n in diff.missing_from_compose:
             print(f"  x {n}", file=sys.stderr)
     if diff.ok:
-        print(f"catalog: {len(names)} containers all accounted for")
+        shown_off = sorted(set(NOT_SHOWN) & names)
+        note = f" ({len(shown_off)} not shown: {', '.join(shown_off)})" if shown_off else ""
+        print(f"catalog: {len(names)} containers all accounted for{note}")
 
     if not args.no_urls:
         dead: list[str] = []
