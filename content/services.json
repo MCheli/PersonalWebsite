@@ -1,6 +1,6 @@
 {
   "$comment": "Homelab service catalog. Single source of truth for the terminal's `homelab` command, the SSR crawler content, and the Flask /services endpoint (identity comes from resume.json). `name` must match the container_name in MCheli/83rr-poweredge docker-compose.yml unless `containers` lists the real container names or `external` is true (runs on other hardware, proxied by the R630). scripts/check_catalog.py diffs this file against the compose file.",
-  "updated": "2026-11-05",
+  "updated": "2026-11-22",
   "host": {
     "name": "83rr-poweredge",
     "displayName": "83RR PowerEdge",
@@ -32,7 +32,13 @@
         {
           "name": "cookbook",
           "url": "https://cookbook.markcheli.com",
-          "description": "Static recipe site, grocery-list builder, printable PDFs",
+          "description": "Recipes and weekly grocery lists to a Whole Foods cart — FastAPI + Vue 3 + Postgres",
+          "repo": "https://github.com/MCheli/cookbook"
+        },
+        {
+          "name": "cookbook-demo",
+          "url": "https://cookbook-demo.markcheli.com",
+          "description": "Live demo of Cookbook: a made-up cook's recipes and weeks, read-only",
           "repo": "https://github.com/MCheli/cookbook"
         },
         {
@@ -72,6 +78,11 @@
           "lanOnly": true,
           "description": "Whole-home energy monitor: maps CT clamps to breakers, calibrates, prints a panel reference (panel-tool)",
           "repo": "https://github.com/MCheli/energy-monitor"
+        },
+        {
+          "name": "homelab-mcp",
+          "description": "Remote MCP server: a claude.ai connector to my notes (Google sign-in)",
+          "repo": "https://github.com/MCheli/83rr-poweredge"
         },
         {
           "name": "homelab-infra",
@@ -202,6 +213,14 @@
         {
           "name": "seafile-notification",
           "description": "Seafile notification server"
+        },
+        {
+          "name": "cookbook-db",
+          "description": "PostgreSQL 16 backend for Cookbook"
+        },
+        {
+          "name": "cookbook-demo-db",
+          "description": "PostgreSQL 16 backend for the Cookbook demo"
         },
         {
           "name": "tallied-scheduler",

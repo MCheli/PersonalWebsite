@@ -1,6 +1,6 @@
 {
   "$comment": "Portfolio projects. Single source of truth for the terminal's `projects` command, the /projects page, the SSR crawler content and the Flask /projects endpoint. Order = display order; `featured` projects come first in summaries. `slug` is what `projects <slug>` and `open <slug>` accept. Keep descriptions factual; link to repos so the code speaks for itself.",
-  "updated": "2026-11-05",
+  "updated": "2026-11-22",
   "projects": [
     {
       "slug": "tallied",
@@ -104,6 +104,30 @@
       "featured": true
     },
     {
+      "slug": "cookbook",
+      "name": "Cookbook",
+      "tagline": "The recipes I actually cook, and the week of groceries that comes out of them.",
+      "description": "The recipes are public to browse. Signed in, you plan a week: the chosen recipes become one grocery list, each item matched to the Whole Foods product you bought last time and sent to your Whole Foods cart on Amazon. The AI parts (adapting a recipe to what's in the kitchen, importing one from a web page or a photo, a typed or spoken chat about what to cook) run on each user's own Anthropic key. Recipes still print the way I like them on paper.",
+      "highlights": [
+        "FastAPI + PostgreSQL + Vue 3, Google sign-in, AI on the user's own key",
+        "Public read-only demo with a fictional cook, reset nightly"
+      ],
+      "stack": [
+        "FastAPI",
+        "PostgreSQL",
+        "Vue 3",
+        "Tailwind",
+        "Claude API",
+        "Docker"
+      ],
+      "repo": "https://github.com/MCheli/cookbook",
+      "url": "https://cookbook.markcheli.com",
+      "demo": "https://cookbook-demo.markcheli.com",
+      "status": "active",
+      "started": "2025-05",
+      "featured": true
+    },
+    {
       "slug": "lidar-grade-explorer",
       "name": "LiDAR Grade Explorer",
       "tagline": "Plan the earthwork for a flat pad from an iPhone LiDAR scan.",
@@ -163,24 +187,6 @@
       "repo": "https://github.com/MCheli/daily-report",
       "status": "active",
       "started": "2026-04",
-      "featured": false
-    },
-    {
-      "slug": "cookbook",
-      "name": "Cookbook",
-      "tagline": "Recipes as markdown, with a site, a grocery-list builder and printable PDFs.",
-      "description": "Thirty-odd recipes organized by cooking method. A build script turns the markdown into a static site and a combined PDF; the site builds a grocery list with Whole Foods links from whichever recipes you pick. It's also what my weekly grocery-ordering agent reads.",
-      "highlights": [],
-      "stack": [
-        "Markdown",
-        "JavaScript",
-        "Python",
-        "Make"
-      ],
-      "repo": "https://github.com/MCheli/cookbook",
-      "url": "https://cookbook.markcheli.com",
-      "status": "active",
-      "started": "2025-05",
       "featured": false
     },
     {

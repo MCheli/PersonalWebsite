@@ -9,9 +9,11 @@ import resumeJson from '~/content/resume.json'
 import projectsJson from '~/content/projects.json'
 import servicesJson from '~/content/services.json'
 import nowJson from '~/content/now.json'
+import privacyJson from '~/content/privacy.json'
 import type {
   Catalog,
   Now,
+  Privacy,
   Project,
   ProjectsFile,
   Resume,
@@ -112,11 +114,26 @@ export const validateNow = (raw: unknown): Now => {
   return raw as Now
 }
 
+export const validatePrivacy = (raw: unknown): Privacy => {
+  const file = 'privacy.json'
+  const root = requireKeys(file, raw, ['updated', 'intro', 'sections', 'contact'])
+  requireString(file, root.updated, 'updated')
+  requireString(file, root.intro, 'intro')
+  requireString(file, root.contact, 'contact')
+  requireArray(file, root.sections, 'sections').forEach((s, i) => {
+    const section = requireKeys(file, s, ['heading', 'paragraphs'], `sections[${i}].`)
+    requireString(file, section.heading, `sections[${i}].heading`)
+    requireArray(file, section.paragraphs, `sections[${i}].paragraphs`)
+  })
+  return raw as Privacy
+}
+
 export const loadContent = (): SiteContent => ({
   resume: validateResume(resumeJson),
   projects: validateProjects(projectsJson),
   catalog: validateCatalog(servicesJson),
-  now: validateNow(nowJson)
+  now: validateNow(nowJson),
+  privacy: validatePrivacy(privacyJson)
 })
 
 /** The site's content, validated once at module load (build time under SSR). */

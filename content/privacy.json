@@ -1,0 +1,30 @@
+{
+  "$comment": "The privacy policy at /privacy, linked from the site nav. Google's OAuth consent screen for the Homelab MCP connector points here. Change `updated` whenever the text changes. Keep it plain and true: no claim about an app that the app's code can't back up.",
+  "updated": "2026-11-22",
+  "intro": "This covers markcheli.com and the apps I run under it on a server in my basement, Cookbook, Tasks, Tallied and the Homelab MCP connector among them. They are small and mostly for my own use, so this is short.",
+  "sections": [
+    {
+      "heading": "This site",
+      "paragraphs": [
+        "There are no accounts here, no ads and no analytics.",
+        "If you send me a note with the message command, the name, email and message you type go to my phone through a notification service on the same server. Nothing puts them in a database.",
+        "Like most web servers, mine may log requests (IP address, time, the page asked for) to help with troubleshooting."
+      ]
+    },
+    {
+      "heading": "Signing in with Google",
+      "paragraphs": [
+        "Some of my apps, the Homelab MCP connector included, let you sign in with a Google account. The connector asks Google for your email address and the basic sign-in identity only: nothing from Gmail, Drive, Contacts or anywhere else.",
+        "The email address is used for one thing, checking it against the short list of people allowed in. For the connector, that list is me."
+      ]
+    },
+    {
+      "heading": "What happens to it",
+      "paragraphs": [
+        "Information from Google is used only to sign you in, and is kept only as long as the session needs it. It is not sold, shared or used for advertising.",
+        "Anything you add to an app yourself, like a recipe or a task, stays in that app on my server."
+      ]
+    }
+  ],
+  "contact": "Questions, or want me to delete something an app holds about you? Email me at"
+}
