@@ -1,6 +1,6 @@
 {
-  "capturedAt": "2026-11-06T17:29:37.291Z",
-  "base": "http://127.0.0.1:44193",
+  "capturedAt": "2026-11-22T21:45:15.889Z",
+  "base": "http://127.0.0.1:55333",
   "captures": {
     "home/mobile": {
       "route": "/",
@@ -9,7 +9,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1087,
+      "scrollHeight": 1112,
       "overflow": false,
       "file": "artifacts/screens/home/mobile.png"
     },
@@ -20,7 +20,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1826,
+      "scrollHeight": 1851,
       "overflow": false,
       "file": "artifacts/screens/cmd-help/mobile.png"
     },
@@ -31,7 +31,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 2033,
+      "scrollHeight": 2059,
       "overflow": false,
       "file": "artifacts/screens/cmd-about/mobile.png"
     },
@@ -42,7 +42,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 3538,
+      "scrollHeight": 3564,
       "overflow": false,
       "file": "artifacts/screens/cmd-resume/mobile.png"
     },
@@ -53,7 +53,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1925,
+      "scrollHeight": 2126,
       "overflow": false,
       "file": "artifacts/screens/cmd-projects/mobile.png"
     },
@@ -64,7 +64,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 4445,
+      "scrollHeight": 4787,
       "overflow": false,
       "file": "artifacts/screens/cmd-services/mobile.png"
     },
@@ -75,7 +75,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1616,
+      "scrollHeight": 1642,
       "overflow": false,
       "file": "artifacts/screens/cmd-now/mobile.png"
     },
@@ -86,7 +86,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1847,
+      "scrollHeight": 1918,
       "overflow": false,
       "file": "artifacts/screens/cmd-contact/mobile.png"
     },
@@ -97,7 +97,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1488,
+      "scrollHeight": 1514,
       "overflow": false,
       "file": "artifacts/screens/cmd-neofetch/mobile.png"
     },
@@ -108,7 +108,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 1189,
+      "scrollHeight": 1215,
       "overflow": false,
       "file": "artifacts/screens/cmd-whoami/mobile.png"
     },
@@ -119,7 +119,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 4285,
+      "scrollHeight": 4310,
       "overflow": false,
       "file": "artifacts/screens/resume/mobile.png"
     },
@@ -130,9 +130,20 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 6407,
+      "scrollHeight": 6712,
       "overflow": false,
       "file": "artifacts/screens/projects/mobile.png"
+    },
+    "privacy/mobile": {
+      "route": "/privacy",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "scrollHeight": 1299,
+      "overflow": false,
+      "file": "artifacts/screens/privacy/mobile.png"
     },
     "home/desktop": {
       "route": "/",
@@ -185,7 +196,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1552,
+      "scrollHeight": 1664,
       "overflow": false,
       "file": "artifacts/screens/cmd-projects/desktop.png"
     },
@@ -196,7 +207,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 2831,
+      "scrollHeight": 2981,
       "overflow": false,
       "file": "artifacts/screens/cmd-services/desktop.png"
     },
@@ -218,7 +229,7 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 1554,
+      "scrollHeight": 1578,
       "overflow": false,
       "file": "artifacts/screens/cmd-contact/desktop.png"
     },
@@ -262,9 +273,20 @@
       "status": 200,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "scrollHeight": 4499,
+      "scrollHeight": 4625,
       "overflow": false,
       "file": "artifacts/screens/projects/desktop.png"
+    },
+    "privacy/desktop": {
+      "route": "/privacy",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "status": 200,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "scrollHeight": 1012,
+      "overflow": false,
+      "file": "artifacts/screens/privacy/desktop.png"
     }
   }
 }

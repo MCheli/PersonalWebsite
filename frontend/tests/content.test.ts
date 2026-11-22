@@ -12,17 +12,19 @@ import {
   serviceHref,
   validateCatalog,
   validateNow,
+  validatePrivacy,
   validateProjects,
   validateResume
 } from '~/utils/content'
 import { cloneContent } from './helpers'
 
 describe('content loading', () => {
-  it('loads the four real files', () => {
+  it('loads the five real files', () => {
     expect(content.resume.basics.name).toBe('Mark Cheli')
     expect(content.projects.projects.length).toBeGreaterThan(0)
     expect(content.catalog.categories.length).toBeGreaterThan(0)
     expect(Array.isArray(content.now.items)).toBe(true)
+    expect(content.privacy.sections.length).toBeGreaterThan(0)
   })
 
   it('rejects a resume missing a required key, naming it', () => {
@@ -48,6 +50,13 @@ describe('content loading', () => {
   it('rejects a now.json whose items is not an array', () => {
     expect(() => validateNow({ updated: '2026', items: 'x' })).toThrow(/items/)
     expect(() => validateNow({ items: [] })).toThrow(/updated/)
+  })
+
+  it('rejects a privacy.json section without paragraphs, naming it', () => {
+    const c = cloneContent()
+    const broken = { ...c.privacy, sections: [{ heading: 'x' }] }
+    expect(() => validatePrivacy(broken)).toThrow('privacy.json: missing required key "sections[0].paragraphs"')
+    expect(() => validatePrivacy({ ...c.privacy, contact: '' })).toThrow(/contact/)
   })
 })
 

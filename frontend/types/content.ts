@@ -172,6 +172,19 @@ export interface Now {
   items: string[]
 }
 
+export interface PrivacySection {
+  heading: string
+  paragraphs: string[]
+}
+
+export interface Privacy {
+  updated: string
+  intro: string
+  sections: PrivacySection[]
+  /** Lead-in for the contact line; the page appends basics.email from resume.json. */
+  contact: string
+}
+
 // ---------------------------------------------------------------------------
 // Everything together
 // ---------------------------------------------------------------------------
@@ -181,4 +194,5 @@ export interface SiteContent {
   projects: ProjectsFile
   catalog: Catalog
   now: Now
+  privacy: Privacy
 }

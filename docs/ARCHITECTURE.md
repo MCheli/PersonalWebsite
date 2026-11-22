@@ -6,7 +6,7 @@ How the code is put together and the rules that keep it that way. What the site 
 
 - **Frontend** `frontend/`: Nuxt 4 (SSR, Nitro; Nuxt 3 directory layout via `srcDir`), Vue 3 `<script setup lang="ts">`, TypeScript strict, `@fontsource/jetbrains-mono` (self-hosted). ESLint via `@nuxt/eslint-config`; `nuxi typecheck` (vue-tsc 3 on TypeScript 5.9). Node 22 (`.nvmrc`, the image, CI).
 - **API** `api/`: Flask 3, flask-cors, requests, python-dotenv, gunicorn (2 workers in the image). Python 3.11 (`.python-version`, the image, CI). ruff for lint and format. `api/requirements.txt` is the pinned lockfile compiled from `requirements.in`.
-- **Content** `content/`: four JSON files and a JSON Schema per file. No database, no CMS.
+- **Content** `content/`: five JSON files and a JSON Schema per file. No database, no CMS.
 - **Scripts** `scripts/`: Python gates (`ledger_check.py`, `content_check.py`, `check_catalog.py`, `check_resume_pdf.py`) and Playwright scripts (`screenshot_tour.mjs`, `og_image.mjs`, `resume_pdf.mjs`, sharing `lib/browser.mjs`). Playwright is a frontend devDependency; the scripts resolve it from `frontend/node_modules`.
 - **Runtime**: two Docker images built from the repo root, deployed by Watchtower on the homelab R630. `docs/DEPLOYING.md`.
 
@@ -18,7 +18,8 @@ content/
   projects.json      { updated, projects: [ {slug, name, tagline, description, highlights, stack, repo, url?, demo?, status, started, featured} ] }
   services.json      { updated, host, categories: [ {id, title, lanOnly?, services: [ {name, url?, description, repo?, containers?, external?, compose?, lanOnly?} ]} ] }
   now.json           { updated, items: [string] }
-  schemas/           services/projects/now (draft-07, written here); resume (the vendored JSON Resume v1.0.0 schema, draft-04)
+  privacy.json       { updated, intro, sections: [ {heading, paragraphs: [string]} ], contact }
+  schemas/           services/projects/now/privacy (draft-07, written here); resume (the vendored JSON Resume v1.0.0 schema, draft-04)
 frontend/
   nuxt.config.ts     security headers, self-hosted font css, runtimeConfig.public.apiBase ('/api')
   app.vue            html lang, viewport, favicon, title template; <NuxtLayout><NuxtPage/>
@@ -27,7 +28,7 @@ frontend/
   components/        IdentityHeader · Figlet · SeoContent · TerminalOutput · TerminalPrompt · PromptSegments · CommandBar
   commands/          registry.ts (the list) · registry.json (generated view) · execute.ts · blocks.ts · one file per command
   composables/useTerminal.ts   terminal state
-  types/             terminal.ts (OutputBlock, Command, CommandContext, PendingPrompt) · content.ts (the four files)
+  types/             terminal.ts (OutputBlock, Command, CommandContext, PendingPrompt) · content.ts (the five files)
   utils/             content.ts (loadContent, derived views) · seo.ts · jsonld.ts · api.ts · figlet.ts
   assets/css/terminal.css      palette as CSS variables, global rules, print rules
   public/            og.png · sitemap.xml · robots.txt · favicon.png · Mark-Cheli-Resume.pdf (+ .pdf.json sidecar)
@@ -47,7 +48,7 @@ Makefile             every command an agent or Mark runs; `make help` lists them
 
 | Container | Built from | Serves | Port |
 |---|---|---|---|
-| `personal-website` (`ghcr.io/mcheli/personal-website`) | `frontend/Dockerfile`, context = repo root | Nuxt SSR: `/`, `/resume`, `/projects`, `public/` through Nitro | 3000 |
+| `personal-website` (`ghcr.io/mcheli/personal-website`) | `frontend/Dockerfile`, context = repo root | Nuxt SSR: `/`, `/resume`, `/projects`, `/privacy`, `public/` through Nitro | 3000 |
 | `flask-api` (`ghcr.io/mcheli/flask-api`) | `api/Dockerfile`, context = repo root | JSON content endpoints, `/weather`, `POST /contact` | 5000 |
 
 Both builds run from the repo root so `COPY content/` works: each Dockerfile does `rm -f ./content` (the dev symlink) and then `COPY content/ ./content/`. Both images run as non-root (`nuxtjs` / `appuser`), carry no curl, npm or npx, and answer a HEALTHCHECK (`wget --spider /` and `GET /health`). The frontend image serves `.output/public` through Nitro itself; there is no symlink hack. `.github/workflows/docker-publish.yml` builds both on every PR (smoke-tested, not pushed) and pushes on `main`; Watchtower on the R630 pulls `:latest`. The homelab nginx proxies `www.markcheli.com` → `personal-website:3000`, `flask.markcheli.com` → `flask-api:5000`, and `www.markcheli.com/api/` → `flask-api` (83rr-poweredge #31), which is why the frontend's default `apiBase` is the relative `/api`. Rollback and the after-deploy checks are in `docs/DEPLOYING.md`.
@@ -57,8 +58,8 @@ Both builds run from the repo root so `COPY content/` works: each Dockerfile doe
 `content/` is the only place a fact about Mark lives. `docs/PRODUCT.md`, "Content model", says what each file holds and which surfaces render it.
 
 - `frontend/content` and `api/content` are symlinks to `../content`, so `import resumeJson from '~/content/resume.json'` and `Path(__file__).parent / "content"` resolve the same files in dev, in tests and in the image (where the symlink has been replaced by a copy).
-- `frontend/utils/content.ts` imports the four files, runs `validateResume` / `validateProjects` / `validateCatalog` / `validateNow` (required keys, unique slugs and service names) and exports `content: SiteContent`, validated once at module load, which under SSR is build time. A broken file fails the build and the test run with `content/<file>: missing required key "..."` instead of a blank page. The same module holds the derived views every renderer shares: `featuredFirst`, `publicServices`, `containerCount`, `serviceCount`, `currentWork`, `previousWork`, `profileByNetwork`, `locationLine`, `serviceHref`, `formatDate`, `dateRange`, `siteUrl`.
-- `api/app.py` reads the same four files at import into `CATALOG`, `RESUME`, `PROJECTS`, `NOW` (one copy per gunicorn worker; content only changes with a deploy).
+- `frontend/utils/content.ts` imports the five files, runs `validateResume` / `validateProjects` / `validateCatalog` / `validateNow` / `validatePrivacy` (required keys, unique slugs and service names) and exports `content: SiteContent`, validated once at module load, which under SSR is build time. A broken file fails the build and the test run with `content/<file>: missing required key "..."` instead of a blank page. The same module holds the derived views every renderer shares: `featuredFirst`, `publicServices`, `containerCount`, `serviceCount`, `currentWork`, `previousWork`, `profileByNetwork`, `locationLine`, `serviceHref`, `formatDate`, `dateRange`, `siteUrl`.
+- `api/app.py` reads four of them at import into `CATALOG`, `RESUME`, `PROJECTS`, `NOW` (`privacy.json` is only the `/privacy` page) (one copy per gunicorn worker; content only changes with a deploy).
 - `content/schemas/` is the stricter check: `make content-check` (`scripts/content_check.py`) validates each file against its schema (`additionalProperties: false` on the three written here) and then the rules a schema cannot say: unique slugs and service names, `repo` under `github.com/MCheli/`, `updated` is `YYYY-MM-DD`, other dates `YYYY` or `YYYY-MM`, `meta.lastModified` is a real date. `$comment` keys are documentation and are stripped before the resume schema sees them.
 - `services.json` is also checked against the world: `make catalog-check` (`scripts/check_catalog.py`) downloads `docker-compose.yml` and every per-entry `compose` override from `MCheli/83rr-poweredge` main, collects `container_name` values and diffs them against the catalog (a `name` must be a container unless `containers: [...]` lists the real ones, `[]` meaning "not a container", or `external: true`), then HEAD/GETs every public https url in `services.json` and `projects.json` (`lanOnly` skipped; 401/403 count as alive behind Cloudflare Access). `--no-urls`, `--urls-warn-only`, `--offline <checkout>` for dev and CI.
 - Generated from content and committed: `frontend/public/og.png` (`make og-image`), `frontend/public/Mark-Cheli-Resume.pdf` plus its sidecar `{generatedFrom, generatedAt}` (`make resume-pdf`). `scripts/check_resume_pdf.py` fails CI when `meta.lastModified` is newer than `generatedFrom`.
@@ -128,7 +129,7 @@ Identity lives only in `resume.json` (`basics` plus `work[0]`): the frontend, th
 
 - `/` server-renders `IdentityHeader` (visible) and `SeoContent` (sr-only: about, work, projects, services, now, links); `scripts/tests/test_ssr.py` fetches the built server with no JavaScript and asserts the title, every project name, every service name, the JSON-LD Person, no `fonts.googleapis.com`, and the security headers.
 - JSON-LD on `/` (Person + WebSite) and `/resume` (Person), built from `resume.json`; `tests/seo.test.ts` parses it.
-- `public/sitemap.xml` lists `/`, `/resume`, `/projects` and `/?cmd=<name>` for every `deepLink` command; `tests/seo.test.ts` compares it to the registry. `public/robots.txt` allows everything and names the sitemap.
+- `public/sitemap.xml` lists `/`, `/resume`, `/projects`, `/privacy` and `/?cmd=<name>` for every `deepLink` command; `tests/seo.test.ts` compares it to the registry. `public/robots.txt` allows everything and names the sitemap.
 - `og:image` and `twitter:image` are `/og.png`, rendered by `scripts/og_image.mjs` from `content/` (and `basics.image` when set) and committed.
 - Security headers come from `nuxt.config.ts` `routeRules`: `X-Content-Type-Options`, `X-Frame-Options: DENY`, a CSP of `frame-ancestors 'none'; base-uri 'self'; object-src 'none'` (a full CSP waits on a nonce for Nuxt's inline hydration script), `Referrer-Policy`, `Permissions-Policy`.
 

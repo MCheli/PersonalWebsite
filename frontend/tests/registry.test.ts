@@ -77,6 +77,7 @@ describe('completions and suggestions', () => {
     expect(completions('he', content)).toEqual(['help'])
     expect(completions('ser', content)).toEqual(['services'])
     expect(completions('tall', content)).toEqual(['tallied', 'tallied-demo'])
+    expect(completions('cook', content)).toEqual(['cookbook', 'cookbook-demo'])
     expect(completions('link', content)).toEqual(['linkedin'])
   })
 

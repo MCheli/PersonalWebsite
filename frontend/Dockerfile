@@ -1,4 +1,4 @@
-FROM node:22.23.5-alpine3.24 AS builder
+FROM node:22.23.5-alpine3.24@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a AS builder
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ COPY content/ ./content/
 RUN npm run build
 
 # Production image
-FROM node:22.23.5-alpine3.24 AS runner
+FROM node:22.23.5-alpine3.24@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a AS runner
 
 WORKDIR /app
 
@@ -39,7 +39,7 @@ COPY --from=builder --chown=nuxtjs:nodejs /app/.output /app/.output
 
 # Nitro serves .output/public itself: its asset manifest resolves "../public/<file>" from
 # .output/server (globalThis._importMeta_.url is set in .output/server/index.mjs), so no
-# symlinks into server/chunks/public are needed. Verified on Nuxt 3.21 and 4.6 by running
+# symlinks into server/chunks/public are needed. Verified on Nuxt 3.21 by running
 # `node .output/server/index.mjs` from a foreign cwd and fetching /favicon.png and /_nuxt/*.
 
 USER nuxtjs

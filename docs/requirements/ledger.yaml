@@ -327,6 +327,26 @@ requirements:
     notes:
       - "2026-11-05: implemented (commands/message.ts, pendingPrompt in composables/useTerminal.ts, utils/api.ts); screenshot pending tour."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
+  - id: REACH-005
+    title: /privacy page states how the site and its apps handle data
+    job: reach
+    area: privacy-page
+    priority: p1
+    visible: true
+    done_means:
+      - "GET /privacy server-renders every heading and paragraph of content/privacy.json, its `updated` date and a mailto link to resume.json basics.email; nothing in the copy is typed into the Vue file."
+      - "The nav on every page links /privacy, so it is reachable from the home page (Google's OAuth consent screen for the Homelab MCP connector needs that); the sitemap lists it."
+      - "At 390px nothing overflows."
+    status: done
+    evidence:
+      - "frontend/tests/content.test.ts#rejects a privacy.json section without paragraphs, naming it"
+      - "frontend/tests/seo.test.ts#lists the four pages"
+      - scripts/tests/test_ssr.py::test_privacy_page_renders_server_side_and_is_linked
+      - artifacts/screens/privacy/mobile.png
+      - artifacts/screens/privacy/desktop.png
+    notes:
+      - "2026-11-22: added for the Homelab MCP connector's Google consent screen (openid and email only). content/privacy.json + schema, pages/privacy.vue, nav link in layouts/default.vue; awaiting Mark's review of the wording; tour captures come from the PR's CI tour (no browser download in the authoring sandbox)."
+      - "2026-11-22: tour captures committed; closed."
   # ---------------------------------------------------------------------------
   # READ — crawlers, assistants, API
   # ---------------------------------------------------------------------------
@@ -373,15 +393,15 @@ requirements:
     area: seo
     priority: p1
     done_means:
-      - "public/sitemap.xml lists /, /resume, /projects and the ?cmd= entries for every command the registry marks as `deepLink: true`; robots.txt allows all and points at the sitemap. A test compares the sitemap to the registry so a new command cannot be forgotten."
+      - "public/sitemap.xml lists /, /resume, /projects, /privacy and the ?cmd= entries for every command the registry marks as `deepLink: true`; robots.txt allows all and points at the sitemap. A test compares the sitemap to the registry so a new command cannot be forgotten."
     status: done
     evidence:
       - "frontend/tests/seo.test.ts#lists exactly the registry deepLink commands as ?cmd= entries"
-      - "frontend/tests/seo.test.ts#lists the three pages"
+      - "frontend/tests/seo.test.ts#lists the four pages"
       - "frontend/tests/seo.test.ts#robots.txt allows everything and points at the sitemap"
       - "frontend/tests/registry.test.ts#registry.json matches the registry exports"
-    notes: []
-
+    notes:
+      - "2026-11-22: /privacy added to the sitemap; the test is now 'lists the four pages'."
   - id: READ-004
     title: API serves resume, projects, services, profile as JSON
     job: read
@@ -430,13 +450,14 @@ requirements:
     area: tooling
     priority: p0
     done_means:
-      - "`make catalog-check` (scripts/check_catalog.py) downloads docker-compose.yml and infrastructure/openclaw/docker-compose.yml from MCheli/83rr-poweredge main, collects container_name values, and fails listing (a) containers not in services.json and (b) catalog entries whose containers are not in compose; `external: true` entries and `containers: []` entries are skipped. It also HEAD/GETs every public https url in services.json and projects.json and fails on non-2xx/3xx (LAN-only urls skipped)."
+      - "`make catalog-check` (scripts/check_catalog.py) downloads docker-compose.yml and infrastructure/openclaw/docker-compose.yml from MCheli/83rr-poweredge main, collects container_name values, and fails listing (a) containers not in services.json and (b) catalog entries whose containers are not in compose; `external: true` entries and `containers: []` entries are skipped, and the containers in `NOT_SHOWN` (private household services Mark chose to keep off the site, e.g. house-transcriber, 2026-11-22) need no entry. It also HEAD/GETs every public https url in services.json and projects.json and fails on non-2xx/3xx (LAN-only urls skipped)."
       - "A unit test runs the diff logic on fixture compose text. CI runs the check on PRs (url check allowed to warn) and weekly on a schedule (hard fail)."
     status: done
     evidence:
       - scripts/tests/test_check_catalog.py::test_diff_reports_containers_missing_from_catalog
       - scripts/tests/test_check_catalog.py::test_diff_reports_catalog_entries_missing_from_compose
       - scripts/tests/test_check_catalog.py::test_external_and_empty_containers_are_skipped
+      - scripts/tests/test_check_catalog.py::test_not_shown_containers_need_no_catalog_entry
       - scripts/tests/test_check_catalog.py::test_public_urls_skip_lan_only_and_non_https
       - scripts/tests/test_check_catalog.py::test_offline_main_run_with_fixture_files
       - scripts/check_catalog.py

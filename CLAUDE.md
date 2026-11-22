@@ -1,6 +1,6 @@
 # markcheli.com — Mark Cheli's personal site
 
-Nuxt 4 SSR terminal on `/` (plus `/resume` and `/projects` as readable pages) and a small Flask API, both reading the same four JSON files in `content/`. Two containers on the homelab, deployed by GitHub Actions → ghcr.io → Watchtower. Personal site, not a product. The terminal is the personality; the job is that a hiring manager on a phone learns who Mark is, what he built and how to reach him in under a minute, without the site ever reading as a job search.
+Nuxt 4 SSR terminal on `/` (plus `/resume`, `/projects` and `/privacy` as readable pages) and a small Flask API, both reading the JSON files in `content/`. Two containers on the homelab, deployed by GitHub Actions → ghcr.io → Watchtower. Personal site, not a product. The terminal is the personality; the job is that a hiring manager on a phone learns who Mark is, what he built and how to reach him in under a minute, without the site ever reading as a job search.
 
 ## Read first
 
@@ -53,14 +53,14 @@ API env: `api/.env` (`OPENWEATHER_API_KEY`, `NTFY_PUBLISH_TOKEN`, optional `NTFY
 ## Layout
 
 ```
-content/                     resume.json (JSON Resume v1) · projects.json · services.json (homelab catalog) · now.json
+content/                     resume.json (JSON Resume v1) · projects.json · services.json (homelab catalog) · now.json · privacy.json
 content/schemas/             one JSON Schema per file; `make content-check`
 frontend/                    Nuxt 4 SSR (Nuxt 3 directory layout); content/ → ../content (symlink; the Dockerfile copies the real dir)
   commands/                  one file per command, registry.ts (the only list), registry.json (generated view), execute.ts, blocks.ts
   composables/useTerminal.ts terminal state: entries, input, history, Tab, the pending prompt
   components/                TerminalOutput, TerminalPrompt, CommandBar, Figlet, IdentityHeader, SeoContent
-  pages/                     index.vue (terminal), resume.vue, projects.vue · layouts/default.vue (nav)
-  types/                     terminal.ts (OutputBlock, Command, CommandContext) · content.ts (the four files)
+  pages/                     index.vue (terminal), resume.vue, projects.vue, privacy.vue · layouts/default.vue (nav)
+  types/                     terminal.ts (OutputBlock, Command, CommandContext) · content.ts (the five files)
   utils/                     content.ts (loadContent + derived views) · seo.ts · jsonld.ts · api.ts · figlet.ts
   tests/                     vitest specs · public/ og.png, sitemap.xml, robots.txt, the resume PDF + sidecar
 api/                         app.py (Flask), test_app.py, Dockerfile; content/ → ../content (symlink)
@@ -73,7 +73,7 @@ docs/                        PRODUCT.md · ARCHITECTURE.md · CONTRIBUTING-FEATU
 
 ## Content model in one paragraph
 
-`content/resume.json` is JSON Resume v1 (basics, work, education, skills, certificates, interests, `meta.lastModified`) and feeds the `resume`/`about`/`whoami` commands, `/resume`, the PDF, `<title>`, JSON-LD and the API. `content/projects.json` is the portfolio (slug, name, tagline, description, highlights, stack, repo, url, demo, status, started, featured). `content/services.json` is the homelab catalog (host block and categories of services; nothing about Mark) and every service `name` must equal a `container_name` in `MCheli/83rr-poweredge`'s compose files unless it lists `containers: []` or is `external: true`; `make catalog-check` diffs it against GitHub and CI runs that weekly. `content/now.json` is a dated list. `frontend/utils/content.ts` loads all four once, checks the keys the site cannot live without, and exports `content`; `api/app.py` reads the same files at import.
+`content/resume.json` is JSON Resume v1 (basics, work, education, skills, certificates, interests, `meta.lastModified`) and feeds the `resume`/`about`/`whoami` commands, `/resume`, the PDF, `<title>`, JSON-LD and the API. `content/projects.json` is the portfolio (slug, name, tagline, description, highlights, stack, repo, url, demo, status, started, featured). `content/services.json` is the homelab catalog (host block and categories of services; nothing about Mark) and every service `name` must equal a `container_name` in `MCheli/83rr-poweredge`'s compose files unless it lists `containers: []` or is `external: true`; `make catalog-check` diffs it against GitHub and CI runs that weekly. `content/now.json` is a dated list. `content/privacy.json` is the `/privacy` page (Google's OAuth consent screen points at it). `frontend/utils/content.ts` loads all five once, checks the keys the site cannot live without, and exports `content`; `api/app.py` reads the same files at import.
 
 ## History
 
