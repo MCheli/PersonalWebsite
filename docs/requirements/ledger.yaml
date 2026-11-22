@@ -430,13 +430,14 @@ requirements:
     area: tooling
     priority: p0
     done_means:
-      - "`make catalog-check` (scripts/check_catalog.py) downloads docker-compose.yml and infrastructure/openclaw/docker-compose.yml from MCheli/83rr-poweredge main, collects container_name values, and fails listing (a) containers not in services.json and (b) catalog entries whose containers are not in compose; `external: true` entries and `containers: []` entries are skipped. It also HEAD/GETs every public https url in services.json and projects.json and fails on non-2xx/3xx (LAN-only urls skipped)."
+      - "`make catalog-check` (scripts/check_catalog.py) downloads docker-compose.yml and infrastructure/openclaw/docker-compose.yml from MCheli/83rr-poweredge main, collects container_name values, and fails listing (a) containers not in services.json and (b) catalog entries whose containers are not in compose; `external: true` entries and `containers: []` entries are skipped, and the containers in `NOT_SHOWN` (private household services Mark chose to keep off the site, e.g. house-transcriber, 2026-11-22) need no entry. It also HEAD/GETs every public https url in services.json and projects.json and fails on non-2xx/3xx (LAN-only urls skipped)."
       - "A unit test runs the diff logic on fixture compose text. CI runs the check on PRs (url check allowed to warn) and weekly on a schedule (hard fail)."
     status: done
     evidence:
       - scripts/tests/test_check_catalog.py::test_diff_reports_containers_missing_from_catalog
       - scripts/tests/test_check_catalog.py::test_diff_reports_catalog_entries_missing_from_compose
       - scripts/tests/test_check_catalog.py::test_external_and_empty_containers_are_skipped
+      - scripts/tests/test_check_catalog.py::test_not_shown_containers_need_no_catalog_entry
       - scripts/tests/test_check_catalog.py::test_public_urls_skip_lan_only_and_non_https
       - scripts/tests/test_check_catalog.py::test_offline_main_run_with_fixture_files
       - scripts/check_catalog.py
