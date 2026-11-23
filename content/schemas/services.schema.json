@@ -149,6 +149,11 @@
           "type": "string",
           "description": "Path (in 83rr-poweredge) of the compose file that defines this entry's containers, when not the root docker-compose.yml.",
           "pattern": "\\.ya?ml$"
+        },
+        "checkPath": {
+          "type": "string",
+          "description": "Path scripts/check_catalog.py probes instead of `url` when the root is not a page (an API's /health). Only the liveness check uses it; the site still links `url`.",
+          "pattern": "^/"
         }
       }
     }

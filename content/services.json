@@ -26,6 +26,7 @@
         {
           "name": "flask-api",
           "url": "https://flask.markcheli.com",
+          "checkPath": "/health",
           "description": "Flask API behind the site: weather, profile, resume, catalog as JSON",
           "repo": "https://github.com/MCheli/PersonalWebsite"
         },

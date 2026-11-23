@@ -148,6 +148,8 @@ export interface Service {
   /** Real container names when they differ from `name`; empty when not a container. */
   containers?: string[]
   compose?: string
+  /** Path the catalog check probes instead of `url` when the root is not a page (an API's /health). */
+  checkPath?: string
 }
 
 export interface Category {
