@@ -17,7 +17,12 @@ Two questions, answered by a machine instead of by Mark remembering:
    services.json and projects.json (url, demo, repo), skipping `lanOnly: true`
    entries and categories and non-http values. 2xx/3xx/401/403 count as alive
    (Cloudflare Access and SSO front some of them); anything else, or a connection
-   error, is dead.
+   error, is dead. Two refinements, both narrow on purpose so real breakage still fails:
+     - a service whose root is not a page (the Flask API answers 404 at `/`) sets
+       `checkPath` (e.g. "/health") and that path is probed instead of the bare url;
+     - the hosts in BOT_WALL_HOSTS (LinkedIn) answer every bot with 999 or 429 and
+       never reveal whether the page exists, so only those two statuses count as
+       alive there; a 404, a 5xx or a connection error from them still fails.
 
 Usage:
   python scripts/check_catalog.py                       # live: GitHub + URLs
@@ -39,6 +44,7 @@ import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import urlsplit
 
 try:
     import yaml
@@ -55,6 +61,12 @@ USER_AGENT = (
     "Chrome/130.0 Safari/537.36 markcheli-catalog-check/1.0"
 )
 ALIVE_STATUSES = {401, 403}
+# Hosts that answer every non-browser request with a bot wall instead of the page. LinkedIn
+# sends 999 (its own code) or 429 whether or not the profile exists, so those two statuses
+# count as alive for these hosts only. Anything else from them (404, 5xx, connection error)
+# is still dead. Keep the list short: each entry is a URL the check can only half-verify.
+BOT_WALL_HOSTS = {"linkedin.com", "www.linkedin.com"}
+BOT_WALL_STATUSES = {429, 999}
 TIMEOUT = 10
 # Containers that run on the R630 but are deliberately left off the public site. Mark decided
 # each one; add a name here only on his say-so, with the date. Everything else in compose
@@ -156,6 +168,18 @@ def diff_catalog(
 # --- urls --------------------------------------------------------------------------
 
 
+def probe_url(svc: dict) -> object:
+    """The URL to probe for a service: `url` plus `checkPath` when the entry sets one.
+
+    `url` stays the link the site shows; `checkPath` only redirects the liveness probe
+    to a path that answers 200 when the root does not (an API's /health).
+    """
+    url, path = svc.get("url"), svc.get("checkPath")
+    if isinstance(url, str) and isinstance(path, str) and path.startswith("/"):
+        return url.rstrip("/") + path
+    return url
+
+
 def public_urls(catalog: dict, projects: dict, resume: dict | None = None) -> list[tuple[str, str]]:
     """(label, url) pairs worth checking: https only, LAN-only entries skipped."""
     out: list[tuple[str, str]] = []
@@ -175,7 +199,7 @@ def public_urls(catalog: dict, projects: dict, resume: dict | None = None) -> li
         cat_lan = bool(cat.get("lanOnly"))
         for svc in cat.get("services", []):
             if not (cat_lan or svc.get("lanOnly")):
-                add(f"services:{svc['name']}.url", svc.get("url"))
+                add(f"services:{svc['name']}.url", probe_url(svc))
             add(f"services:{svc['name']}.repo", svc.get("repo"))
     for proj in projects.get("projects", []):
         for key in ("url", "demo", "repo"):
@@ -183,11 +207,16 @@ def public_urls(catalog: dict, projects: dict, resume: dict | None = None) -> li
     return out
 
 
+def is_bot_wall_host(url: str) -> bool:
+    return urlsplit(url).hostname in BOT_WALL_HOSTS
+
+
 def check_url(url: str) -> tuple[bool, str]:
     """HEAD then GET; returns (alive, detail)."""
     import requests
 
     headers = {"User-Agent": USER_AGENT, "Accept": "*/*"}
+    bot_wall = is_bot_wall_host(url)
     last = ""
     for method in ("head", "get"):
         try:
@@ -199,6 +228,8 @@ def check_url(url: str) -> tuple[bool, str]:
             continue
         if resp.status_code < 400 or resp.status_code in ALIVE_STATUSES:
             return True, f"{method.upper()} {resp.status_code}"
+        if bot_wall and resp.status_code in BOT_WALL_STATUSES:
+            return True, f"{method.upper()} {resp.status_code} bot wall"
         last = f"{method.upper()} {resp.status_code}"
     return False, last
 

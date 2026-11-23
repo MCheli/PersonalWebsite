@@ -180,6 +180,64 @@ def test_public_urls_skip_lan_only_and_non_https():
     assert len(urls) == len(set(urls))
 
 
+def test_public_urls_probe_check_path_instead_of_root():
+    cat = catalog(
+        {"name": "api", "url": "https://flask.markcheli.com", "checkPath": "/health"},
+        {"name": "slash", "url": "https://x.example/", "checkPath": "/ping"},
+        {"name": "plain", "url": "https://y.example"},
+    )
+    urls = dict(cc.public_urls(cat, {"projects": []}))
+    assert urls["services:api.url"] == "https://flask.markcheli.com/health"
+    assert urls["services:slash.url"] == "https://x.example/ping"
+    assert urls["services:plain.url"] == "https://y.example"
+
+
+class _Resp:
+    def __init__(self, status_code):
+        self.status_code = status_code
+
+
+def _fake_requests(monkeypatch, statuses):
+    """Patch requests.request to answer each call with the next status in `statuses`."""
+    import requests
+
+    calls = []
+    queue = list(statuses)
+
+    def fake(method, url, **kwargs):
+        calls.append((method, url))
+        return _Resp(queue.pop(0))
+
+    monkeypatch.setattr(requests, "request", fake)
+    return calls
+
+
+@pytest.mark.parametrize("status", [999, 429])
+def test_bot_wall_status_counts_as_alive_on_linkedin_only(monkeypatch, status):
+    _fake_requests(monkeypatch, [status, status])
+    alive, detail = cc.check_url("https://www.linkedin.com/in/someone/")
+    assert alive
+    assert detail == f"HEAD {status} bot wall"
+
+    _fake_requests(monkeypatch, [status, status])
+    alive, detail = cc.check_url("https://example.com/")
+    assert not alive
+    assert detail == f"GET {status}"
+
+
+def test_bot_wall_host_still_fails_on_other_errors(monkeypatch):
+    _fake_requests(monkeypatch, [404, 404])
+    assert cc.check_url("https://www.linkedin.com/in/gone/") == (False, "GET 404")
+
+    import requests
+
+    def boom(method, url, **kwargs):
+        raise requests.ConnectionError("refused")
+
+    monkeypatch.setattr(requests, "request", boom)
+    assert cc.check_url("https://www.linkedin.com/in/gone/") == (False, "GET ConnectionError")
+
+
 def test_offline_main_run_with_fixture_files(tmp_path, capsys):
     (tmp_path / "docker-compose.yml").write_text(FIXTURE_COMPOSE)
     (tmp_path / "infrastructure" / "openclaw").mkdir(parents=True)
