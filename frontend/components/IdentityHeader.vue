@@ -2,6 +2,7 @@
 /**
  * The first screen's answer to "who is this?": visible, server-rendered,
  * read from resume.json. The terminal is the personality; this is the point.
+ * Name, title and place only: the summary is one command away (`about`).
  */
 import { content, locationLine } from '~/utils/content'
 
@@ -16,9 +17,6 @@ const location = locationLine(content.resume)
     </h1>
     <p class="identity-title">
       {{ basics.label }} · {{ location }}
-    </p>
-    <p class="identity-summary">
-      {{ basics.summary }}
     </p>
   </header>
 </template>
@@ -39,12 +37,7 @@ const location = locationLine(content.resume)
 }
 
 .identity-title {
-  margin: 0.15rem 0 0.5rem;
+  margin: 0.15rem 0 0;
   color: var(--t-prompt);
-}
-
-.identity-summary {
-  margin: 0;
-  color: var(--t-output);
 }
 </style>
