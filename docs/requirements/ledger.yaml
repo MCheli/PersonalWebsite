@@ -25,11 +25,11 @@ requirements:
     priority: p0
     visible: true
     done_means:
-      - "On / at 390px and 1440px, before any command, the page shows Mark's name, 'Director, Product Operations & Strategy' and 'Onshape' plus the one-sentence summary from resume.json basics, as visible text (not only in the sr-only block)."
+      - "On / at 390px and 1440px, before any command, the page shows Mark's name, 'Director, Product Operations & Strategy' and 'Onshape' as visible text (not only in the sr-only block), and not the basics.summary bio (Mark, 2026-11-28: start with the name; the bio lives in `about`, `/resume` and the sr-only block)."
       - "The text is server-rendered: curl of / contains it."
     status: done
     evidence:
-      - "frontend/tests/components.test.ts#shows name, title with company, location and summary from resume.json"
+      - "frontend/tests/components.test.ts#shows name, title with company and location from resume.json, not the summary"
       - "frontend/tests/components.test.ts#contains every project name, every service name, every work entry and the profile links"
       - artifacts/screens/home/mobile.png
       - artifacts/screens/home/desktop.png
@@ -39,6 +39,7 @@ requirements:
       - "2026-11-05: components/IdentityHeader.vue is visible and server-rendered; curl of / contains the title and summary."
       - "2026-11-05: closed after the merge; tour captures from `make tour` at 390px/1440px; SSR checks in scripts/tests/test_ssr.py run against the built server."
       - "2026-11-06: first screen restyled: Dracula palette (assets/css/terminal.css), Powerlevel10k-style prompt segments (components/PromptSegments.vue); the identity header, figlet and SSR text are unchanged. Captures re-taken by `make tour`."
+      - "2026-11-28: the summary paragraph dropped from IdentityHeader at Mark's request (\"just start with my name\"); name, title and location stay; the summary stays in `about`, `resume`, /resume, SeoContent and the meta description. Captures re-taken by `make tour`."
   - id: IDENT-002
     title: Figlet replaced by the name on narrow screens
     job: identify

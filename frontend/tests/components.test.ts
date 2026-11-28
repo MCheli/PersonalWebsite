@@ -193,13 +193,13 @@ describe('TerminalPrompt', () => {
 })
 
 describe('IdentityHeader', () => {
-  it('shows name, title with company, location and summary from resume.json', () => {
+  it('shows name, title with company and location from resume.json, not the summary', () => {
     const w = mount(IdentityHeader)
     expect(w.get('h1').text()).toBe(content.resume.basics.name)
     expect(w.text()).toContain('Director, Product Operations & Strategy')
     expect(w.text()).toContain('Onshape')
     expect(w.text()).toContain('Ashland, MA')
-    expect(w.text()).toContain(content.resume.basics.summary)
+    expect(w.text()).not.toContain(content.resume.basics.summary)
   })
 })
 

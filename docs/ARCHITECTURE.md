@@ -90,7 +90,7 @@ Identity lives only in `resume.json` (`basics` plus `work[0]`): the frontend, th
 
 ### Components and pages
 
-- `IdentityHeader.vue`: name, label, location and summary from `resume.json`, visible and server-rendered. The first thing on `/`.
+- `IdentityHeader.vue`: name, label and location from `resume.json` (not the summary), visible and server-rendered. The first thing on `/`.
 - `Figlet.vue`: the `MARK CHELI` art (`utils/figlet.ts`) in a `pre` shown from 640px; below that the name as large text. Used by the `figlet` block (the banner, `neofetch`).
 - `SeoContent.vue`: everything the commands can print, as plain HTML in an `sr-only` section (visually hidden, never `display: none`).
 - `TerminalOutput.vue`, `PromptSegments.vue` (the Powerlevel10k rainbow prompt: `user` from `promptUser(resume)`, `~/<host>` from the catalog, `main`; powerline arrows are CSS border triangles, `aria-hidden`), `TerminalPrompt.vue` (the two-line prompt: segments, then the green `❯` and the input; a question label replaces both while a command waits; the input has `font-size: max(1rem, 16px)`, `autocapitalize`/`autocorrect` off, `spellcheck=false`, `enterkeyhint="go"`; emits submit/up/down/tab/clear/cancel), `CommandBar.vue` (the six chips `about projects resume services contact help`; `position: fixed` at the bottom under 640px, under the prompt above; disabled while busy or a prompt is pending).
