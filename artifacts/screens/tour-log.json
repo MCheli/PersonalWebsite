@@ -1,6 +1,6 @@
 {
-  "capturedAt": "2026-11-22T21:45:15.889Z",
-  "base": "http://127.0.0.1:55333",
+  "capturedAt": "2026-11-28T12:54:40.767Z",
+  "base": "http://127.0.0.1:64577",
   "captures": {
     "home/mobile": {
       "route": "/",
@@ -64,7 +64,7 @@
       "status": 200,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "scrollHeight": 4787,
+      "scrollHeight": 4808,
       "overflow": false,
       "file": "artifacts/screens/cmd-services/mobile.png"
     },
